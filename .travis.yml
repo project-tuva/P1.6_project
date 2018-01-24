@@ -1,0 +1,12 @@
+language: c
+
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y mpi-default-bin mpi-default-dev
+
+compiler:
+  - gcc
+
+script:
+  - make check
+
