@@ -91,7 +91,7 @@ static void ekin(mdsys_t *sys) // pointer to the structure
     sys->temp = 2.0*sys->ekin/(3.0*sys->natoms-3.0)/kboltz;
 }
 
-/* compute forces */
+/* compute forces */ // (2)
 static void force(mdsys_t *sys) 
 {
     double r,ffac;
@@ -111,7 +111,8 @@ static void force(mdsys_t *sys)
             if (i==j) continue;
             
             /* get distance between particle i and j */
-            rx=pbc(sys->rx[i] - sys->rx[j], 0.5*sys->box); // position relative to the centre of the box
+	    // position relative to the centre of the box
+            rx=pbc(sys->rx[i] - sys->rx[j], 0.5*sys->box);
             ry=pbc(sys->ry[i] - sys->ry[j], 0.5*sys->box);
             rz=pbc(sys->rz[i] - sys->rz[j], 0.5*sys->box);
             r = sqrt(rx*rx + ry*ry + rz*rz);
@@ -119,12 +120,13 @@ static void force(mdsys_t *sys)
             /* compute force and energy if within cutoff */
             if (r < sys->rcut) {
                 ffac = -4.0*sys->epsilon*(-12.0*pow(sys->sigma/r,12.0)/r
-					  +6*pow(sys->sigma/r,6.0)/r); // force intensity
-                
+					  +6*pow(sys->sigma/r,6.0)/r);
+		// force intensity               
                 sys->epot += 0.5*4.0*sys->epsilon*(pow(sys->sigma/r,12.0)
                                                -pow(sys->sigma/r,6.0));
-
-                sys->fx[i] += rx/r*ffac; // force vector 
+		// force vectors
+		// Add force contribution of atom j on atom i
+                sys->fx[i] += rx/r*ffac; 
                 sys->fy[i] += ry/r*ffac;
                 sys->fz[i] += rz/r*ffac; 
             }
@@ -132,8 +134,8 @@ static void force(mdsys_t *sys)
     }
 }
 
-/* velocity verlet */
-static void velverlet(mdsys_t *sys) // velocity verlet
+/* velocity verlet */ // (1)
+static void velverlet(mdsys_t *sys) // velocity verlet algorithm
 {
     int i;
 
@@ -164,7 +166,8 @@ static void output(mdsys_t *sys, FILE *erg, FILE *traj)
     int i;
     
     printf("% 8d % 20.8f % 20.8f % 20.8f % 20.8f\n", sys->nfi, sys->temp,
-	   sys->ekin, sys->epot, sys->ekin+sys->epot); // nfi = n° of force iteration
+	   sys->ekin, sys->epot, sys->ekin+sys->epot);
+    // nfi = n° of force iteration
     fprintf(erg,"% 8d % 20.8f % 20.8f % 20.8f % 20.8f\n", sys->nfi, sys->temp,
 	    sys->ekin, sys->epot, sys->ekin+sys->epot);
     fprintf(traj,"%d\n nfi=%d etot=%20.8f\n", sys->natoms, sys->nfi,
