@@ -10,24 +10,32 @@ CC=gcc
 CFLAGS=-Wall -g -O3 -ffast-math -fomit-frame-pointer -I$(HEADDIR)
 LDLIBS=-lm
 
-MAIN=$(ROOT)/main.c
+MAIN=$(ROOT)/main
 
+SRC=$(wildcard ../src/*.c)
 OBJ=$(SRC:%.c=%.o)
 
 default: $(EXEDIR)/ljmd-serial.x
+#default:
+#	echo $(OBJ)
+#	echo $(SRC)
+
 
 clean:
-	rm -f *.mod *.o $(EXEDIR)/ljmd-serial.x $(SRCDIR)/*.o
+	rm -f *.mod *.o $(EXEDIR)/ljmd-serial.x $(OBJ)
 
 # linker rule
-$(EXEDIR)/ljmd-serial.x: $(OBJ)
-	$(CC) -o $@ $(CFLAGS) $^ $(MAIN) $(LDLIBS)
+$(EXEDIR)/ljmd-serial.x: $(OBJ) $(MAIN).o
+	$(CC) -o $@ $(CFLAGS) $^ $(LDLIBS)
 
 # compilation pattern rule for objects
-%.o: $(HEADDIR)/ljmd.h
+$(OBJ): $(HEADDIR)/ljmd.h
 
 %.o: %.c
-	$(CC) -c $(CFLAGS) $<
+	$(CC) -c $< $(CFLAGS) -o $@  
+
+$(MAIN).o: $(MAIN).c
+	$(CC) -c $< $(CFLAGS) -o $(MAIN).o
 
 # dependencies
 #ljmd.o: ljmd.c
