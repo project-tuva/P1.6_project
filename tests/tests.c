@@ -14,9 +14,9 @@ d) verify that input parameter data is read correctly.
 Add these tests to the existing testing facility with Travis-CI.
 */
 #include <stdio.h>
+#include <ljmd.h>
 
 int main(){
-  // dichiaro una sys con 4 stringhe di char di lunghezza BLEn e un integre
   mdsys_t sys;
   char restfile[BLEN], trajfile[BLEN], ergfile[BLEN], line[BLEN];
   int nprint;
