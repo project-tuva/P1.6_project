@@ -242,3 +242,32 @@ to the compiler
 => unrolling, inlining can be offloaded
 (3) Understand the properties of your hardware and adjust your code to match it
 (4) For a large number of threads use simpler code
+******************************************************************************
+SUMMARY
+(0) split the code into parts
+(1) Check the performance of the serial with gperf
+(2) Compiler Optimization:
+-O2,O3
+-ffast-math -fexpensive-optimizations -msse3
+- chech the results!!
+The used flags:
+CFLAGS=-Wall -g -O3 -ffast-math -fomit-frame-pointer
+(3) Modify the code
+- Use physics! Newton's 3 rd law: Fij=-Fji (not look at every pair twice)
+   Time now: 5.4s (9.0x faster) --> Another big improvement
+- Avoid expensive math: pow(), sqrt(), division
+=> 108 atoms: 4.0s (12.2x faster) --> still worth
+(4) try a bigger system: 2'916 atoms, 100 steps
+(5) Apply the cell-list variant method
+(6) Check the scaling
+(7) MPI
+(8) OpenMP
+(9) Hybrid approach
+******************************************************************************
+
+HEADER FILE (ljmd.h):
+constant and declaration,
+structure
+get_a_line
+
+SRC:
