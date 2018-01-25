@@ -31,7 +31,6 @@ void test_forces_output(mdsys_t *sys, FILE *traj)
         fprintf(traj, "%d %20.5f %20.5f %20.5f %20.5f %20.5f %20.5f %20.5f %20.5f %20.5f\n",\
                       i,  sys->rx[i], sys->ry[i], sys->rz[i],\
                       sys->vx[i], sys->vy[i], sys->vz[i],\
-                      sys->fx[i], sys->fy[i], sys->fz[i],\
-                       );
+                      sys->fx[i], sys->fy[i], sys->fz[i]);
     }
 }
