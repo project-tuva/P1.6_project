@@ -1,0 +1,12 @@
+4                 # natoms
+49.948            # mass in AMU
+0.2379            # epsilon in kcal/mol
+3.405             # sigma in angstrom
+0.002             # rcut in angstrom (expected no interactions)
+1                 # box length (in angstrom)
+kinetic.rest      # restart
+kinetic2.xyz      # trajectory
+kinetic2.dat      # energies
+1                 # nr MD steps
+5.0               # MD time step (in fs)
+1                 # output print frequency
