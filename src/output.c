@@ -1,5 +1,5 @@
 /*output.c: output methods*/
-#include "lmdj.h"
+#include<ljmd.h>
 #include <stdio.h>
 
 void output(mdsys_t *sys, FILE *erg, FILE *traj)
