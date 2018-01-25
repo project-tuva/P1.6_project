@@ -29,9 +29,9 @@ void test_forces_output(mdsys_t *sys, FILE *traj)
               fx         fy          fz\n");
     for (i=0; i<sys->natoms; ++i) {
         fprintf(traj, "%d %20.5f %20.5f %20.5f %20.5f %20.5f %20.5f %20.5f %20.5f %20.5f\n",\
-                      i,  sys->rx[i], sys->ry[i], sys->rz[i]\
-                      sys->vx[i], sys->vy[i], sys->vz[i]\
-                      sys->fx[i], sys->fy[i], sys->fz[i]\
+                      i,  sys->rx[i], sys->ry[i], sys->rz[i],\
+                      sys->vx[i], sys->vy[i], sys->vz[i],\
+                      sys->fx[i], sys->fy[i], sys->fz[i],\
                        );
     }
 }
