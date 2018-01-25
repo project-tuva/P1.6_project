@@ -41,7 +41,8 @@ void ekin(mdsys_t *sys); // previously it was static
 static void force(mdsys_t *sys); // previously it was static
 
 /* velocity verlet */
-void velverlet(mdsys_t *sys); // previously it was static
+void velverlet_1(mdsys_t *sys); // previously it was static
+void velverlet_2(mdsys_t *sys); // previously it was static
 
 /* append data to output. */
 void output(mdsys_t *sys, FILE *erg, FILE *traj); // previously it was static
