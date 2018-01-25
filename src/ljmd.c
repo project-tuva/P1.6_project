@@ -1,6 +1,6 @@
 /* 
  * simple lennard-jones potential MD code with velocity verlet.
- * units: Length=Angstrom, Mass=amu; Energy=kcal
+ * units: Length=Angstrom (10-10 m), Mass=amu (Hamu=1); Energy=kcal
  *
  * baseline c version.
  */
@@ -26,9 +26,9 @@ struct _mdsys {
     double ekin, epot, temp;
     double *rx, *ry, *rz;
     double *vx, *vy, *vz;
-    double *fx, *fy, *fz;
+  double *fx, *fy, *fz; // force
 };
-typedef struct _mdsys mdsys_t;
+typedef struct _mdsys mdsys_t; // alias
 
 /* helper function: read a line and then return
    the first string with whitespace stripped off */
@@ -37,10 +37,10 @@ static int get_a_line(FILE *fp, char *buf)
     char tmp[BLEN], *ptr;
 
     /* read a line and cut of comments and blanks */
-    if (fgets(tmp,BLEN,fp)) {
+    if (fgets(tmp,BLEN,fp)) { // fgets will save in tmp teh content of fp
         int i;
 
-        ptr=strchr(tmp,'#');
+        ptr=strchr(tmp,'#'); // string character
         if (ptr) *ptr= '\0';
         i=strlen(tmp); --i;
         while(isspace(tmp[i])) {
@@ -49,8 +49,8 @@ static int get_a_line(FILE *fp, char *buf)
         }
         ptr=tmp;
         while(isspace(*ptr)) {++ptr;}
-        i=strlen(ptr);
-        strcpy(buf,tmp);
+        i=strlen(ptr); // string length
+        strcpy(buf,tmp); // string copy
         return 0;
     } else {
         perror("problem reading input");
@@ -69,26 +69,29 @@ static void azzero(double *d, const int n)
 }
 
 /* helper function: apply minimum image convention */
-static double pbc(double x, const double boxby2)
+static double pbc(double x, const double boxby2) // periodic boundary condition
+// x: position relative to tehcentre of the interval
 {
-    while (x >  boxby2) x -= 2.0*boxby2;
+  while (x >  boxby2) x -= 2.0*boxby2; // boxby2=L/2
     while (x < -boxby2) x += 2.0*boxby2;
     return x;
 }
 
 /* compute kinetic energy */
-static void ekin(mdsys_t *sys)
+static void ekin(mdsys_t *sys) // pointer to the structure
 {   
     int i;
 
     sys->ekin=0.0;
     for (i=0; i<sys->natoms; ++i) {
-        sys->ekin += 0.5*mvsq2e*sys->mass*(sys->vx[i]*sys->vx[i] + sys->vy[i]*sys->vy[i] + sys->vz[i]*sys->vz[i]);
+        sys->ekin += 0.5*mvsq2e*sys->mass*(sys->vx[i]*sys->vx[i] +
+					   sys->vy[i]*sys->vy[i] +
+					   sys->vz[i]*sys->vz[i]);
     }
     sys->temp = 2.0*sys->ekin/(3.0*sys->natoms-3.0)/kboltz;
 }
 
-/* compute forces */
+/* compute forces */ // (2)
 static void force(mdsys_t *sys) 
 {
     double r,ffac;
@@ -108,6 +111,7 @@ static void force(mdsys_t *sys)
             if (i==j) continue;
             
             /* get distance between particle i and j */
+	    // position relative to the centre of the box
             rx=pbc(sys->rx[i] - sys->rx[j], 0.5*sys->box);
             ry=pbc(sys->ry[i] - sys->ry[j], 0.5*sys->box);
             rz=pbc(sys->rz[i] - sys->rz[j], 0.5*sys->box);
@@ -116,21 +120,22 @@ static void force(mdsys_t *sys)
             /* compute force and energy if within cutoff */
             if (r < sys->rcut) {
                 ffac = -4.0*sys->epsilon*(-12.0*pow(sys->sigma/r,12.0)/r
-                                         +6*pow(sys->sigma/r,6.0)/r);
-                
+					  +6*pow(sys->sigma/r,6.0)/r);
+		// force intensity               
                 sys->epot += 0.5*4.0*sys->epsilon*(pow(sys->sigma/r,12.0)
                                                -pow(sys->sigma/r,6.0));
-
-                sys->fx[i] += rx/r*ffac;
+		// force vectors
+		// Add force contribution of atom j on atom i
+                sys->fx[i] += rx/r*ffac; 
                 sys->fy[i] += ry/r*ffac;
-                sys->fz[i] += rz/r*ffac;
+                sys->fz[i] += rz/r*ffac; 
             }
         }
     }
 }
 
-/* velocity verlet */
-static void velverlet(mdsys_t *sys)
+/* velocity verlet */ // (1)
+static void velverlet(mdsys_t *sys) // velocity verlet algorithm
 {
     int i;
 
@@ -160,11 +165,16 @@ static void output(mdsys_t *sys, FILE *erg, FILE *traj)
 {
     int i;
     
-    printf("% 8d % 20.8f % 20.8f % 20.8f % 20.8f\n", sys->nfi, sys->temp, sys->ekin, sys->epot, sys->ekin+sys->epot);
-    fprintf(erg,"% 8d % 20.8f % 20.8f % 20.8f % 20.8f\n", sys->nfi, sys->temp, sys->ekin, sys->epot, sys->ekin+sys->epot);
-    fprintf(traj,"%d\n nfi=%d etot=%20.8f\n", sys->natoms, sys->nfi, sys->ekin+sys->epot);
+    printf("% 8d % 20.8f % 20.8f % 20.8f % 20.8f\n", sys->nfi, sys->temp,
+	   sys->ekin, sys->epot, sys->ekin+sys->epot);
+    // nfi = n° of force iteration
+    fprintf(erg,"% 8d % 20.8f % 20.8f % 20.8f % 20.8f\n", sys->nfi, sys->temp,
+	    sys->ekin, sys->epot, sys->ekin+sys->epot);
+    fprintf(traj,"%d\n nfi=%d etot=%20.8f\n", sys->natoms, sys->nfi,
+	    sys->ekin+sys->epot);
     for (i=0; i<sys->natoms; ++i) {
-        fprintf(traj, "Ar  %20.8f %20.8f %20.8f\n", sys->rx[i], sys->ry[i], sys->rz[i]);
+        fprintf(traj, "Ar  %20.8f %20.8f %20.8f\n", sys->rx[i], sys->ry[i],
+		sys->rz[i]);
     }
 }
 
@@ -179,7 +189,7 @@ int main(int argc, char **argv)
 
     /* read input file */
     if(get_a_line(stdin,line)) return 1;
-    sys.natoms=atoi(line);
+    sys.natoms=atoi(line); // reading from the file
     if(get_a_line(stdin,line)) return 1;
     sys.mass=atof(line);
     if(get_a_line(stdin,line)) return 1;
@@ -234,15 +244,16 @@ int main(int argc, char **argv)
     force(&sys);
     ekin(&sys);
     
-    erg=fopen(ergfile,"w");
-    traj=fopen(trajfile,"w");
+    erg=fopen(ergfile,"w"); // energy file 
+    traj=fopen(trajfile,"w"); // trajectory file
 
-    printf("Starting simulation with %d atoms for %d steps.\n",sys.natoms, sys.nsteps);
+    printf("Starting simulation with %d atoms for %d steps.\n",sys.natoms,
+	   sys.nsteps);
     printf("     NFI            TEMP            EKIN                 EPOT              ETOT\n");
     output(&sys, erg, traj);
 
     /**************************************************/
-    /* main MD loop */
+    /* main MD loop */ // Molecular Dynamic
     for(sys.nfi=1; sys.nfi <= sys.nsteps; ++sys.nfi) {
 
         /* write output, if requested */
@@ -250,8 +261,8 @@ int main(int argc, char **argv)
             output(&sys, erg, traj);
 
         /* propagate system and recompute energies */
-        velverlet(&sys);
-        ekin(&sys);
+        velverlet(&sys); // updating the state of the syste
+        ekin(&sys); // update kinetic energy
     }
     /**************************************************/
 
