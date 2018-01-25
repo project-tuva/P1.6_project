@@ -1,0 +1,1 @@
+/*utilities for main function in ljmd.c*/
