@@ -2,13 +2,16 @@
 #ifndef _LJMD_
 #define _LJMD_
 
+#include <stdlib.h>
+#include <stdio.h>
+
 // Constants
 /* generic file- or pathname buffer length */
-#define BLEN 200
+static const int BLEN=200;
 
 /* a few physical constants */
-const double kboltz=0.0019872067;     /* boltzman constant in kcal/mol/K */
-const double mvsq2e=2390.05736153349; /* m*v^2 in kcal/mol */
+static const double kboltz=0.0019872067;     /* boltzman constant in kcal/mol/K */
+static const double mvsq2e=2390.05736153349; /* m*v^2 in kcal/mol */
 
 // Data
 /* structure to hold the complete information
@@ -28,6 +31,11 @@ typedef struct _mdsys mdsys_t;
    the first string with whitespace stripped off */
 int get_a_line(FILE *fp, char *buf); // previously it was static
 
+/* set structure from input */
+int set_mdsys(mdsys_t *sys,char restfile[BLEN],char trajfile[BLEN],char ergfile[BLEN],char line[BLEN],int *nprint);
+
+int set_ic(mdsys_t *sys, char restfile[BLEN]);
+
 /* helper function: zero out an array */
 void azzero(double *d, const int n); // previously it was static
 
@@ -37,8 +45,11 @@ double pbc(double x, const double boxby2);
 /* compute kinetic energy */
 void ekin(mdsys_t *sys); // previously it was static
 
+void allocate_mdsys(mdsys_t *sys);
+void free_mdsys(mdsys_t *sys);
+
 /* compute forces */
-static void force(mdsys_t *sys); // previously it was static
+void force(mdsys_t *sys); // previously it was static
 
 /* velocity verlet */
 void velverlet_1(mdsys_t *sys); // previously it was static
