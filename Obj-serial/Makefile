@@ -21,7 +21,7 @@ clean:
 
 # linker rule
 $(EXEDIR)/ljmd-serial.x: $(OBJ)
-	$(CC) -o $@ $(CFLAGS) $^ $(LDLIBS)
+	$(CC) -o $@ $(CFLAGS) $^ $(MAIN) $(LDLIBS)
 
 # compilation pattern rule for objects
 %.o: $(HEADDIR)/ljmd.h
