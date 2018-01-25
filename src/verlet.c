@@ -1,1 +1,1 @@
-/*verlet.c: implementation of the verlet function*/
+/*verlet.c: complete verlet*/

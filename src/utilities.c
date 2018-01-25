@@ -1,1 +1,1 @@
-/*utilities for main.c*/
+/*utilities for main function in ljmd.c*/
