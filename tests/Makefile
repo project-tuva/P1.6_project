@@ -1,31 +1,27 @@
 #Dirs
 ROOT=..
-EXEDIR=$(ROOT)
+EXEDIR=.
 SRCDIR=$(ROOT)/src
 HEADDIR=$(ROOT)/include
 
 # -*- Makefile -*-
 SHELL=/bin/sh
 CC=gcc
-CFLAGS=-Wall -g -O3 -ffast-math -fomit-frame-pointer -I$(HEADDIR)
+CFLAGS=-Wall -g -std=c99 -O3 -ffast-math -fomit-frame-pointer -I$(HEADDIR)
 LDLIBS=-lm
 
-MAIN=$(ROOT)/main
+MAIN=unit_tests.c
 
 SRC=$(wildcard ../src/*.c)
 OBJ=$(SRC:%.c=%.o)
 
-default: $(EXEDIR)/ljmd-serial.x
-#default:
-#	echo $(OBJ)
-#	echo $(SRC)
-
+default: $(EXEDIR)/unit_tests.x
 
 clean:
-	rm -f *.mod *.o $(EXEDIR)/ljmd-serial.x $(OBJ)
+	rm -f *.mod *.o $(EXEDIR)/unit_tests.x $(OBJ)
 
 # linker rule
-$(EXEDIR)/ljmd-serial.x: $(OBJ) $(MAIN).o
+$(EXEDIR)/unit_tests.x: $(OBJ) $(MAIN).o
 	$(CC) -o $@ $(CFLAGS) $^ $(LDLIBS)
 
 # compilation pattern rule for objects
