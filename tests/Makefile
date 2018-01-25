@@ -7,7 +7,7 @@ HEADDIR=$(ROOT)/include
 # -*- Makefile -*-
 SHELL=/bin/sh
 CC=gcc
-CFLAGS=-Wall -std=c99 -g -O3 -ffast-math -fomit-frame-pointer -I$(HEADDIR)
+CFLAGS=-Wall -g -O3 -ffast-math -fomit-frame-pointer -I$(HEADDIR)
 LDLIBS=-lm
 
 MAIN=$(ROOT)/main
