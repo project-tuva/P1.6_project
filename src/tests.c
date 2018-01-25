@@ -1,38 +1,21 @@
 /*tests.c: source file where the test functions are implemented*/
-#include <ljmd.h>
-#include <stdio.h>
 
-struct _mdsys {
-    int natoms,nfi,nsteps;
-    double dt, mass, epsilon, sigma, box, rcut;
-    double ekin, epot, temp;
-    double *rx, *ry, *rz;
-    double *vx, *vy, *vz;
-    double *fx, *fy, *fz;
-};
-typedef struct _mdsys mdsys_t;
-//input test
-void test2(){
-
-}
+#include<stdio.h>
+#include<ljmd.h>
 
 
-int main(int argc, char **argv)
-{
-  double k;
-  force();
-  printf();
 
-  verlet_1();
-  verlet_2();
-  printf("time of full step integration is done!");
+/* Test for kinetic energy */
+void test3(){
+
+  mdsys_t sys;
+  sys.natoms=3;
+  sys.mass=1;
+  sys.dt=1;
+  sys.epsilon=1;
+  sys.sigma=1;
   
-  k = ekin();
-  printf("kinetic energy is %f", k);
   
-  if()
-    printf("input parameter data is read correctly");
-    return 0;
-    
-    return 1;
+
+>>>>>>> master
 }
