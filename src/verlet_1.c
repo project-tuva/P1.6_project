@@ -15,10 +15,4 @@
         sys->ry[i] += sys->dt*sys->vy[i];
         sys->rz[i] += sys->dt*sys->vz[i];
     }
-
-    /* compute forces and potential energy */
-    force(sys);
-
-    // Calling velverlet_2
-    velverlet_2(sys);
 }
