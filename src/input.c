@@ -1,6 +1,8 @@
 /*input.c: input methods*/
-#include "lmdj.h"
-#include <stdio.h>
+#include<ljmd.h>
+#include<stdio.h>
+#include<string.h>
+#include<ctype.h>
 
 int get_a_line(FILE *fp, char *buf)
 {

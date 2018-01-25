@@ -2,13 +2,16 @@
 #ifndef _LJMD_
 #define _LJMD_
 
+#include <stdlib.h>
+#include <stdio.h>
+
 // Constants
 /* generic file- or pathname buffer length */
-#define BLEN 200
+static const int BLEN=200;
 
 /* a few physical constants */
-const double kboltz=0.0019872067;     /* boltzman constant in kcal/mol/K */
-const double mvsq2e=2390.05736153349; /* m*v^2 in kcal/mol */
+static const double kboltz=0.0019872067;     /* boltzman constant in kcal/mol/K */
+static const double mvsq2e=2390.05736153349; /* m*v^2 in kcal/mol */
 
 // Data
 /* structure to hold the complete information
@@ -38,7 +41,7 @@ double pbc(double x, const double boxby2);
 void ekin(mdsys_t *sys); // previously it was static
 
 /* compute forces */
-static void force(mdsys_t *sys); // previously it was static
+void force(mdsys_t *sys); // previously it was static
 
 /* velocity verlet */
 void velverlet_1(mdsys_t *sys); // previously it was static
