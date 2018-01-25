@@ -25,7 +25,6 @@ force3.test: if r in [0.1, 0.395) B<->C & A<->D
 int main(void){
   int nprint, i;
   char restfile[BLEN], trajfile[BLEN], ergfile[BLEN], line[BLEN];
-  FILE *fp,*traj,*erg;
   mdsys_t sys;
 
 
@@ -37,7 +36,7 @@ int main(void){
 
   force(&sys); // previously it was static
 
-  test_forces_output(&sys, traj); // previously it was static
+  test_forces_output(&sys, trajfile); // previously it was static
 
   free_mdsys(&sys);
 
@@ -45,3 +44,4 @@ int main(void){
 
   return 0;
 }
+ 

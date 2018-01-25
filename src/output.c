@@ -16,15 +16,16 @@ void output(mdsys_t *sys, FILE *erg, FILE *traj)
 
 
 
-void test_forces_output(mdsys_t *sys, FILE *traj)
+void test_forces_output(mdsys_t *sys, char *trajname)
 {
     int i;
-
+    FILE * traj;
+    traj = fopen(trajname, "w");
     //printf("% 8d % 20.8f % 20.8f % 20.8f % 20.8f\n", sys->nfi, sys->temp, sys->ekin, sys->epot, sys->ekin+sys->epot);
     //fprintf(erg,"% 8d % 20.8f % 20.8f % 20.8f % 20.8f\n", sys->nfi, sys->temp, sys->ekin, sys->epot, sys->ekin+sys->epot);
     //fprintf(traj,"%d\n nfi=%d etot=%20.8f\n", sys->natoms, sys->nfi, sys->ekin+sys->epot);
-    printf("Starting force test with %d atoms for %d steps.\n",sys->natoms, sys->nsteps);
-    printf("  ID        x            y            z\
+    printf( "Starting force test with %d atoms for %d steps.\n",sys->natoms, sys->nsteps);
+    fprintf( traj, "  ID        x            y            z\
               vx            vy          vz\
               fx         fy          fz\n");
     for (i=0; i<sys->natoms; ++i) {
@@ -33,6 +34,8 @@ void test_forces_output(mdsys_t *sys, FILE *traj)
                       sys->vx[i], sys->vy[i], sys->vz[i],\
                       sys->fx[i], sys->fy[i], sys->fz[i]);
     }
+
+    fclose(traj);
 }
 
 void test_kinetic_output(mdsys_t *sys, FILE *traj)
