@@ -57,5 +57,7 @@ void velverlet_2(mdsys_t *sys); // previously it was static
 
 /* append data to output. */
 void output(mdsys_t *sys, FILE *erg, FILE *traj); // previously it was static
+void test_forces_output(mdsys_t *sys, FILE *traj)
+
 
 #endif
