@@ -32,9 +32,9 @@ int main(void){
 
   allocate_mdsys(&sys);
 
-  force(&sys); // previously it was static
+  force(&sys);
 
-  test_forces_output(&sys, trajfile); // previously it was static
+  test_forces_output(&sys, trajfile);
 
   free_mdsys(&sys);
 

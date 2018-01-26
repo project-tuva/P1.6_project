@@ -2,11 +2,11 @@
 39.948            # mass in AMU
 0.2379            # epsilon in kcal/mol
 3.405             # sigma in angstrom
-0.07             # rcut in angstrom (expected interaction B<->C)
+0.002             # rcut in angstrom (expected no interactions)
 1                 # box length (in angstrom)
 force1.rest       # restart
-force2.xyz        # trajectory
-force2.dat        # energies
+force1.out        # trajectory
+force1.dat        # energies
 1                 # nr MD steps
 5.0               # MD time step (in fs)
 1                 # output print frequency
