@@ -13,10 +13,10 @@ LDLIBS=-lm
 SRC=$(wildcard ../src/*.c)
 OBJ=$(SRC:%.c=%.o)
 
-default: $(EXEDIR)/force_test.x $(EXEDIR)/input_test.x $(EXEDIR)/kinetic_test.x 
+default: $(EXEDIR)/input_test.x $(EXEDIR)/kinetic_test.x $(EXEDIR)/integration_test.x 
 
 clean:
-	rm -f *.mod *.o $(EXEDIR)/force_test.x $(EXEDIR)/input_test.x $(EXEDIR)/kinetic_test.x
+	rm -f *.mod *.o $(EXEDIR)/force_test.x $(EXEDIR)/input_test.x $(EXEDIR)/kinetic_test.x $(EXEDIR)/integration_test.x 
 
 # linker rule
 $(EXEDIR)/force_test.x: $(OBJ) force_test.o
@@ -26,6 +26,9 @@ $(EXEDIR)/input_test.x: $(OBJ) input_test.o
 	$(CC) -o $@ $(CFLAGS) $^ $(LDLIBS)
 
 $(EXEDIR)/kinetic_test.x: $(OBJ) kinetic_test.o
+	$(CC) -o $@ $(CFLAGS) $^ $(LDLIBS)
+
+$(EXEDIR)/integration_test.x: $(OBJ) integration_test.o
 	$(CC) -o $@ $(CFLAGS) $^ $(LDLIBS)
 
 # compilation pattern rule for objects
@@ -40,8 +43,11 @@ force_test.o: force_test.c
 input_test.o: input_test.c
 	$(CC) -c $< $(CFLAGS) -o input_test.o
 
-kinetic_test.o: input_test.c
+kinetic_test.o: kinetic_test.c
 	$(CC) -c $< $(CFLAGS) -o kinetic_test.o
+
+integration_test.o: integration_test.c
+	$(CC) -c $< $(CFLAGS) -o integration_test.o
 
 # dependencies
 #ljmd.o: ljmd.c 
