@@ -35,6 +35,8 @@ int get_a_line(FILE *fp, char *buf); // previously it was static
 int set_mdsys(mdsys_t *sys,char restfile[BLEN],char trajfile[BLEN],char ergfile[BLEN],char line[BLEN],int *nprint);
 
 int set_ic(mdsys_t *sys, char restfile[BLEN]);
+int set_ic_f(mdsys_t *sys, char restfile[BLEN]);
+
 
 /* helper function: zero out an array */
 void azzero(double *d, const int n); // previously it was static
