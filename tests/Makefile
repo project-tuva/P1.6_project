@@ -70,9 +70,9 @@ force_test: force_test.x
 	./force_test.x < force1.test 
 	diff -w force1.rest force1.out || exit 1
 	./force_test.x < force2.test 
-	diff -w force1.rest force2.out || exit 1 
+	diff -w force2.rest force2.out || exit 1 
 	./force_test.x < force3.test 
-	diff -w force1.rest force3.out || exit 1
+	diff -w force3.rest force3.out || exit 1
 
 integration_test: integration_test.x
 	./integration_test.x || exit 1 
