@@ -37,7 +37,6 @@ int set_mdsys(mdsys_t *sys,char restfile[BLEN],char trajfile[BLEN],char ergfile[
 int set_ic(mdsys_t *sys, char restfile[BLEN]);
 int set_ic_f(mdsys_t *sys, char restfile[BLEN]);
 
-
 /* helper function: zero out an array */
 void azzero(double *d, const int n); // previously it was static
 
@@ -59,7 +58,7 @@ void velverlet_2(mdsys_t *sys); // previously it was static
 
 /* append data to output. */
 void output(mdsys_t *sys, FILE *erg, FILE *traj); // previously it was static
-void test_output(mdsys_t *sys, char * namefile);
 
+void test_output(mdsys_t *sys, char * namefile);
 
 #endif

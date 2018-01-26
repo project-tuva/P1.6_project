@@ -32,3 +32,4 @@ void test_output(mdsys_t *sys, char *trajname)
 
   fclose(traj);
 }
+
