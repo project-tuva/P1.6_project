@@ -25,9 +25,9 @@ int main(void){
   char restfile[BLEN], trajfile[BLEN], ergfile[BLEN], line[BLEN];
   mdsys_t sys;
 
-  allocate_mdsys(&sys);
 
   set_mdsys(&sys,restfile, trajfile, ergfile, line, &nprint);
+  allocate_mdsys(&sys);
 
 
   set_ic(&sys, restfile);
