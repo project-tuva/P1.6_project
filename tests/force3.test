@@ -5,7 +5,7 @@
 0.2               # rcut in angstrom (expected interaction B<->C & A<->D)
 1                 # box length (in angstrom)
 force1.rest       # restart
-../examples/force3.out        # trajectory
+force3.out        # trajectory
 force3.dat        # energies
 1                 # nr MD steps
 5.0               # MD time step (in fs)
