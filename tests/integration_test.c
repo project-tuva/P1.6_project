@@ -38,7 +38,7 @@ int main(){
   double posiz[sys.natoms];
 
   
-  // Test 1: still particles
+  // TEST 1: still particles
   for (int i=0; i<sys.natoms; ++i){
     sys.rx[i]= ((double)rand()/(RAND_MAX)*sys.box); 
     sys.ry[i]= ((double)rand()/(RAND_MAX)*sys.box);
@@ -66,17 +66,14 @@ int main(){
   velverlet_2(&sys);
 
   // Check positions
- 
   fp = fopen("integration_test.out","w");
   fprintf(fp, "TEST 1: STILL PARTICLE\n");
-  
     for (int i=0; i<sys.natoms; ++i){
       if(fabs(posix[i]-sys.rx[i])>TOLERANCE){
 	fprintf(fp, "Test FAILED. Position rx for particle %d is not still.\n",
 		i);
 		return 1;
-      }
-     
+      }   
       else if(fabs(posiy[i]-sys.ry[i])>TOLERANCE){
 	fprintf(fp, "Test FAILED. Position ry for particle %d is not still.\n",
 		i);
@@ -92,7 +89,31 @@ int main(){
 	}
     }
     fclose(fp);
-  
+
+ // TEST 2: moving particles
+  for (int i=0; i<sys.natoms; ++i){
+    sys.rx[i]= ((double)rand()/(RAND_MAX)*sys.box); 
+    sys.ry[i]= ((double)rand()/(RAND_MAX)*sys.box);
+    sys.rz[i]= ((double)rand()/(RAND_MAX)*sys.box);
+    posix[i] =sys.rx[i];
+    posiy[i] =sys.ry[i];
+    posiz[i] =sys.rz[i];
+    /*
+    printf("%f %f\n", sys.rx[i], posix[i]);
+    printf("%f %f\n", sys.ry[i], posiy[i]);
+    printf("%f %f\n", sys.rz[i], posiz[i]);
+    */
+    sys.vx[i]=0.0;
+    sys.vy[i]=0.0;
+    sys.vz[i]=0.0;
+    
+    sys.fx[i]=0.0;
+    sys.fy[i]=0.0;
+    sys.fz[i]=0.0;
+    
+  }
+
+    
   // Deallocation
   free_mdsys(&sys);
   
