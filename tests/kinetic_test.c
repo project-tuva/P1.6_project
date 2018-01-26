@@ -25,15 +25,16 @@ int main(void)
     char restfile[BLEN], trajfile[BLEN], ergfile[BLEN], line[BLEN];
     FILE *fp,*traj,*erg;
     mdsys_t sys;
-    
-    set_mdsys(&sys, restfile[BLEN], trajfile[BLEN], ergfile[BLEN], line, &nprint);
-    set_ic_f(&sys, restfile[BLEN]);
 
     allocate_mdsys(&sys);
+     
+    set_mdsys(&sys, restfile[BLEN], trajfile[BLEN], ergfile[BLEN], line, &nprint);
+    
+    set_ic_f(&sys, restfile[BLEN]);
       
     ekin(&sys);
 
-    test_kinetic_output(&sys, traj);
+    test_output(&sys, traj);
 
     free_mdsys(&sys);
 
