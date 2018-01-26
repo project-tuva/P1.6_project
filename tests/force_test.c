@@ -28,9 +28,9 @@ int main(void){
 
   set_mdsys(&sys,restfile, trajfile, ergfile, line, &nprint);
 
-  set_ic(&sys, restfile);
-
   allocate_mdsys(&sys);
+
+  set_ic(&sys, restfile);
 
   force(&sys);
 
