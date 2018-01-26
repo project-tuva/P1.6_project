@@ -28,9 +28,9 @@ int main(void)
 
     allocate_mdsys(&sys);
      
-    set_mdsys(&sys, restfile[BLEN], trajfile[BLEN], ergfile[BLEN], line, &nprint);
+    set_mdsys(&sys, restfile, trajfile, ergfile, line, &nprint);
     
-    set_ic_f(&sys, restfile[BLEN]);
+    set_ic_f(&sys, restfile);
       
     ekin(&sys);
 
