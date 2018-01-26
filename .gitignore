@@ -6,3 +6,5 @@
 *.odt
 *~
 *.s
+examples/argon*.dat
+examples/argon*.xyz
