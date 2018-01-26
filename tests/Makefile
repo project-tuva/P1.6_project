@@ -13,22 +13,22 @@ LDLIBS=-lm
 SRC=$(wildcard ../src/*.c)
 OBJ=$(SRC:%.c=%.o)
 
-default: $(EXEDIR)/input_test.x $(EXEDIR)/kinetic_test.x $(EXEDIR)/integration_test.x $(EXEDIR)/force_test.x
+default: $(EXEDIR)/force_test.x $(EXEDIR)/input_test.x $(EXEDIR)/kinetic_test.x $(EXEDIR)/integration_test.x 
 
 clean:
 	rm -f *.mod *.o $(EXEDIR)/force_test.x $(EXEDIR)/input_test.x $(EXEDIR)/kinetic_test.x $(EXEDIR)/integration_test.x 
 
 # linker rule
-$(EXEDIR)/force_test.x: $(OBJ) force_test.o
+force_test.x: $(OBJ) force_test.o
 	$(CC) -o $@ $(CFLAGS) $^ $(LDLIBS)
 
-$(EXEDIR)/input_test.x: $(OBJ) input_test.o
+input_test.x: $(OBJ) input_test.o
 	$(CC) -o $@ $(CFLAGS) $^ $(LDLIBS)
 
-$(EXEDIR)/kinetic_test.x: $(OBJ) kinetic_test.o
+kinetic_test.x: $(OBJ) kinetic_test.o
 	$(CC) -o $@ $(CFLAGS) $^ $(LDLIBS)
 
-$(EXEDIR)/integration_test.x: $(OBJ) integration_test.o
+integration_test.x: $(OBJ) integration_test.o
 	$(CC) -o $@ $(CFLAGS) $^ $(LDLIBS)
 
 # compilation pattern rule for objects
@@ -51,3 +51,28 @@ integration_test.o: integration_test.c
 
 # dependencies
 #ljmd.o: ljmd.c 
+
+check: input_test kinetic_test force_test integration_test
+
+input_test: input_test.x
+	./input_test.x < input_test.inp
+	diff -w input_test.inp input_test.out
+
+kinetic_test: kinetic_test.x
+	./kinetic_test.x < kinetic1.test 
+	diff -w kinetic.rest kinetic1.out || exit 1
+	./kinetic_test.x < kinetic2.test 
+	diff -w kinetic.rest kinetic2.out || exit 1 
+	./kinetic_test.x < kinetic3.test 
+	diff -w kinetic.rest kinetic3.out || exit 1
+
+force_test: force_test.x
+	./force_test.x < force1.test 
+	diff -w force1.rest force1.out || exit 1
+	./force_test.x < force2.test 
+	diff -w force1.rest force2.out || exit 1 
+	./force_test.x < force3.test 
+	diff -w force1.rest force3.out || exit 1
+
+integration_test: integration_test.x
+	./integration_test.x || exit 1 
