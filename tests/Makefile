@@ -13,7 +13,11 @@ LDLIBS=-lm
 SRC=$(wildcard ../src/*.c)
 OBJ=$(SRC:%.c=%.o)
 
+<<<<<<< HEAD
 default: $(EXEDIR)/input_test.x $(EXEDIR)/kinetic_test.x $(EXEDIR)/integration_test.x $(EXEDIR)/force_test.x
+=======
+default: $(EXEDIR)/force_test.x $(EXEDIR)/input_test.x $(EXEDIR)/kinetic_test.x $(EXEDIR)/integration_test.x 
+>>>>>>> compiling test
 
 clean:
 	rm -f *.mod *.o $(EXEDIR)/force_test.x $(EXEDIR)/input_test.x $(EXEDIR)/kinetic_test.x $(EXEDIR)/integration_test.x 
