@@ -24,11 +24,9 @@ int main(void){
   int nprint;
   char restfile[BLEN], trajfile[BLEN], ergfile[BLEN], line[BLEN];
   mdsys_t sys;
-
-
+  
   set_mdsys(&sys,restfile, trajfile, ergfile, line, &nprint);
   allocate_mdsys(&sys);
-
 
   set_ic(&sys, restfile);
 
@@ -37,8 +35,6 @@ int main(void){
   test_output(&sys, trajfile);
 
   free_mdsys(&sys);
-
-
 
   return 0;
 }

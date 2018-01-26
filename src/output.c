@@ -23,6 +23,7 @@ void test_output(mdsys_t *sys, char *trajname)
   traj = fopen(trajname, "w");
   
   printf( "Starting force test with %d atoms for %d steps.\n",sys->natoms, sys->nsteps);
+
   for (i=0; i<sys->natoms; ++i) {
     fprintf(traj, "%.5f %.5f %.5f\n %.5f %.5f %.5f\n %.5f %.5f %.5f\n",\
 	    sys->rx[i], sys->ry[i], sys->rz[i],\
@@ -33,23 +34,4 @@ void test_output(mdsys_t *sys, char *trajname)
   fclose(traj);
 }
 
-<<<<<<< HEAD
-=======
-void test_kinetic_output(mdsys_t *sys,char *trajname)
-{
-  int i;
-  FILE * traj;
-  traj = fopen(trajname, "w");
-  printf("Starting kinetic test %d atoms for %d steps.\n",sys->natoms,sys->nsteps);
-  printf(" ID     x     y     z\
-                   vx     vy    vz\
-                   fx     fy    fz\n ");
-  for (i=0; i<sys->natoms; ++i) {
-    fprintf(traj, "%d %20.8f %20.8f %20.8f %20.8f %20.8f %20.8f %20.8f %20.8f %20.8f\n",\
-	    i, sys->rx[i], sys->ry[i], sys->rz[i],\
-	    sys->vx[i], sys->vy[i], sys->vz[i],\
-	    sys->fx[i], sys->fy[i], sys->fz[i]);
-  }
-  fclose(traj);
-}
->>>>>>> compiling test
+
