@@ -3,7 +3,7 @@
 0.2379            # epsilon in kcal/mol
 3.405             # sigma in angstrom
 0.07             # rcut in angstrom (expected interaction B<->C)
-1                 # box length (in angstrom)
+1.0                 # box length (in angstrom)
 force1.rest       # restart
 force2.out        # trajectory
 force2.dat        # energies

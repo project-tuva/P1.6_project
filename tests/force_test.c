@@ -25,16 +25,16 @@ int main(void){
   char restfile[BLEN], trajfile[BLEN], ergfile[BLEN], line[BLEN];
   mdsys_t sys;
 
+  allocate_mdsys(&sys);
 
   set_mdsys(&sys,restfile, trajfile, ergfile, line, &nprint);
 
-  set_ic(&sys, restfile);
 
-  allocate_mdsys(&sys);
+  set_ic(&sys, restfile);
 
   force(&sys);
 
-  test_forces_output(&sys, trajfile);
+  test_output(&sys, trajfile);
 
   free_mdsys(&sys);
 
