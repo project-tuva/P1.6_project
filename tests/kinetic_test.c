@@ -23,19 +23,10 @@ int main(void)
   {
     int nprint;
     char restfile[BLEN], trajfile[BLEN], ergfile[BLEN], line[BLEN];
-<<<<<<< HEAD
 
-    mdsys_t sys;
-     
-    set_mdsys(&sys, restfile, trajfile, ergfile, line, &nprint);
-
-=======
- 
     mdsys_t sys;
     
     set_mdsys(&sys, restfile, trajfile, ergfile, line, &nprint);
-    set_ic_f(&sys, restfile);
->>>>>>> compiling test
 
     allocate_mdsys(&sys);
     
@@ -43,11 +34,7 @@ int main(void)
       
     ekin(&sys);
 
-<<<<<<< HEAD
     test_output(&sys, trajfile);
-=======
-    test_kinetic_output(&sys, trajfile);
->>>>>>> compiling test
 
     free_mdsys(&sys);
 

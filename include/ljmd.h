@@ -58,12 +58,6 @@ void velverlet_2(mdsys_t *sys); // previously it was static
 
 /* append data to output. */
 void output(mdsys_t *sys, FILE *erg, FILE *traj); // previously it was static
-<<<<<<< HEAD
-=======
-void test_forces_output(mdsys_t *sys, char * namefile);
-void test_kinetic_output(mdsys_t *sys, char *trajname);
->>>>>>> compiling test
-
 void test_output(mdsys_t *sys, char * namefile);
 
 #endif
