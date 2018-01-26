@@ -34,7 +34,7 @@ int main(void){
 
   force(&sys);
 
-  test_forces_output(&sys, trajfile);
+  test_output(&sys, trajfile);
 
   free_mdsys(&sys);
 
