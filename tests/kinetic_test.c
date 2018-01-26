@@ -21,20 +21,19 @@ force3.test: if r in [0.1, 0.395) B<->C & A<->D
 
 int main(void)
   {
-    int nprint, i;
+    int nprint;
     char restfile[BLEN], trajfile[BLEN], ergfile[BLEN], line[BLEN];
-    FILE *fp,*traj,*erg;
     mdsys_t sys;
-
-    allocate_mdsys(&sys);
      
     set_mdsys(&sys, restfile, trajfile, ergfile, line, &nprint);
+
+    allocate_mdsys(&sys);
     
     set_ic_f(&sys, restfile);
       
     ekin(&sys);
 
-    test_output(&sys, traj);
+    test_output(&sys, trajfile);
 
     free_mdsys(&sys);
 
