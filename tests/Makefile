@@ -44,4 +44,4 @@ kinetic_test.o: input_test.c
 	$(CC) -c $< $(CFLAGS) -o kinetic_test.o
 
 # dependencies
-#ljmd.o: ljmd.c
+#ljmd.o: ljmd.c 
