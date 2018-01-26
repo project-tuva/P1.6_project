@@ -23,12 +23,20 @@ void test_output(mdsys_t *sys, char *trajname)
   traj = fopen(trajname, "w");
   
   printf( "Starting force test with %d atoms for %d steps.\n",sys->natoms, sys->nsteps);
+
   for (i=0; i<sys->natoms; ++i) {
-    fprintf(traj, "%.5f %.5f %.5f\n %.5f %.5f %.5f\n %.5f %.5f %.5f\n",\
-	    sys->rx[i], sys->ry[i], sys->rz[i],\
-	    sys->vx[i], sys->vy[i], sys->vz[i],\
-	    sys->fx[i], sys->fy[i], sys->fz[i]);
+    fprintf(traj, "%.5f %.5f %.5f\n", sys->rx[i], sys->ry[i], sys->rz[i]);
   }
 
+  for (i=0; i<sys->natoms; ++i) {
+    fprintf(traj, "%.5f %.5f %.5f\n", sys->vx[i], sys->vy[i], sys->vz[i]);
+  }
+
+  for (i=0; i<sys->natoms; ++i) {
+    fprintf(traj, "%.5f %.5f %.5f\n", sys->fx[i], sys->fy[i], sys->fz[i]);
+  }
+  
   fclose(traj);
 }
+
+
