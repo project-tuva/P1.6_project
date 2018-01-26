@@ -13,7 +13,7 @@ LDLIBS=-lm
 SRC=$(wildcard ../src/*.c)
 OBJ=$(SRC:%.c=%.o)
 
-default: $(EXEDIR)/input_test.x $(EXEDIR)/kinetic_test.x $(EXEDIR)/integration_test.x 
+default: $(EXEDIR)/input_test.x $(EXEDIR)/kinetic_test.x $(EXEDIR)/integration_test.x $(EXEDIR)/force_test.x
 
 clean:
 	rm -f *.mod *.o $(EXEDIR)/force_test.x $(EXEDIR)/input_test.x $(EXEDIR)/kinetic_test.x $(EXEDIR)/integration_test.x 
