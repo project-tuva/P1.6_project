@@ -46,7 +46,7 @@ void test_kinetic_output(mdsys_t *sys, FILE *traj)
                    vx     vy    vz\
                    fx     fy    fz\n ");
   for (i=0; i<sys->natoms; ++i) {
-    fprintf(traj, "%20.8f %20.8f %20.8f %20.8f %20.8f %20.8f %20.8f %20.8f %20.8f\n",\
+    fprintf(traj, "%d %20.8f %20.8f %20.8f %20.8f %20.8f %20.8f %20.8f %20.8f %20.8f\n",\
 	    i, sys->rx[i], sys->ry[i], sys->rz[i],\
 	    sys->vx[i], sys->vy[i], sys->vz[i],\
 	    sys->fx[i], sys->fy[i], sys->fz[i]);
