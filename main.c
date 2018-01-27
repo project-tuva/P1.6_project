@@ -10,12 +10,13 @@
 #include <stdlib.h>
 #include <math.h>
 #include <ljmd.h>
+
 /*include mpi.h iff compiled with mpicc -D _MPI=1*/
 #ifdef _MPI
 #include <mpi.h>
 #endif
 
-/*debugging constants*/
+/*debugging constants MPI code*/
 #define D_MPI_INIT 0
 /**/
 

@@ -16,6 +16,7 @@ static const double mvsq2e=2390.05736153349; /* m*v^2 in kcal/mol */
 // Data
 /* structure to hold the complete information
  * about the MD system */
+#ifndef _MPI
 struct _mdsys {
   int natoms,nfi,nsteps;
   double dt, mass, epsilon, sigma, box, rcut;
@@ -24,6 +25,18 @@ struct _mdsys {
   double *vx, *vy, *vz;
   double *fx, *fy, *fz;
 };
+#else
+struct _mdsys {
+  int natoms,nfi,nsteps;
+  double dt, mass, epsilon, sigma, box, rcut;
+  double ekin, epot, temp;
+  double *rx, *ry, *rz;
+  double *vx, *vy, *vz;
+  double *fx, *fy, *fz;
+  double *cx, *cy, *cz;
+};
+#endif /*defined _MPI*/
+
 typedef struct _mdsys mdsys_t;
 
 // Methods
