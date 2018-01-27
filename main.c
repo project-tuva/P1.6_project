@@ -17,7 +17,8 @@
 #include <ljmd.h>
 
 /*debugging constants MPI code*/
-#define D_MPI_INIT 0
+#define D_MPI_INIT 1
+#define D_NSIZE 1
 /**/
 
 
@@ -32,14 +33,12 @@ int main(int argc, char **argv)
   MPI_Comm_size(MPI_COMM_WORLD, &size);
 #endif /*_MPI*/
 
-#if defined(_MPI) && defined(D_MPI_INIT)
+#if defined(_MPI) && (D_MPI_INIT)
   printf("\n------------------\n");
   printf("Hello from process %d out of %d\n", rank, size);
   printf("-------------------\n");
-
-  
-  MPI_Finalize();
-  return 0;
+  // MPI_Finalize();
+  //return 0;
 #endif /*defined(_MPI) && defined(D_MPI_INIT)*/
 
   
@@ -47,13 +46,17 @@ int main(int argc, char **argv)
     char restfile[BLEN], trajfile[BLEN], ergfile[BLEN], line[BLEN];
     FILE *traj,*erg;
     mdsys_t sys;
-
+    
+    // PROBLEMA PERCHE SOLO PROCESSO 0 LEGGE STDIN E GLI ALTRI RESTANO A BOCCA ASCIUTTA!
     /* sets the system usyn parameters in stdin */
     set_mdsys(&sys,restfile,trajfile,ergfile,line,&nprint);
     
-#ifdef _MPI
+#if defined ( _MPI) && defined(D_NSIZE) 
     /*util: set nsize=n atoms assigned to this process*/
     set_nsize(&sys, rank, size);
+    printf("this is rank %d with %d particles\n", rank, sys.nsize);
+    MPI_Finalize();
+    return 0;
 #endif
 
     /* allocate memory */
