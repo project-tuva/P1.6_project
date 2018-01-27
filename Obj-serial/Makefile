@@ -8,8 +8,8 @@ HEADDIR=$(ROOT)/include
 SHELL=/bin/sh
 CC=gcc
 CFLAGS=-Wall -std=c99 -O3 -ffast-math  -pg -g -fno-pie -I$(HEADDIR)
-#CFLAGS=-Wall -g -std=c99 -O3 -ffast-math -fomit-frame-pointer -I$(HEADDIR)
 LDLIBS=-lm -pg -fno-pie
+#CFLAGS=-Wall -g -std=c99 -O3 -ffast-math -fomit-frame-pointer -I$(HEADDIR)
 #LDLIBS=-lm
 
 MAIN=$(ROOT)/main
