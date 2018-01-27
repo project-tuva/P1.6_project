@@ -4,17 +4,17 @@
  *
  */
 
+/*include mpi.h iff compiled with mpicc -D _MPI=1*/
+#ifdef _MPI
+#include <mpi.h>
+#endif
+
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <math.h>
 #include <ljmd.h>
-
-/*include mpi.h iff compiled with mpicc -D _MPI=1*/
-#ifdef _MPI
-#include <mpi.h>
-#endif
 
 /*debugging constants MPI code*/
 #define D_MPI_INIT 0
@@ -36,6 +36,8 @@ int main(int argc, char **argv)
   printf("\n------------------\n");
   printf("Hello from process %d out of %d\n", rank, size);
   printf("-------------------\n");
+
+  set_nsize(&sys);
   MPI_Finalize();
   return 0;
 #endif /*defined(_MPI) && defined(D_MPI_INIT)*/

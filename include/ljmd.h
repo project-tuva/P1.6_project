@@ -27,7 +27,7 @@ struct _mdsys {
 };
 #else
 struct _mdsys {
-  int natoms,nfi,nsteps;
+  int natoms,nsize,nfi,nsteps; /*added nsize: n of atoms processed by the current process*/
   double dt, mass, epsilon, sigma, box, rcut;
   double ekin, epot, temp;
   double *rx, *ry, *rz;
@@ -56,11 +56,17 @@ void azzero(double *d, const int n); // previously it was static
 /* helper function: apply minimum image convention */
 double pbc(double x, const double boxby2);
 
-/* compute kinetic energy */
-void ekin(mdsys_t *sys); // previously it was static
-
+/* helper functions: malloc and free memory for r v f for all the particles */
 void allocate_mdsys(mdsys_t *sys);
 void free_mdsys(mdsys_t *sys);
+
+/*helper function: evaluate nsize= num of atoms assigned to the current process*/
+#ifdef _MPI
+void set_nsize(mdsys_t * sys, int rank, int size);
+#endif /*defined _MPI*/
+
+/* compute kinetic energy */
+void ekin(mdsys_t *sys); // previously it was static
 
 /* compute forces */
 void force(mdsys_t *sys); // previously it was static

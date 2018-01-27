@@ -54,31 +54,40 @@ void allocate_mdsys(mdsys_t *sys){
 void free_mdsys(mdsys_t *sys){
 
   free(sys->rx);
-  sys_rx=NULL;
+  sys->rx=NULL;
   free(sys->ry);
-  sys_ry=NULL;
+  sys->ry=NULL;
   free(sys->rz);
-  sys_rz=NULL;
+  sys->rz=NULL;
   free(sys->vx);
-  sys_vx=NULL;
+  sys->vx=NULL;
   free(sys->vy);
-  sys_vy=NULL;
+  sys->vy=NULL;
   free(sys->vz);
-  sys_vz=NULL;
+  sys->vz=NULL;
   free(sys->fx);
-  sys_fx=NULL;
+  sys->fx=NULL;
   free(sys->fy);
-  sys_fy=NULL;
+  sys->fy=NULL;
   free(sys->fz);
-  sys_fz=NULL;
+  sys->fz=NULL;
 #ifdef _MPI
   free(sys->cx);
-  sys_cx=NULL;
+  sys->cx=NULL;
   free(sys->cy);
-  sys_cy=NULL;
+  sys->cy=NULL;
   free(sys->cz);
-  sys_cz=NULL;
+  sys->cz=NULL;
 #endif /*defined _MPI*/
 
 }
 
+#ifdef _MPI
+void set_nsize(mdsys_t * sys, int rank, int size){
+
+  sys->nsize = sys->natoms/size; 
+
+  if(rank < sys->natoms % size) /*manage remainders*/
+    sys->nsize+=1;
+}
+#endif /*defined _MPI*/
