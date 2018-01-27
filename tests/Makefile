@@ -7,8 +7,10 @@ HEADDIR=$(ROOT)/include
 # -*- Makefile -*-
 SHELL=/bin/sh
 CC=gcc
-CFLAGS=-Wall -g -std=c99 -O3 -ffast-math -fomit-frame-pointer -I$(HEADDIR)
-LDLIBS=-lm
+CFLAGS=-Wall -std=c99 -O3 -ffast-math  -pg -g -fno-pie -I$(HEADDIR)
+#CFLAGS=-Wall -g -std=c99 -O3 -ffast-math -fomit-frame-pointer -I$(HEADDIR)
+LDLIBS=-lm -pg -fno-pie
+#LDLIBS=-lm
 
 SRC=$(wildcard ../src/*.c)
 OBJ=$(SRC:%.c=%.o)
