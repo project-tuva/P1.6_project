@@ -10,7 +10,7 @@ CC=mpicc
 CFLAGS=-Wall -g -std=c99 -O3 -ffast-math -fomit-frame-pointer -I$(HEADDIR) -D _MPI=1
 LDLIBS=-lm -lrt
 
-MAIN=$(ROOT)/ljmd_MPI
+MAIN=$(ROOT)/main
 
 SRC=$(wildcard ../src/*.c)
 OBJ=$(SRC:%.c=%.o)
