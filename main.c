@@ -16,7 +16,7 @@
 #endif
 
 /*debugging constants*/
-#define D_MPI_INIT 1
+#define D_MPI_INIT 0
 /**/
 
 
@@ -35,11 +35,14 @@ int main(int argc, char **argv)
   printf("\n------------------\n");
   printf("Hello from process %d out of %d\n", rank, size);
   printf("-------------------\n");
+  MPI_Finalize();
+  return 0;
 #endif /*defined(_MPI) && defined(D_MPI_INIT)*/
+
   
-  int nprint, i;
+  int nprint;
     char restfile[BLEN], trajfile[BLEN], ergfile[BLEN], line[BLEN];
-    FILE *fp,*traj,*erg;
+    FILE *traj,*erg;
     mdsys_t sys;
 
     /* sets the system usyn parameters in stdin */
