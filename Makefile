@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-SHELL=/bin/sh
+SHELL=/bin/bash
 ############################################
 # derived makefile variables
 OBJ_SERIAL=$(SRC:src/%.f90=Obj-serial/%.o)
@@ -15,5 +15,5 @@ clean:
 	$(MAKE) $(MFLAGS) -C examples clean
 	$(MAKE) $(MFLAGS) -C tests clean
 
-check: serial
+check: serial 
 	$(MAKE) $(MFLAGS) -C examples check

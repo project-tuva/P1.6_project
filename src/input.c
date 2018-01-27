@@ -64,15 +64,15 @@ int set_mdsys(mdsys_t *sys,char restfile[BLEN],char trajfile[BLEN],char ergfile[
 int set_ic(mdsys_t *sys, char restfile[BLEN]){
 
   FILE *fp;
-  int i;
+  int i,foo;
   
   fp=fopen(restfile,"r");
   if(fp){
     for (i=0; i<sys->natoms; ++i) {
-      fscanf(fp,"%lf%lf%lf",sys->rx+i, sys->ry+i, sys->rz+i);
+      foo=fscanf(fp,"%lf%lf%lf",sys->rx+i, sys->ry+i, sys->rz+i);
     }
     for (i=0; i<sys->natoms; ++i) {
-      fscanf(fp,"%lf%lf%lf",sys->vx+i, sys->vy+i, sys->vz+i);
+      foo=fscanf(fp,"%lf%lf%lf",sys->vx+i, sys->vy+i, sys->vz+i);
     }
     fclose(fp);
     azzero(sys->fx, sys->natoms);
@@ -83,6 +83,8 @@ int set_ic(mdsys_t *sys, char restfile[BLEN]){
     return 3;
   }
 
+  ++foo;
+
   return 0;  
   
 }
@@ -91,18 +93,18 @@ int set_ic(mdsys_t *sys, char restfile[BLEN]){
 int set_ic_f(mdsys_t *sys, char restfile[BLEN]){
 
   FILE *fp;
-  int i;
+  int i,foo;
   
   fp=fopen(restfile,"r");
   if(fp){
     for (i=0; i<sys->natoms; ++i) {
-      fscanf(fp,"%lf%lf%lf",sys->rx+i, sys->ry+i, sys->rz+i);
+      foo=fscanf(fp,"%lf%lf%lf",sys->rx+i, sys->ry+i, sys->rz+i);
     }
     for (i=0; i<sys->natoms; ++i) {
-      fscanf(fp,"%lf%lf%lf",sys->vx+i, sys->vy+i, sys->vz+i);
+      foo=fscanf(fp,"%lf%lf%lf",sys->vx+i, sys->vy+i, sys->vz+i);
     }
     for (i=0; i<sys->natoms; ++i) {
-      fscanf(fp,"%lf%lf%lf",sys->fx+i, sys->fy+i, sys->fz+i);
+      foo=fscanf(fp,"%lf%lf%lf",sys->fx+i, sys->fy+i, sys->fz+i);
     }
     fclose(fp);
   }  
@@ -110,6 +112,8 @@ int set_ic_f(mdsys_t *sys, char restfile[BLEN]){
     perror("cannot read restart file");
     return 3;
   }
+
+  ++foo;
 
   return 0;  
   
