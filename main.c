@@ -37,7 +37,7 @@ int main(int argc, char **argv)
   printf("Hello from process %d out of %d\n", rank, size);
   printf("-------------------\n");
 
-  set_nsize(&sys);
+  set_nsize(&sys, rank, size);
   MPI_Finalize();
   return 0;
 #endif /*defined(_MPI) && defined(D_MPI_INIT)*/
