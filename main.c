@@ -10,10 +10,34 @@
 #include <stdlib.h>
 #include <math.h>
 #include <ljmd.h>
+/*include mpi.h iff compiled with mpicc -D _MPI=1*/
+#ifdef _MPI
+#include <mpi.h>
+#endif
 
+/*debugging constants*/
+#define D_MPI_INIT 1
+/**/
+
+
+/* MAIN */
 int main(int argc, char **argv) 
 {
-    int nprint, i;
+#ifdef _MPI
+  // INITIALIZE MPI ENVIRONMENT
+  int size, rank;
+  MPI_Init(&argc, &argv);
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+#endif /*_MPI*/
+
+#if defined(_MPI) && defined(D_MPI_INIT)
+  printf("\n------------------\n");
+  printf("Hello from process %d out of %d\n", rank, size);
+  printf("-------------------\n");
+#endif /*defined(_MPI) && defined(D_MPI_INIT)*/
+  
+  int nprint, i;
     char restfile[BLEN], trajfile[BLEN], ergfile[BLEN], line[BLEN];
     FILE *fp,*traj,*erg;
     mdsys_t sys;
@@ -61,6 +85,10 @@ int main(int argc, char **argv)
     fclose(traj);
 
     free_mdsys(&sys);
+#ifdef _MPI    
+    //MPI FINALIZE
+    MPI_Finalize();
+#endif /*_MPI*/
 
     return 0;
 }

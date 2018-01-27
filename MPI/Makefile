@@ -7,7 +7,7 @@ HEADDIR=$(ROOT)/include
 # -*- Makefile -*-
 SHELL=/bin/bash
 CC=mpicc
-CFLAGS=-Wall -g -std=c99 -O3 -ffast-math -fomit-frame-pointer -I$(HEADDIR)
+CFLAGS=-Wall -g -std=c99 -O3 -ffast-math -fomit-frame-pointer -I$(HEADDIR) -D _MPI=1
 LDLIBS=-lm -lrt
 
 MAIN=$(ROOT)/ljmd_MPI
