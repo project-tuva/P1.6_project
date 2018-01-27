@@ -78,7 +78,12 @@ int set_ic(mdsys_t *sys, char restfile[BLEN]){
     azzero(sys->fx, sys->natoms);
     azzero(sys->fy, sys->natoms);
     azzero(sys->fz, sys->natoms);
-  } else {
+#ifdef _MPI
+    azzero(sys->cx, sys->natoms);
+    azzero(sys->cy, sys->natoms);
+    azzero(sys->cz, sys->natoms);
+#endif
+} else {
     perror("cannot read restart file");
     return 3;
   }
