@@ -92,8 +92,11 @@ int main(int argc, char **argv)
     set_ic(&sys,restfile);
 
 #if defined(_MPI) && (D_READ_IN)
-    
-    
+    if(rank==1){
+    for (int i =0; i<110;++i)
+      printf("\n%d \t %.5f \n", i, sysrx[i] );
+    }
+
     free_mdsys(&sys);
     MPI_Finalize();
     return 0;
