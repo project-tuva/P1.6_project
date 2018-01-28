@@ -21,6 +21,7 @@
 #define D_NSIZE 1
 #define D_ALLOC 0
 #define D_READ_IN 0
+#define D_FORCE 1
 /**/
 
 
@@ -104,7 +105,15 @@ int main(int argc, char **argv)
 
     /* initialize forces and energies.*/
     sys.nfi=0;
-    force(&sys);
+
+    force(&sys, rank, size);
+
+#if defined(_MPI) && (D_FORCE)
+    free_mdsys(&sys);
+    MPI_Finalize();
+    return 0;
+#endif
+
     ekin(&sys);
     
     erg=fopen(ergfile,"w");
