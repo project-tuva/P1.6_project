@@ -20,7 +20,7 @@
 #define D_MPI_INIT 1
 #define D_NSIZE 1
 #define D_ALLOC 0
-#define D_READ_IN 1
+#define D_READ_IN 0
 /**/
 
 
@@ -97,9 +97,9 @@ int main(int argc, char **argv)
       printf("\n%d \t %.5f \n", i, sysrx[i] );
     }
 
-    free_mdsys(&sys);
-    MPI_Finalize();
-    return 0;
+    //free_mdsys(&sys);
+    //MPI_Finalize();
+    //return 0;
 #endif
 
     /* initialize forces and energies.*/

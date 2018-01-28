@@ -1,10 +1,12 @@
 /*force_compute.c*/
 #include <ljmd.h>
 #include <math.h>
-
+#ifdef _MPI
+#include <mpi.h>
+#endif
 
 /* compute forces */
-void force(mdsys_t *sys){
+void force(mdsys_t *sys, int rank, int size){
     double r,ffac;
     double rx,ry,rz;
     int i,j;
@@ -15,11 +17,11 @@ void force(mdsys_t *sys){
     azzero(sys->fy,sys->natoms);
     azzero(sys->fz,sys->natoms);
 
-    for(i=0; i < (sys->natoms); ++i) {
-        for(j=0; j < (sys->natoms); ++j) {
+    for(i=rank; i < (sys->natoms)-1; i+=size) {
+        for(j=i+1; j < (sys->natoms); ++j) {
 
             /* particles have no interactions with themselves */
-            if (i==j) continue;
+            //if (i==j) continue;
 
             /* get distance between particle i and j */
             rx=pbc(sys->rx[i] - sys->rx[j], 0.5*sys->box);
@@ -41,4 +43,15 @@ void force(mdsys_t *sys){
             }
         }
     }
+
+
+    double * buf = (double*)malloc( 3*((sys->natoms) -2)*sizeof(double)); // fx fy fz
+    for(int i=0;i<size;++i){
+      
+      MPI_Bcast(buf, (sys->natoms), MPI_DOUBLE, i, sys->mpicomm);      
+      
+    }
+
+    free(buf);
+    buf=NULL;
 }

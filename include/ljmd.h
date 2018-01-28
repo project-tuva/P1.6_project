@@ -39,7 +39,7 @@ typedef struct _mdsys mdsys_t;
 // Methods
 /* helper function: read a line and then return
    the first string with whitespace stripped off */
-int get_a_line(FILE *fp, char *buf); // previously it was static
+int get_a_line(FILE *fp, char *buf); 
 
 /* set structure from input */
 int set_mdsys(mdsys_t *sys,char restfile[BLEN],char trajfile[BLEN],char ergfile[BLEN],char line[BLEN],int *nprint, int rank, int size);
@@ -48,7 +48,7 @@ int set_ic(mdsys_t *sys, char restfile[BLEN]);
 int set_ic_f(mdsys_t *sys, char restfile[BLEN]);
 
 /* helper function: zero out an array */
-void azzero(double *d, const int n); // previously it was static
+void azzero(double *d, const int n); 
 
 /* helper function: apply minimum image convention */
 double pbc(double x, const double boxby2);
@@ -63,17 +63,17 @@ int set_nsize(int natoms, int rank, int size);
 #endif /*defined _MPI*/
 
 /* compute kinetic energy */
-void ekin(mdsys_t *sys); // previously it was static
+void ekin(mdsys_t *sys); 
 
 /* compute forces */
-void force(mdsys_t *sys); // previously it was static
+void force(mdsys_t *sys, int rank, int size); 
 
 /* velocity verlet */
-void velverlet_1(mdsys_t *sys); // previously it was static
-void velverlet_2(mdsys_t *sys); // previously it was static
+void velverlet_1(mdsys_t *sys); 
+void velverlet_2(mdsys_t *sys); 
 
 /* append data to output. */
-void output(mdsys_t *sys, FILE *erg, FILE *traj); // previously it was static
+void output(mdsys_t *sys, FILE *erg, FILE *traj); 
 void test_output(mdsys_t *sys, char * namefile);
 
 #endif
