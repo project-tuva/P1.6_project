@@ -4,6 +4,9 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#ifdef _MPI
+#include <mpi.h>
+#endif /*defined _MPI*/
 
 // Constants
 /* generic file- or pathname buffer length */
@@ -28,6 +31,7 @@ struct _mdsys {
 #else
 struct _mdsys {
   int natoms,nsize,nfi,nsteps; /*added nsize: n of atoms processed by the current process*/
+  MPI_Comm mpicomm;
   double dt, mass, epsilon, sigma, box, rcut;
   double ekin, epot, temp;
   double *rx, *ry, *rz;
@@ -45,7 +49,7 @@ typedef struct _mdsys mdsys_t;
 int get_a_line(FILE *fp, char *buf); // previously it was static
 
 /* set structure from input */
-int set_mdsys(mdsys_t *sys,char restfile[BLEN],char trajfile[BLEN],char ergfile[BLEN],char line[BLEN],int *nprint);
+int set_mdsys(mdsys_t *sys,char restfile[BLEN],char trajfile[BLEN],char ergfile[BLEN],char line[BLEN],int *nprint, int rank, int size);
 
 int set_ic(mdsys_t *sys, char restfile[BLEN]);
 int set_ic_f(mdsys_t *sys, char restfile[BLEN]);
@@ -62,7 +66,7 @@ void free_mdsys(mdsys_t *sys);
 
 /*helper function: evaluate nsize= num of atoms assigned to the current process*/
 #ifdef _MPI
-void set_nsize(mdsys_t * sys, int rank, int size);
+int set_nsize(int natoms, int rank, int size);
 #endif /*defined _MPI*/
 
 /* compute kinetic energy */

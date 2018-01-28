@@ -51,12 +51,15 @@ int main(int argc, char **argv)
     
     // PROBLEMA PERCHE SOLO PROCESSO 0 LEGGE STDIN E GLI ALTRI RESTANO A BOCCA ASCIUTTA!
     /* sets the system usyn parameters in stdin */
-    set_mdsys(&sys,restfile,trajfile,ergfile,line,&nprint);
+    set_mdsys(&sys,restfile,trajfile,ergfile,line,&nprint, rank, size);
     
 #if defined ( _MPI) && defined(D_NSIZE) 
     /*util: set nsize=n atoms assigned to this process*/
-    set_nsize(&sys, rank, size);
-    printf("this is rank %d with %d particles\n", rank, sys.nsize);
+    //set_nsize(&sys, rank, size);
+    //    printf("this is rank %d with %d particles\n", rank, sys.nsize);
+    printf("Process %d out of %d data: %d \t %d \t %.5f \t %.5f \t %.5f \t %.5f \t %.5f",\
+	   rank, size,		\
+	   sys.natoms, sys.nsize, sys.mass, sys.epsilon, sys.sigma, sys.rcut, sys.box);    
     MPI_Finalize();
     return 0;
 #endif

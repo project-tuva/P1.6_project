@@ -5,7 +5,6 @@ utilities for main function in ljmd.c
 - ekin: compute kinetic energy
 - allocate_mdsys
 - free_mdsys 
-- set_nsize
 */
 #include <ljmd.h>
 
@@ -85,12 +84,5 @@ void free_mdsys(mdsys_t *sys){
 
 }
 
-#ifdef _MPI
-void set_nsize(mdsys_t * sys, int rank, int size){
 
-  sys->nsize = sys->natoms / size; 
 
-  if(rank < sys->natoms % size) /*manage remainders*/
-    sys->nsize += 1;
-}
-#endif /*defined _MPI*/
