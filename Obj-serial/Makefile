@@ -22,7 +22,7 @@ default: $(EXEDIR)/ljmd-serial.x
 
 
 clean:
-	rm -f *.mod *.o $(EXEDIR)/ljmd-serial.x $(OBJ)
+	rm -f *.mod *.o $(EXEDIR)/ljmd-serial.x $(OBJ) $(EXEDIR)/*.o 
 
 # linker rule
 $(EXEDIR)/ljmd-serial.x: $(OBJ) $(MAIN).o

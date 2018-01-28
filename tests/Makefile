@@ -16,7 +16,7 @@ OBJ=$(SRC:%.c=%.o)
 default: $(EXEDIR)/force_test.x $(EXEDIR)/input_test.x $(EXEDIR)/kinetic_test.x $(EXEDIR)/integration_test.x 
 
 clean:
-	rm -f *.mod *.o $(EXEDIR)/force_test.x $(EXEDIR)/input_test.x $(EXEDIR)/kinetic_test.x $(EXEDIR)/integration_test.x 
+	rm -f *.mod *.o *.out $(EXEDIR)/force_test.x $(EXEDIR)/input_test.x $(EXEDIR)/kinetic_test.x $(EXEDIR)/integration_test.x 
 
 # linker rule
 force_test.x: $(OBJ) force_test.o
