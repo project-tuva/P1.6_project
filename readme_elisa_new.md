@@ -113,9 +113,9 @@ Comparing to LAMMPS:
 natoms = 108 --> 3.6 s => 22% less :)
 natoms = 2912 --> 2.7 s => NOT done yet
 ------------------------------------------------------------------------
-## Case 6: Inline?
+## Case 6: Inline? :(
 
-* Time: 2.801 s
+* Time: 2.801 s (worse than Case 5, x9.95 faster)
 The command ```make check``` was successfully executed.
 
 
@@ -159,7 +159,29 @@ In this case it works but I think it's not inlined.
   0.00      0.74     0.00       12     0.00     0.00  get_a_line
 
 ```
+------------------------------------------------------------------------
+## Case 7: clang :(
+* Time: 2.932 s  (even worse than Case 5, x9.50 faster)
 
+```
+ %   cumulative   self              self     total           
+ time   seconds   seconds    calls  us/call  us/call  name    
+ 58.86      0.57     0.57    10001    57.09    96.14  force
+ 39.24      0.95     0.38 173357334     0.00     0.00  pbc
+  1.03      0.96     0.01    30006     0.33     0.33  azzero
+  1.03      0.97     0.01    10000     1.00     1.00  velverlet_1
+  0.00      0.97     0.00    10001     0.00     0.00  ekin
+  0.00      0.97     0.00    10000     0.00     0.00  velverlet_2
+  0.00      0.97     0.00      101     0.00     0.00  output
+  0.00      0.97     0.00       12     0.00     0.00  get_a_line
+  0.00      0.97     0.00       10     0.00     0.00  set_mdsys
+  0.00      0.97     0.00        2     0.00     0.00  cclock
+  0.00      0.97     0.00        1     0.00     0.00  allocate_mdsys
+  0.00      0.97     0.00        1     0.00     0.00  free_mdsys
+  0.00      0.97     0.00        1     0.00     1.00  set_ic
+  ```
+  Is not inline anything??
+------------------------------------------------------------------------
 
 
 gprof ljmd-serial.x | gprof2dot | dot -T png -o 4_callgraph.png

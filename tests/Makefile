@@ -6,11 +6,14 @@ HEADDIR=$(ROOT)/include
 
 # -*- Makefile -*-
 SHELL=/bin/sh
-CC=gcc
-CFLAGS=-Wall -std=c99 -O3 -ffast-math -pg -g -fno-pie -I$(HEADDIR)
-#CFLAGS=-Wall -std=c99 -O3 -ffast-math -fexpensive-optimizations -msse3 -pg -g -fno-pie -I$(HEADDIR)
-#CFLAGS=-Wall -std=c99 -O3 -ffast-math  -pg -g -fno-pie -I$(HEADDIR)
+CC=clang
+CFLAGS=-Wall -O3 -ffast-math -pg -g -fno-pie -I$(HEADDIR)
 LDLIBS=-lm -pg -fno-pie
+# Version 5
+#CC=gcc
+#CFLAGS=-Wall -std=c99 -O3 -ffast-math -pg -g -fno-pie -I$(HEADDIR)
+# -------------------------------------------------------------------------
+# Original version
 #CFLAGS=-Wall -g -std=c99 -O3 -ffast-math -fomit-frame-pointer -I$(HEADDIR)
 #LDLIBS=-lm
 
