@@ -87,7 +87,7 @@ int set_mdsys(mdsys_t *sys,char restfile[BLEN],char trajfile[BLEN],char ergfile[
 
 #ifdef _MPI
   MPI_Bcast(&sys->natoms, 1, MPI_INT, 0, sys->mpicomm);
-  sys->nsize = set_nsize(sys->natoms,rank,size); 
+  //sys->nsize = set_nsize(sys->natoms,rank,size); 
   MPI_Bcast(&sys->mass, 1, MPI_DOUBLE, 0, sys->mpicomm);
   MPI_Bcast(&sys->epsilon, 1, MPI_DOUBLE, 0, sys->mpicomm);
   MPI_Bcast(&sys->sigma, 1, MPI_DOUBLE, 0, sys->mpicomm);
@@ -102,6 +102,8 @@ int set_mdsys(mdsys_t *sys,char restfile[BLEN],char trajfile[BLEN],char ergfile[
   MPI_Bcast(nprint, 1, MPI_INT, 0, sys->mpicomm);
 
 #endif /*defined _MPI*/
+
+  sys->nsize = set_nsize(sys->natoms,rank,size);
 
   return 0;
 

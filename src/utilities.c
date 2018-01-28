@@ -41,9 +41,6 @@ alternative policy to avoid code replication:
 add and implement nstep=natoms/size to serial sys struct and use the same function
 for both the serial and the parallel case (size==1 for the serial one)
 */
-
-
-
 #ifdef _MPI
   sys->rx=(double *)malloc(sys->nsize*sizeof(double));
   sys->ry=(double *)malloc(sys->nsize*sizeof(double));
