@@ -117,20 +117,20 @@ int set_ic(mdsys_t *sys, char restfile[BLEN]){
   
   fp=fopen(restfile,"r");
   if(fp){
-    for (i=0; i<sys->natoms; ++i) {
+    for (i=0; i<sys->nsize; ++i) {
       foo=fscanf(fp,"%lf%lf%lf",sys->rx+i, sys->ry+i, sys->rz+i);
     }
-    for (i=0; i<sys->natoms; ++i) {
+    for (i=0; i<sys->nsize; ++i) {
       foo=fscanf(fp,"%lf%lf%lf",sys->vx+i, sys->vy+i, sys->vz+i);
     }
     fclose(fp);
-    azzero(sys->fx, sys->natoms);
-    azzero(sys->fy, sys->natoms);
-    azzero(sys->fz, sys->natoms);
+    azzero(sys->fx, sys->nsize);
+    azzero(sys->fy, sys->nsize);
+    azzero(sys->fz, sys->nsize);
 #ifdef _MPI
-    azzero(sys->cx, sys->natoms);
-    azzero(sys->cy, sys->natoms);
-    azzero(sys->cz, sys->natoms);
+    azzero(sys->cx, sys->nsize);
+    azzero(sys->cy, sys->nsize);
+    azzero(sys->cz, sys->nsize);
 #endif
 } else {
     perror("cannot read restart file");
