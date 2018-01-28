@@ -19,6 +19,7 @@
 /*debugging constants MPI code*/
 #define D_MPI_INIT 1
 #define D_NSIZE 1
+#define D_ALLOC 1
 /**/
 
 
@@ -71,12 +72,20 @@ int main(int argc, char **argv)
     }
   }
 
-  MPI_Finalize();
-    return 0;
+  // MPI_Finalize();
+  //return 0;
 #endif
 
     /* allocate memory */
     allocate_mdsys(&sys);
+
+#if defined(_MPI) && (D_ALLOC)
+    free_mdsys(&sys);
+    
+    MPI_Finalize();
+    return 0;
+#endif /* D_ALLOC */
+
 
     /* read restart - set initial conditions */
     set_ic(&sys,restfile);
