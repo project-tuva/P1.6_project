@@ -36,26 +36,12 @@ void ekin(mdsys_t *sys){
 }
 
 void allocate_mdsys(mdsys_t *sys){
-/*
-alternative policy to avoid code replication:
-add and implement nstep=natoms/size to serial sys struct and use the same function
-for both the serial and the parallel case (size==1 for the serial one)
-*/
+
 #ifdef _MPI
-  sys->rx=(double *)malloc(sys->nsize*sizeof(double));
-  sys->ry=(double *)malloc(sys->nsize*sizeof(double));
-  sys->rz=(double *)malloc(sys->nsize*sizeof(double));
-  sys->vx=(double *)malloc(sys->nsize*sizeof(double));
-  sys->vy=(double *)malloc(sys->nsize*sizeof(double));
-  sys->vz=(double *)malloc(sys->nsize*sizeof(double));
-  sys->fx=(double *)malloc(sys->nsize*sizeof(double));
-  sys->fy=(double *)malloc(sys->nsize*sizeof(double));
-  sys->fz=(double *)malloc(sys->nsize*sizeof(double));
-  //memory for cx cy cz 
-  sys->cx=(double *)malloc(sys->nsize*sizeof(double));
-  sys->cy=(double *)malloc(sys->nsize*sizeof(double));
-  sys->cz=(double *)malloc(sys->nsize*sizeof(double));
-#else
+  sys->cx=(double *)malloc(sys->natoms*sizeof(double));
+  sys->cy=(double *)malloc(sys->natoms*sizeof(double));
+  sys->cz=(double *)malloc(sys->natoms*sizeof(double));
+#endif /*defined _MPI*/
   sys->rx=(double *)malloc(sys->natoms*sizeof(double));
   sys->ry=(double *)malloc(sys->natoms*sizeof(double));
   sys->rz=(double *)malloc(sys->natoms*sizeof(double));
@@ -65,7 +51,6 @@ for both the serial and the parallel case (size==1 for the serial one)
   sys->fx=(double *)malloc(sys->natoms*sizeof(double));
   sys->fy=(double *)malloc(sys->natoms*sizeof(double));
   sys->fz=(double *)malloc(sys->natoms*sizeof(double));
-#endif /*defined _MPI*/
 }
 
 void free_mdsys(mdsys_t *sys){
