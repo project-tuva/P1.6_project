@@ -110,7 +110,7 @@ int set_mdsys(mdsys_t *sys,char restfile[BLEN],char trajfile[BLEN],char ergfile[
 }
 
 /* sets initial condition file named by the string restfile */
-int set_ic(mdsys_t *sys, char restfile[BLEN], int rank){
+int set_ic(mdsys_t *sys, char restfile[BLEN]){
 
   FILE *fp;
   int i,foo;
@@ -133,8 +133,7 @@ int set_ic(mdsys_t *sys, char restfile[BLEN], int rank){
     azzero(sys->cz, sys->natoms);
 #endif
 } else {
-    //    perror("cannot read restart file");
-    printf("Rank %d: cannot read restart file", rank);
+    perror("cannot read restart file");
     return 3;
   }
 

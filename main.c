@@ -89,7 +89,7 @@ int main(int argc, char **argv)
 
 
     /* read restart - set initial conditions */
-    set_ic(&sys,restfile, rank);
+    set_ic(&sys,restfile);
 
 #if defined(_MPI) && (D_READ_IN)
     
