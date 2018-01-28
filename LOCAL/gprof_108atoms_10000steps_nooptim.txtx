@@ -1,0 +1,205 @@
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  us/call  us/call  name    
+ 79.86      4.72     4.72    10001   471.94   577.04  force
+ 17.11      5.73     1.01 346714668     0.00     0.00  pbc
+  1.36      5.81     0.08    10000     8.01     8.01  velverlet_1
+  0.68      5.85     0.04    30006     1.33     1.33  azzero
+  0.68      5.89     0.04    10000     4.00     4.00  velverlet_2
+  0.34      5.91     0.02    10001     2.00     2.00  ekin
+  0.00      5.91     0.00      101     0.00     0.00  output
+  0.00      5.91     0.00       12     0.00     0.00  get_a_line
+  0.00      5.91     0.00        1     0.00     0.00  allocate_mdsys
+  0.00      5.91     0.00        1     0.00     0.00  free_mdsys
+  0.00      5.91     0.00        1     0.00     4.00  set_ic
+  0.00      5.91     0.00        1     0.00     0.00  set_mdsys
+
+ %         the percentage of the total running time of the
+time       program used by this function.
+
+cumulative a running sum of the number of seconds accounted
+ seconds   for by this function and those listed above it.
+
+ self      the number of seconds accounted for by this
+seconds    function alone.  This is the major sort for this
+           listing.
+
+calls      the number of times this function was invoked, if
+           this function is profiled, else blank.
+
+ self      the average number of milliseconds spent in this
+ms/call    function per call, if this function is profiled,
+	   else blank.
+
+ total     the average number of milliseconds spent in this
+ms/call    function and its descendents per call, if this
+	   function is profiled, else blank.
+
+name       the name of the function.  This is the minor sort
+           for this listing. The index shows the location of
+	   the function in the gprof listing. If the index is
+	   in parenthesis it shows where it would appear in
+	   the gprof listing if it were to be printed.
+
+Copyright (C) 2012-2015 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+		     Call graph (explanation follows)
+
+
+granularity: each sample hit covers 2 byte(s) for 0.17% of 5.91 seconds
+
+index % time    self  children    called     name
+                                                 <spontaneous>
+[1]    100.0    0.00    5.91                 main [1]
+                4.72    1.05   10001/10001       force [2]
+                0.08    0.00   10000/10000       velverlet_1 [4]
+                0.04    0.00   10000/10000       velverlet_2 [6]
+                0.02    0.00   10001/10001       ekin [7]
+                0.00    0.00       1/1           set_ic [8]
+                0.00    0.00     101/101         output [9]
+                0.00    0.00       1/1           set_mdsys [13]
+                0.00    0.00       1/1           allocate_mdsys [11]
+                0.00    0.00       1/1           free_mdsys [12]
+-----------------------------------------------
+                4.72    1.05   10001/10001       main [1]
+[2]     97.6    4.72    1.05   10001         force [2]
+                1.01    0.00 346714668/346714668     pbc [3]
+                0.04    0.00   30003/30006       azzero [5]
+-----------------------------------------------
+                1.01    0.00 346714668/346714668     force [2]
+[3]     17.1    1.01    0.00 346714668         pbc [3]
+-----------------------------------------------
+                0.08    0.00   10000/10000       main [1]
+[4]      1.4    0.08    0.00   10000         velverlet_1 [4]
+-----------------------------------------------
+                0.00    0.00       3/30006       set_ic [8]
+                0.04    0.00   30003/30006       force [2]
+[5]      0.7    0.04    0.00   30006         azzero [5]
+-----------------------------------------------
+                0.04    0.00   10000/10000       main [1]
+[6]      0.7    0.04    0.00   10000         velverlet_2 [6]
+-----------------------------------------------
+                0.02    0.00   10001/10001       main [1]
+[7]      0.3    0.02    0.00   10001         ekin [7]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[8]      0.0    0.00    0.00       1         set_ic [8]
+                0.00    0.00       3/30006       azzero [5]
+-----------------------------------------------
+                0.00    0.00     101/101         main [1]
+[9]      0.0    0.00    0.00     101         output [9]
+-----------------------------------------------
+                0.00    0.00      12/12          set_mdsys [13]
+[10]     0.0    0.00    0.00      12         get_a_line [10]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[11]     0.0    0.00    0.00       1         allocate_mdsys [11]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[12]     0.0    0.00    0.00       1         free_mdsys [12]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[13]     0.0    0.00    0.00       1         set_mdsys [13]
+                0.00    0.00      12/12          get_a_line [10]
+-----------------------------------------------
+
+ This table describes the call tree of the program, and was sorted by
+ the total amount of time spent in each function and its children.
+
+ Each entry in this table consists of several lines.  The line with the
+ index number at the left hand margin lists the current function.
+ The lines above it list the functions that called this function,
+ and the lines below it list the functions this one called.
+ This line lists:
+     index	A unique number given to each element of the table.
+		Index numbers are sorted numerically.
+		The index number is printed next to every function name so
+		it is easier to look up where the function is in the table.
+
+     % time	This is the percentage of the `total' time that was spent
+		in this function and its children.  Note that due to
+		different viewpoints, functions excluded by options, etc,
+		these numbers will NOT add up to 100%.
+
+     self	This is the total amount of time spent in this function.
+
+     children	This is the total amount of time propagated into this
+		function by its children.
+
+     called	This is the number of times the function was called.
+		If the function called itself recursively, the number
+		only includes non-recursive calls, and is followed by
+		a `+' and the number of recursive calls.
+
+     name	The name of the current function.  The index number is
+		printed after it.  If the function is a member of a
+		cycle, the cycle number is printed between the
+		function's name and the index number.
+
+
+ For the function's parents, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the function into this parent.
+
+     children	This is the amount of time that was propagated from
+		the function's children into this parent.
+
+     called	This is the number of times this parent called the
+		function `/' the total number of times the function
+		was called.  Recursive calls to the function are not
+		included in the number after the `/'.
+
+     name	This is the name of the parent.  The parent's index
+		number is printed after it.  If the parent is a
+		member of a cycle, the cycle number is printed between
+		the name and the index number.
+
+ If the parents of the function cannot be determined, the word
+ `<spontaneous>' is printed in the `name' field, and all the other
+ fields are blank.
+
+ For the function's children, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the child into the function.
+
+     children	This is the amount of time that was propagated from the
+		child's children to the function.
+
+     called	This is the number of times the function called
+		this child `/' the total number of times the child
+		was called.  Recursive calls by the child are not
+		listed in the number after the `/'.
+
+     name	This is the name of the child.  The child's index
+		number is printed after it.  If the child is a
+		member of a cycle, the cycle number is printed
+		between the name and the index number.
+
+ If there are any cycles (circles) in the call graph, there is an
+ entry for the cycle-as-a-whole.  This entry shows who called the
+ cycle (as parents) and the members of the cycle (as children.)
+ The `+' recursive calls entry shows the number of function calls that
+ were internal to the cycle, and the calls entry for each member shows,
+ for that member, how many times it was called from other members of
+ the cycle.
+
+Copyright (C) 2012-2015 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+Index by function name
+
+  [11] allocate_mdsys         [12] free_mdsys              [8] set_ic
+   [5] azzero                 [10] get_a_line             [13] set_mdsys
+   [7] ekin                    [9] output                  [4] velverlet_1
+   [2] force                   [3] pbc                     [6] velverlet_2

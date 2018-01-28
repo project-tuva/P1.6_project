@@ -82,6 +82,7 @@ Enabled at levels -O2, -O3, -Os.
 ```
 The command ```make check``` was successfully executed.
 
+------------------------------------------------------------------------
 ## Case 4: Optimizations -O3 and -ffast-math + math modifications
 * Time: 5.478 s (x5.08 faster)
 ```
@@ -94,13 +95,24 @@ The command ```make check``` was successfully executed.
   0.00      1.63     0.00       12     0.00     0.00  get_a_line
 
 ```
+------------------------------------------------------------------------
+## Case 5: Optimizations -O3 and -ffast-math + math modifications + Newton
+* Time: 2.794 s  (x9.97 faster)
+```
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ns/call  ns/call  name    
+ 74.85      0.65     0.65                             force
+ 23.03      0.85     0.20 173357334     1.16     1.16  pbc
+  2.30      0.87     0.02    30006   667.77   667.77  azzero
+  0.00      0.87     0.00       12     0.00     0.00  get_a_line
+
+```
 Comparing to LAMMPS:
-natoms = 108 --> 3.6 s => 34% more
-natoms = 2912 --> 2.7 s => 
-
-## Case 4: Optimizations -O3 and -ffast-math + math modifications + inline pbc
+natoms = 108 --> 3.6 s => 22% less :)
+natoms = 2912 --> 2.7 s => NOT done yet
+------------------------------------------------------------------------
+## Case 6: Inline?
 https://www.greenend.org.uk/rjk/tech/inline.html
-
 ```
 
 ```
