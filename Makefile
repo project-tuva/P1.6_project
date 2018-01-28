@@ -17,6 +17,7 @@ clean:
 	$(MAKE) $(MFLAGS) -C Obj-serial clean
 	$(MAKE) $(MFLAGS) -C examples clean
 	$(MAKE) $(MFLAGS) -C tests clean
+	$(MAKE) $(MFLAGS) -C MPI clean
 
 check: serial 
 	$(MAKE) $(MFLAGS) -C examples check

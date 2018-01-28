@@ -27,7 +27,9 @@ int main(int argc, char **argv)
 {
 #ifdef _MPI
   // INITIALIZE MPI ENVIRONMENT
-  int size, rank;
+  int size=1;
+  int rank=0;
+  
   MPI_Init(&argc, &argv);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
