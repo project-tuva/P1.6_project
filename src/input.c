@@ -37,9 +37,11 @@ int get_a_line(FILE *fp, char *buf)
 
 #ifdef _MPI
 int set_nsize(int natoms, int rank, int size){
-  int nsize = natoms / size;
+  int nsize;
+  nsize = natoms / size;
   if(rank < natoms % size) /*manage remainders*/
     ++nsize;
+  printf("\t\tRank %d out of %d: nsize = %d\n", rank, size, nsize);
   return nsize;
 }
 #endif /*defined _MPI*/
@@ -48,16 +50,19 @@ int set_nsize(int natoms, int rank, int size){
 
 int set_mdsys(mdsys_t *sys,char restfile[BLEN],char trajfile[BLEN],char ergfile[BLEN],char line[BLEN],int *nprint, int rank, int size){
 
+  //  printf("\nHello from rank %d out of %d", rank, size);
+
 #ifdef _MPI
   sys->mpicomm = MPI_COMM_WORLD;
+#endif /*defined MPI*/
 
   if(rank==0){
-#endif /*defined MPI*/
+    // printf("\nEXPECTED ONLY 0. Hello from rank %d out of %d\n\n\n", rank, size);
   /* read input file */
   if(get_a_line(stdin,line)) return 1;
-  sys->natoms=atoi(line); //
+  sys->natoms=atoi(line); 
   if(get_a_line(stdin,line)) return 1;
-  sys->mass=atof(line); // sys->mass sys->epsilon sys->sigma sys->rcut sys->box restfile trajfile ergfile sys->nsteps sys->dt *nprint
+  sys->mass=atof(line); 
   if(get_a_line(stdin,line)) return 1;
   sys->epsilon=atof(line);
   if(get_a_line(stdin,line)) return 1;
@@ -75,25 +80,26 @@ int set_mdsys(mdsys_t *sys,char restfile[BLEN],char trajfile[BLEN],char ergfile[
   sys->dt=atof(line);
   if(get_a_line(stdin,line)) return 1;
   *nprint=atoi(line);
+}
+  //  printf("\nAfter reading from stdin. Hello from rank %d out of %d\n\n\n", rank, size);        
 
-#ifdef _MPI  
-} // end if rank==0
 
-  /*broadcast input data to other processes*/
+
+#ifdef _MPI
   MPI_Bcast(&sys->natoms, 1, MPI_INT, 0, sys->mpicomm);
-  sys->nsize = set_nsize(sys->natoms, rank, size);
+  sys->nsize = set_nsize(sys->natoms,rank,size); 
   MPI_Bcast(&sys->mass, 1, MPI_DOUBLE, 0, sys->mpicomm);
   MPI_Bcast(&sys->epsilon, 1, MPI_DOUBLE, 0, sys->mpicomm);
   MPI_Bcast(&sys->sigma, 1, MPI_DOUBLE, 0, sys->mpicomm);
   MPI_Bcast(&sys->rcut, 1, MPI_DOUBLE, 0, sys->mpicomm);
   MPI_Bcast(&sys->box, 1, MPI_DOUBLE, 0, sys->mpicomm);
-  MPI_Bcast(&restfile, BLEN, MPI_CHAR, 0, sys->mpicomm);
-  MPI_Bcast(&trajfile, BLEN, MPI_CHAR, 0, sys->mpicomm);
-  MPI_Bcast(&ergfile, BLEN, MPI_CHAR, 0, sys->mpicomm);
+  MPI_Bcast(restfile, BLEN, MPI_CHAR, 0, sys->mpicomm);
+  MPI_Bcast(trajfile, BLEN, MPI_CHAR, 0, sys->mpicomm);
+  MPI_Bcast(ergfile, BLEN, MPI_CHAR, 0, sys->mpicomm);
   MPI_Bcast(&sys->nsteps, 1, MPI_INT, 0, sys->mpicomm);
   MPI_Bcast(&sys->dt, 1, MPI_DOUBLE, 0, sys->mpicomm);
   MPI_Bcast(&sys->mass, 1, MPI_DOUBLE, 0, sys->mpicomm);
-  MPI_Bcast(&nprint, 1, MPI_INT, 0, sys->mpicomm);
+  MPI_Bcast(nprint, 1, MPI_INT, 0, sys->mpicomm);
 
 #endif /*defined _MPI*/
 

@@ -25,11 +25,12 @@
 /* MAIN */
 int main(int argc, char **argv) 
 {
-#ifdef _MPI
-  // INITIALIZE MPI ENVIRONMENT
+
   int size=1;
   int rank=0;
-  
+
+#ifdef _MPI
+  // INITIALIZE MPI ENVIRONMENT                                                 
   MPI_Init(&argc, &argv);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -45,22 +46,32 @@ int main(int argc, char **argv)
 
   
   int nprint;
-    char restfile[BLEN], trajfile[BLEN], ergfile[BLEN], line[BLEN];
-    FILE *traj,*erg;
-    mdsys_t sys;
-    
-    // PROBLEMA PERCHE SOLO PROCESSO 0 LEGGE STDIN E GLI ALTRI RESTANO A BOCCA ASCIUTTA!
+  char restfile[BLEN], trajfile[BLEN], ergfile[BLEN], line[BLEN];
+  FILE *traj,*erg;
+  mdsys_t sys;
+#if defined(_MPI) && (D_NSIZE)
+  for(int i =0; i<size; ++i){
+    if(i==rank){    
+  printf("Process %d out of %d data: %d \t %d \t %.5f \n %.5f \t %.5f \t %.5f \t %.5f\n",\
+         rank, size,          \
+         sys.natoms, sys.nsize, sys.mass, sys.epsilon, sys.sigma, sys.rcut, sys.box);
+    }
+  }
+#endif
+  
     /* sets the system usyn parameters in stdin */
-    set_mdsys(&sys,restfile,trajfile,ergfile,line,&nprint, rank, size);
-    
-#if defined ( _MPI) && defined(D_NSIZE) 
-    /*util: set nsize=n atoms assigned to this process*/
-    //set_nsize(&sys, rank, size);
-    //    printf("this is rank %d with %d particles\n", rank, sys.nsize);
-    printf("Process %d out of %d data: %d \t %d \t %.5f \t %.5f \t %.5f \t %.5f \t %.5f",\
-	   rank, size,		\
-	   sys.natoms, sys.nsize, sys.mass, sys.epsilon, sys.sigma, sys.rcut, sys.box);    
-    MPI_Finalize();
+  set_mdsys(&sys,restfile,trajfile,ergfile,line,&nprint, rank, size);
+  
+#if defined(_MPI) && (D_NSIZE)
+  for (int i =0; i<size ;++i){
+    if(i==rank){
+  printf("LATER Process %d out of %d data: %d \t %d \t %.5f \n %.5f \t %.5f \t %.5f \t %.5f\n",\
+	 rank, size,          \
+	 sys.natoms, sys.nsize, sys.mass, sys.epsilon, sys.sigma, sys.rcut, sys.box);
+    }
+  }
+
+  MPI_Finalize();
     return 0;
 #endif
 
