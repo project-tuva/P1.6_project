@@ -5,7 +5,7 @@
  */
 
 /*include mpi.h iff compiled with mpicc -D _MPI=1*/
-#ifdef _MPI
+#ifdef  _MPI
 #include <mpi.h>
 #endif
 
@@ -19,7 +19,8 @@
 /*debugging constants MPI code*/
 #define D_MPI_INIT 1
 #define D_NSIZE 1
-#define D_ALLOC 1
+#define D_ALLOC 0
+#define D_READ_IN 1
 /**/
 
 
@@ -80,15 +81,23 @@ int main(int argc, char **argv)
     allocate_mdsys(&sys);
 
 #if defined(_MPI) && (D_ALLOC)
-    free_mdsys(&sys);
+    //    free_mdsys(&sys);
     
-    MPI_Finalize();
-    return 0;
+    //MPI_Finalize();
+    //return 0;
 #endif /* D_ALLOC */
 
 
     /* read restart - set initial conditions */
-    set_ic(&sys,restfile);
+    set_ic(&sys,restfile, rank);
+
+#if defined(_MPI) && (D_READ_IN)
+    
+    
+    free_mdsys(&sys);
+    MPI_Finalize();
+    return 0;
+#endif
 
     /* initialize forces and energies.*/
     sys.nfi=0;
