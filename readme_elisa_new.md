@@ -107,13 +107,56 @@ The command ```make check``` was successfully executed.
   0.00      0.87     0.00       12     0.00     0.00  get_a_line
 
 ```
+The command ```make check``` was successfully executed.
+
 Comparing to LAMMPS:
 natoms = 108 --> 3.6 s => 22% less :)
 natoms = 2912 --> 2.7 s => NOT done yet
 ------------------------------------------------------------------------
 ## Case 6: Inline?
+
+* Time: 2.801 s
+The command ```make check``` was successfully executed.
+
+
 https://www.greenend.org.uk/rjk/tech/inline.html
+"
+...
+(3) A C99 model.
+Use inline in a common header, and
+provide definitions in a .c file somewhere, via extern declarations.
+
+For instance, in the header file:
+inline int max(int a, int b) {
+  return a > b ? a : b;
+}
+...and in exactly one source file:
+#include "header.h"
+extern int max(int a, int b);
+In file included from ../src/verlet_2.c:3:0:
+../include/ljmd.h:45:15: warning: inline function ‘pbc’ declared but
+never defined
+ inline double pbc(double x, const double boxby2);
+
+To support legacy compilers, you have to swap the whole thing around so that
+- the declarations are visible in the common header and ("inline")
+- the definitions are restricted to a single translation unit,
+with inline defined away. ("extern")????
+"
+
+I swapped like that:
+-header (declar) --> extern double pbc(double x, const double boxby2);
+-src file (defin) --> inline double pbc(double x, const double boxby2){...
+
+In this case it works but I think it's not inlined.
 ```
+ %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ns/call  ns/call  name    
+ 70.40      0.52     0.52                             force
+ 25.72      0.71     0.19 173357334     1.10     1.10  pbc         !!!!!
+  2.71      0.73     0.02    30006   667.77   667.77  azzero
+  1.35      0.74     0.01                             velverlet_1
+  0.00      0.74     0.00       12     0.00     0.00  get_a_line
 
 ```
 
