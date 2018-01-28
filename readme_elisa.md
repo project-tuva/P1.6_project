@@ -1,22 +1,27 @@
 # INDIVIDUAL PART
 ## Introduction
 This section describes the code optimization.
-The main goal is to optimize the force computation, refactoring the code in order to avoid costly
-operations or redundant work. The improvements are documented with profiling/benchmark data.
+The main goal is to optimize the force computation, refactoring the code in
+order to avoid costly
+operations or redundant work. The improvements are documented with
+profiling/benchmark data.
 So two steps will be perfomed:
 1. Mapping, through the visualization of the call-tree and code coverage
-2. Profiling, analysing the code behaviour (hotspots, bottlenecks, resource utilization) and its
+2. Profiling, analysing the code behaviour (hotspots, bottlenecks, resource
+utilization) and its
 efficiency (instruction cycles/cycles, L1/L2/RAM hits, branch misses);
 
 ## Starting code
-After breaking down the single file ljmd.c into multiple files and updating the make
-process accordingly so that dependencies are properly applied, __gprof__ was used to produce the
-call-tree.
+After breaking down the single file ljmd.c into multiple files and updating
+the make process accordingly so that dependencies are properly applied,
+__gprof__ was used to produce the call-tree.
 
 The call-tree:
-* is a control flow graph that exhibits the calling relationship among routines in a program;
+* is a control flow graph that exhibits the calling relationship among
+routines in a program;
 * reports the cumulative number of calls.
-* a node in the graph represents a routine while an edge represent a calling relationship.
+* a node in the graph represents a routine while an edge represent a calling
+relationship.
 
 After compiling with ```make serial``` using the following flags:
 ```
@@ -43,14 +48,17 @@ time   seconds   seconds    calls  us/call  us/call  name
 0.00      5.91     0.00        1     0.00     0.00  set_mdsys
 ```
 The output given by gprof showed that:
-* Use of pbc() is convenient, but costs 17% (VS 25%)=> compiling with -O3 should inline it
-* Loops should be unrolled for superscalar CPUs => compiling with -O3 should do it for us
+* Use of pbc() is convenient, but costs 17% (VS 25%)=> compiling with -O3
+should inline it
+* Loops should be unrolled for superscalar CPUs => compiling with -O3
+should do it for us
 
 ## Compiler Optimization
 ### Use of -O3 --> PLOTTARE CALL-GRAPH
 After checking the energy conservation using ```make check```,  
 * Time now: 20 s (VS 39s) (1.4x faster)
-* gprof was run again to see the changes in the profiling; it can be noticed that
+* gprof was run again to see the changes in the profiling; it can be noticed
+that
 * * velverlet_1, ekin, output, allocate_mdsys, free_mdysys, set_ic and set_mdsys
 seem not to be called 
 * * more time is spent inside pbc
@@ -86,7 +94,8 @@ Newton's 3 rd law: F ij = -F ji
 Time now: 5.4s (9.0x faster))
 
 ## More Modifications
-Avoid expensive math: pow(), sqrt(), division => 108 atoms: 5 s (VS 4.0s) (5.6x faster)
+Avoid expensive math: pow(), sqrt(), division => 108 atoms: 5 s (VS 4.0s)
+(5.6x faster)
 
 
 
