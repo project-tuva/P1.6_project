@@ -90,7 +90,9 @@ int main(int argc, char **argv)
 
 
     /* read restart - set initial conditions */
+  if(rank==0){
     set_ic(&sys,restfile);
+  }
 
 #if defined(_MPI) && (D_READ_IN)
     if(rank==1){
@@ -132,10 +134,10 @@ int main(int argc, char **argv)
             output(&sys, erg, traj);
 
         /* propagate system and recompute energies */
-        velverlet_1(&sys);
+        velverlet_1(&sys); // only process 0
 	force(&sys, rank, size);
-	velverlet_2(&sys);
-        ekin(&sys);
+	velverlet_2(&sys); // only process 0
+        ekin(&sys);// only process 0
     }
     /**************************************************/
 

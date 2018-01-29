@@ -124,14 +124,14 @@ int set_ic(mdsys_t *sys, char restfile[BLEN]){
       foo=fscanf(fp,"%lf%lf%lf",sys->vx+i, sys->vy+i, sys->vz+i);
     }
     fclose(fp);
-    azzero(sys->fx, sys->natoms);
+    azzero(sys->fx, sys->natoms); // can be av.
     azzero(sys->fy, sys->natoms);
     azzero(sys->fz, sys->natoms);
-#ifdef _MPI
+#ifdef _MPI // can be avoided. just for check
     azzero(sys->cx, sys->natoms);
     azzero(sys->cy, sys->natoms);
     azzero(sys->cz, sys->natoms);
-#endif
+#endif 
 } else {
     perror("cannot read restart file");
     return 3;

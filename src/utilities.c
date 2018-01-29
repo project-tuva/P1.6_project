@@ -25,7 +25,7 @@ double pbc(double x, const double boxby2){
 
 
 /* compute kinetic energy */
-void ekin(mdsys_t *sys){
+void ekin(mdsys_t *sys){ // only process 1
     int i;
 
     sys->ekin=0.0;

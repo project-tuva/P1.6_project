@@ -27,9 +27,9 @@ void force(mdsys_t *sys, int rank, int size){
 
     /*each process computes the force for natoms/size(+1 if neeed) particles*/
     for(int i=rank; i < (sys->natoms)-1; i+=size) {
+
       printf("Process %d out of %d: dealing with particle %d\n", rank, size , i);
       for(int j=i+1; j < (sys->natoms); ++j) {
-	//for(int j=i+1; j < (sys->natoms); ++j) { // with N's law
 
             /* particles have no interactions with themselves */
             //if (i==j) continue; // to be activated if N's law is not exploited
