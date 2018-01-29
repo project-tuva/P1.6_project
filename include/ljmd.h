@@ -23,6 +23,7 @@ struct _mdsys {
   double *rx, *ry, *rz;
   double *vx, *vy, *vz;
   double *fx, *fy, *fz;
+  int nthreads;
 };
 typedef struct _mdsys mdsys_t;
 
