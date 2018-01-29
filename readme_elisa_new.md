@@ -256,7 +256,7 @@ icc: command line warning #10006: ignoring unknown option '-ffast-math'
 make[1]: Leaving directory `/scratch/ebortoli/P1.6_project/Obj-serial'
 ------------------------------------------------------------------------
 ## Case 10: gcc (default)
-* Time: 2.813 s (like Case 5, x9.90 faster)
+* Time: 2.784 s (WINNER!!! x10.01 faster)
 
 ```
   %   cumulative   self              self     total           
