@@ -38,10 +38,21 @@ void ekin(mdsys_t *sys){
 void allocate_mdsys(mdsys_t *sys){
 
 #ifdef _MPI
+  sys->rx=(double *)malloc(sys->natoms*sizeof(double));
+  sys->ry=(double *)malloc(sys->natoms*sizeof(double));
+  sys->rz=(double *)malloc(sys->natoms*sizeof(double));
   sys->cx=(double *)malloc(sys->natoms*sizeof(double));
   sys->cy=(double *)malloc(sys->natoms*sizeof(double));
   sys->cz=(double *)malloc(sys->natoms*sizeof(double));
-#endif /*defined _MPI*/
+  if(rank==0){
+  sys->vx=(double *)malloc(sys->natoms*sizeof(double));
+  sys->vy=(double *)malloc(sys->natoms*sizeof(double));
+  sys->vz=(double *)malloc(sys->natoms*sizeof(double));
+  sys->fx=(double *)malloc(sys->natoms*sizeof(double));
+  sys->fy=(double *)malloc(sys->natoms*sizeof(double));
+  sys->fz=(double *)malloc(sys->natoms*sizeof(double));
+  }
+#else /*defined _MPI*/
   sys->rx=(double *)malloc(sys->natoms*sizeof(double));
   sys->ry=(double *)malloc(sys->natoms*sizeof(double));
   sys->rz=(double *)malloc(sys->natoms*sizeof(double));
@@ -51,10 +62,39 @@ void allocate_mdsys(mdsys_t *sys){
   sys->fx=(double *)malloc(sys->natoms*sizeof(double));
   sys->fy=(double *)malloc(sys->natoms*sizeof(double));
   sys->fz=(double *)malloc(sys->natoms*sizeof(double));
+#endif /*defined _MPI*/
+
 }
 
 void free_mdsys(mdsys_t *sys){
-
+#ifdef _MPI
+  free(sys->rx);
+  sys->rx=NULL;
+  free(sys->ry);
+  sys->ry=NULL;
+  free(sys->rz);
+  sys->rz=NULL;
+  free(sys->cx);
+  sys->cx=NULL;
+  free(sys->cy);
+  sys->cy=NULL;
+  free(sys->cz);
+  sys->cz=NULL;
+  if(rank==0){
+  free(sys->vx);
+  sys->vx=NULL;
+  free(sys->vy);
+  sys->vy=NULL;
+  free(sys->vz);
+  sys->vz=NULL;
+  free(sys->fx);
+  sys->fx=NULL;
+  free(sys->fy);
+  sys->fy=NULL;
+  free(sys->fz);
+  sys->fz=NULL;
+  }
+#else
   free(sys->rx);
   sys->rx=NULL;
   free(sys->ry);
@@ -73,13 +113,6 @@ void free_mdsys(mdsys_t *sys){
   sys->fy=NULL;
   free(sys->fz);
   sys->fz=NULL;
-#ifdef _MPI
-  free(sys->cx);
-  sys->cx=NULL;
-  free(sys->cy);
-  sys->cy=NULL;
-  free(sys->cz);
-  sys->cz=NULL;
 #endif /*defined _MPI*/
 
 }

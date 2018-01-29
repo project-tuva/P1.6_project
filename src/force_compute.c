@@ -9,9 +9,10 @@
 void force(mdsys_t *sys, int rank, int size){
     double r,ffac;
     double rx,ry,rz;
-    MPI_Bcast(sys->rx, );
-    MPI_Bcast();
-    MPI_Bcast();
+    MPI_Bcast(sys->rx, sys->natoms, MPI_DOUBLE, 0, sys->mpicomm);
+    MPI_Bcast(sys->ry, sys->natoms, MPI_DOUBLE, 0, sys->mpicomm);
+    MPI_Bcast(sys->rz, sys->natoms, MPI_DOUBLE, 0, sys->mpicomm);
+
     /* zero energy and forces */
     sys->epot=0.0;
 #ifdef _MPI
@@ -67,6 +68,11 @@ void force(mdsys_t *sys, int rank, int size){
             } /*end of if r<rcut*/
         } /*end of for cycle on j*/
     } /*end of for cycle on i*/
-    MPI_Reduce(sys->cx, sys->fx, sys->natoms, MPI_DOUBLE, MPI_SUM, 0, sys->mpicomm);
 
+#ifdef _MPI
+    MPI_Reduce(sys->cx, sys->fx, sys->natoms, MPI_DOUBLE, MPI_SUM, 0, sys->mpicomm);
+    MPI_Reduce(sys->cy, sys->fy, sys->natoms, MPI_DOUBLE, MPI_SUM, 0, sys->mpicomm);
+    MPI_Reduce(sys->cz, sys->fz, sys->natoms, MPI_DOUBLE, MPI_SUM, 0, sys->mpicomm);
+    MPI_Reduce(&epot, &sys->epot, 1, MPI_DOUBLE, MPI_SUM, 0, sys->mpicomm);
+#endif
 }
