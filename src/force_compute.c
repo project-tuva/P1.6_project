@@ -33,11 +33,12 @@ void force(mdsys_t *sys, int rank, int size){
 
     int off=0; // offset to fill in bsend
     /*each process computes the force for natoms/size(+1 if neeed) particles*/
-    for(int i=rank; i < (sys->natoms)-1; i+=size) {
-        for(int j=i+1; j < (sys->natoms); ++j) {
+    for(int i=rank; i < (sys->natoms); i+=size) {
+      for(int j=0; j < (sys->natoms); ++j) {
+	//for(int j=i+1; j < (sys->natoms); ++j) { // with N's law
 
             /* particles have no interactions with themselves */
-            //if (i==j) continue; // managed by altering the cycling rules
+            if (i==j) continue; // to be activated if N's law is not exploited
 
             /* get distance between particle i and j */
             rx=pbc(sys->rx[i] - sys->rx[j], 0.5*sys->box);
@@ -78,15 +79,22 @@ void force(mdsys_t *sys, int rank, int size){
 	MPI_Bcast(bsend, dimbuff, MPI_DOUBLE, R, sys->mpicomm);
 
 	/*Copy buffer elements into the right memory cell in fx fy and fz*/
-	
+	off=0;
+	if( rank != R ){
+	  for(int kk=0; kk < sys->nsizes; ++kk){
+	    sys->fx[R*kk] = buf[kk*3];
+	    sys->fy[R*kk+1] = buf[kk*3+1];
+	    sys->fz[R*kk+2] = buf[kk*3+2];
+	  }
+	}
+
 
     } /*end of for loop on R (ranks)*/
 
 
     free(bsend);
     bsend=NULL;
-    free(brecv);
-    brecv=NULL;
+
 
 
 }
