@@ -9,37 +9,29 @@
 void force(mdsys_t *sys, int rank, int size){
     double r,ffac;
     double rx,ry,rz;
-
+    MPI_Bcast(sys->rx, );
+    MPI_Bcast();
+    MPI_Bcast();
     /* zero energy and forces */
     sys->epot=0.0;
+#ifdef _MPI
+    azzero(sys->cx,sys->natoms);
+    azzero(sys->cy,sys->natoms);
+    azzero(sys->cz,sys->natoms);
+#else
     azzero(sys->fx,sys->natoms);
     azzero(sys->fy,sys->natoms);
     azzero(sys->fz,sys->natoms);
+#endif
 
-
-    double * bsend;
-    //    double *recvb;
-    /*evaluate buffer size*/
-    int rem = sys->natoms % size;
-    int dimbuff;
-    int a=0;
-    if(rank>rem)
-      ++a;
-    dimbuff = 3* (sys->nsize + a);
-    
-    /*alloc memory for send and recv buffers*/
-    bsend = (double *)malloc(dimbuff*sizeof(double));
-    azzero(bsend, dimbuff);
-    //    recvb = (double *)malloc(dimbuff);
-
-    //int off=0; // offset to fill in bsend
     /*each process computes the force for natoms/size(+1 if neeed) particles*/
-    for(int i=rank; i < (sys->natoms); i+=size) {
-      for(int j=0; j < (sys->natoms); ++j) {
+    for(int i=rank; i < (sys->natoms)-1; i+=size) {
+      printf("Process %d out of %d: dealing with particle %d\n", rank, size , i);
+      for(int j>i+1; j < (sys->natoms); ++j) {
 	//for(int j=i+1; j < (sys->natoms); ++j) { // with N's law
 
             /* particles have no interactions with themselves */
-            if (i==j) continue; // to be activated if N's law is not exploited
+            //if (i==j) continue; // to be activated if N's law is not exploited
 
             /* get distance between particle i and j */
             rx=pbc(sys->rx[i] - sys->rx[j], 0.5*sys->box);
@@ -54,50 +46,27 @@ void force(mdsys_t *sys, int rank, int size){
 
                 sys->epot += 0.5*4.0*sys->epsilon*(pow(sys->sigma/r,12.0)
                                                -pow(sys->sigma/r,6.0));
-
+		
+#ifdef _MPI
+		sys->cx[i] += rx/r*ffac;
+                sys->cy[i] += ry/r*ffac;
+		sys->cz[i] += rz/r*ffac;
+                sys->cx[j] -= rx/r*ffac;
+                sys->cy[j] -= ry/r*ffac;
+                sys->cz[j] -= rz/r*ffac;
+#else
                 sys->fx[i] += rx/r*ffac;
                 sys->fy[i] += ry/r*ffac;
                 sys->fz[i] += rz/r*ffac;
+                sys->fx[j] -= rx/r*ffac;
+                sys->fy[j] -= ry/r*ffac;
+		sys->fz[j] -= rz/r*ffac;
+#endif
+
 
             } /*end of if r<rcut*/
         } /*end of for cycle on j*/
-
     } /*end of for cycle on i*/
-
-
-
-    /*Broadcast computed values to other processes*/
-    for(int R=0; R<size; ++R){
-      /*fill in bsend*/
-      if(rank==R){
-	for(int i=0; i < sys->nsize; ++i){
-	  bsend[i*3] = sys->fx[size*i];
-	  bsend[i*3+1] = sys->fy[size*i];
-	  bsend[i*3+2] = sys->fz[size*i];
-	  //++off;
-	} /*end of for loop on i to fill in bsend*/
-      }
-
-	/*Broadcast data from current rank to all other ranks*/
-	MPI_Bcast(bsend, dimbuff, MPI_DOUBLE, R, sys->mpicomm);
-
-	/*Copy buffer elements into the right memory cell in fx fy and fz*/
-	//off=0;
-	if( rank != R ){
-	  for(int kk=0; kk < sys->nsize; ++kk){
-	    sys->fx[R*kk] = bsend[kk*3];
-	    sys->fy[R*kk] = bsend[kk*3+1];
-	    sys->fz[R*kk] = bsend[kk*3+2];
-	  }
-	}
-
-
-    } /*end of for loop on R (ranks)*/
-
-
-    free(bsend);
-    bsend=NULL;
-
-
+    MPI_Reduce(sys->cx, sys->fx, sys->natoms, MPI_DOUBLE, MPI_SUM, 0, sys->mpicomm);
 
 }
