@@ -35,7 +35,7 @@ void ekin(mdsys_t *sys){
     sys->temp = 2.0*sys->ekin/(3.0*sys->natoms-3.0)/kboltz;
 }
 
-void allocate_mdsys(mdsys_t *sys){
+void allocate_mdsys(mdsys_t *sys, int rank, int size){
 
 #ifdef _MPI
   sys->rx=(double *)malloc(sys->natoms*sizeof(double));
@@ -66,7 +66,7 @@ void allocate_mdsys(mdsys_t *sys){
 
 }
 
-void free_mdsys(mdsys_t *sys){
+void free_mdsys(mdsys_t *sys, int rank, int size){
 #ifdef _MPI
   free(sys->rx);
   sys->rx=NULL;

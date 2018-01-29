@@ -54,8 +54,8 @@ void azzero(double *d, const int n);
 double pbc(double x, const double boxby2);
 
 /* helper functions: malloc and free memory for r v f for all the particles */
-void allocate_mdsys(mdsys_t *sys);
-void free_mdsys(mdsys_t *sys);
+void allocate_mdsys(mdsys_t *sys, int rank, int size);
+void free_mdsys(mdsys_t *sys, int rank, int size);
 
 /*helper function: evaluate nsize= num of atoms assigned to the current process*/
 #ifdef _MPI

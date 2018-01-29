@@ -79,7 +79,7 @@ int main(int argc, char **argv)
 #endif
 
     /* allocate memory */
-    allocate_mdsys(&sys);
+  allocate_mdsys(&sys, rank, size);
 
 #if defined(_MPI) && (D_ALLOC)
     //    free_mdsys(&sys);
@@ -109,7 +109,7 @@ int main(int argc, char **argv)
     force(&sys, rank, size);
 
 #if defined(_MPI) && (D_FORCE)
-    free_mdsys(&sys);
+    free_mdsys(&sys, rank, size);
     MPI_Finalize();
     return 0;
 #endif
@@ -144,7 +144,7 @@ int main(int argc, char **argv)
     fclose(erg);
     fclose(traj);
 
-    free_mdsys(&sys);
+    free_mdsys(&sys, rank, size);
 #ifdef _MPI    
     //MPI FINALIZE
     MPI_Finalize();
