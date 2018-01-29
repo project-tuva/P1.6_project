@@ -98,7 +98,7 @@ int set_mdsys(mdsys_t *sys,char restfile[BLEN],char trajfile[BLEN],char ergfile[
   MPI_Bcast(ergfile, BLEN, MPI_CHAR, 0, sys->mpicomm);
   MPI_Bcast(&sys->nsteps, 1, MPI_INT, 0, sys->mpicomm);
   MPI_Bcast(&sys->dt, 1, MPI_DOUBLE, 0, sys->mpicomm);
-  MPI_Bcast(&sys->mass, 1, MPI_DOUBLE, 0, sys->mpicomm);
+  //  MPI_Bcast(&sys->mass, 1, MPI_DOUBLE, 0, sys->mpicomm);
   MPI_Bcast(nprint, 1, MPI_INT, 0, sys->mpicomm);
 
 #endif /*defined _MPI*/
