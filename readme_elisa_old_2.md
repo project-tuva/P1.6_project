@@ -155,7 +155,7 @@ Compiler flags:
 ```
 
 * Time 108: 2.794 s  (x 9.97 faster)
-* Time 2916: 204.061 s (x 2.65 faster)
+* Time 2916: 204.061 s (x faster)
 
 ```
   %   cumulative   self              self     total           
@@ -172,7 +172,61 @@ Comparing to LAMMPS:
 natoms = 108 --> 3.6 s => 22% less :)
 natoms = 2912 --> 2.7 s => NOT done yet
 ------------------------------------------------------------------------
-## Case 7: clang
+## Case 6: Inline? :( NOOOOOOOOOOOOOOOOOOOOOO
+Compiler flags:
+```
+
+```
+
+* Time 108: 2.801 s (worse than Case 5, x9.95 faster)
+* Time 2916: NOT NEEDED s
+
+
+The command ```make check``` was successfully executed.
+
+
+https://www.greenend.org.uk/rjk/tech/inline.html
+"
+...
+(3) A C99 model.
+Use inline in a common header, and
+provide definitions in a .c file somewhere, via extern declarations.
+
+For instance, in the header file:
+inline int max(int a, int b) {
+  return a > b ? a : b;
+}
+...and in exactly one source file:
+#include "header.h"
+extern int max(int a, int b);
+In file included from ../src/verlet_2.c:3:0:
+../include/ljmd.h:45:15: warning: inline function ‘pbc’ declared but
+never defined
+ inline double pbc(double x, const double boxby2);
+
+To support legacy compilers, you have to swap the whole thing around so that
+- the declarations are visible in the common header and ("inline")
+- the definitions are restricted to a single translation unit,
+with inline defined away. ("extern")????
+"
+
+I swapped like that:
+-header (declar) --> extern double pbc(double x, const double boxby2);
+-src file (defin) --> inline double pbc(double x, const double boxby2){...
+
+In this case it works but I think it's not inlined.
+```
+ %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ns/call  ns/call  name    
+ 70.40      0.52     0.52                             force
+ 25.72      0.71     0.19 173357334     1.10     1.10  pbc         !!!!!
+  2.71      0.73     0.02    30006   667.77   667.77  azzero
+  1.35      0.74     0.01                             velverlet_1
+  0.00      0.74     0.00       12     0.00     0.00  get_a_line
+
+```
+------------------------------------------------------------------------
+## Case 7: clang :(
 Compiler flags:
 ```
 CC=clang
@@ -180,8 +234,8 @@ CFLAGS=-Wall -std=c99 -O3 -ffast-math -pg -g -I$(HEADDIR)
 LDLIBS=-lm -pg
 
 ```
-* Time 108: 2.932 s  (even worse than Case 5, x 9.50 faster)
-* Time 2916: 177.513 (x 3.05 faster)
+* Time 108: 2.932 s  (even worse than Case 5, x9.50 faster)
+* Time 2916: 
 
 ```
  %   cumulative   self              self     total           
@@ -200,16 +254,96 @@ LDLIBS=-lm -pg
   0.00      0.97     0.00        1     0.00     0.00  free_mdsys
   0.00      0.97     0.00        1     0.00     1.00  set_ic
   ```
+  Is not inline anything??
+------------------------------------------------------------------------
+## Case 8: g++ :( NOOOOOOOOOOOOOOOOOOOOOO
+Compiler flags:
+```
+
+```
+
+https://stackoverflow.com/questions/172587/what-is-the-difference-between-g-and-gcc
+gcc and g++ are compiler-drivers of the 'Gnu Compiler Collection'
+(which was once upon a time just the 'Gnu C Compiler').
+Even though they automatically determine which backends (cc1 cc1plus ...) to call
+depending on the file-type, unless overridden with -x language,
+they have some differences.
+The probably most important difference in their defaults is which libraries
+they link against automatically.
+According to [1] and [2], g++ is equivalent to
+gcc -xc++ -lstdc++ -shared-libgcc
+(the 1st is a compiler option, the 2nd two are linker options).
+This can be checked by running both with the -v option
+(it displays the backend toolchain commands being run).
+
+* Time: 2.804 s (worse than Case 5, x9.93 faster)
+* Time: NOT NEEDED
+------------------------------------------------------------------------
+## Case 9: icc (intel compiler)
+Compiler flags:
+
+
+### c3e cluster
+module  list 
+Currently Loaded Modulefiles:
+  1) gnu/4.8.3    2) intel/15.0
+
+[ebortoli@b22 P1.6_project]$ make
+make  -C Obj-serial
+make[1]: Entering directory `/u/MHPC17/ebortoli/P1.6_project/Obj-serial'
+icc -c ../src/utilities.c -Wall -O3 -ffast-math -pg -g -fno-pie -I../include -o ../src/utilities.o  
+
+Error: A license for CCompL is not available (-76,61026,2).
+
+License file(s) used were (in this order):
+    1.  Trusted Storage
+**  2.  /u/MHPC17/ebortoli/intel/licenses
+**  3.  /opt/intel/licenses
+**  4.  /opt/cluster/intel/composer_xe_2015.0.090/licenses
+**  5.  /opt/cluster/intel/composer_xe_2015.0.090/licenses/licenses13.lic
+**  6.  /opt/cluster/intel/composer_xe_2015.0.090/bin/intel64/../../Licenses
+**  7.  /u/MHPC17/ebortoli/Licenses
+**  8.  /Users/Shared/Library/Application Support/Intel/Licenses
+**  9.  /opt/cluster/intel/composer_xe_2015.0.090/bin/intel64/*.lic
+
+Please visit http://software.intel.com/sites/support/ if you require technical assistance.
+
+icc: error #10052: could not checkout FLEXlm license
+make[1]: *** [../src/utilities.o] Error 1
+make[1]: Leaving directory `/u/MHPC17/ebortoli/P1.6_project/Obj-serial'
+make: *** [serial] Error 2
+
+### Ulysses cluster (login node)
+* Time: 3.832 s (worse than Case 5, x7.27 faster)
+
+[ebortoli@login1 P1.6_project]$ make 
+make  -C Obj-serial
+make[1]: Entering directory `/scratch/ebortoli/P1.6_project/Obj-serial'
+icc -c ../src/force_compute.c -Wall -O3 -ffast-math -pg -g -fno-pie -I../include -o ../src/force_compute.o  
+icc: command line warning #10006: ignoring unknown option '-ffast-math'
+icc -c ../src/input.c -Wall -O3 -ffast-math -pg -g -fno-pie -I../include -o ../src/input.o  
+icc: command line warning #10006: ignoring unknown option '-ffast-math'
+icc -c ../src/output.c -Wall -O3 -ffast-math -pg -g -fno-pie -I../include -o ../src/output.o  
+icc: command line warning #10006: ignoring unknown option '-ffast-math'
+icc -c ../src/utilities.c -Wall -O3 -ffast-math -pg -g -fno-pie -I../include -o ../src/utilities.o  
+icc: command line warning #10006: ignoring unknown option '-ffast-math'
+icc -c ../src/verlet_1.c -Wall -O3 -ffast-math -pg -g -fno-pie -I../include -o ../src/verlet_1.o  
+icc: command line warning #10006: ignoring unknown option '-ffast-math'
+icc -c ../src/verlet_2.c -Wall -O3 -ffast-math -pg -g -fno-pie -I../include -o ../src/verlet_2.o  
+icc: command line warning #10006: ignoring unknown option '-ffast-math'
+icc -c ../main.c -Wall -O3 -ffast-math -pg -g -fno-pie -I../include -o ../main.o
+icc: command line warning #10006: ignoring unknown option '-ffast-math'
+icc -o ../ljmd-serial.x -Wall -O3 -ffast-math -pg -g -fno-pie -I../include ../src/force_compute.o ../src/input.o ../src/output.o ../src/utilities.o ../src/verlet_1.o ../src/verlet_2.o ../main.o -lm -pg -fno-pie
+icc: command line warning #10006: ignoring unknown option '-ffast-math'
+make[1]: Leaving directory `/scratch/ebortoli/P1.6_project/Obj-serial'
 ------------------------------------------------------------------------
 ## Case 10: gcc (default)
 Compiler flags:
 ```
-CC=gcc
-CFLAGS=-Wall -O3 -ffast-math -pg -g -fno-pie -I$(HEADDIR)
-LDLIBS=-lm -pg -fno-pie
+
 ```
-* Time 108: 2.784 s ( x 10.01 faster)
-* Time 2916: 167.499 ( x 3.23 faster)
+* Time 108: 2.784 s ( x10.01 faster)
+* Time 2916: 
 
 ```
   %   cumulative   self              self     total           
@@ -225,16 +359,14 @@ gprof ljmd-serial.x | gprof2dot | dot -T png -o 4_callgraph.png
 ## Case 11: gcc (default) with inline
 Compiler flags:
 ```
-CC=gcc
-CFLAGS=-Wall -std=c99 -O3 -ffast-math -pg -g -no-pie -I$(HEADDIR)
-LDLIBS=-lm -pg -no-pie
+
 ```
 pbc
 -removed from the header
 -put in force_compute to have it inline (static)
 
-* Time 108: 1.201 s ( x 23.20 faster)
-* Time 2916: 35.340 s ( x 15.34 faster)
+* Time 108: 1.201 s yu-uuuuuuuh!!!
+* Time 2916: 
 ```
   %   cumulative   self              self     total           
  time   seconds   seconds    calls  Ts/call  Ts/call  name    

@@ -29,7 +29,9 @@ int main(){
   sys.sigma = 3.405;
   sys.box = 17.1580;
   sys.rcut = 8.5;
-  
+
+  //   set_mdsys(&sys,restfile, trajfile, ergfile, line, &nprint);
+
   // Allocate the structure
   allocate_mdsys(&sys); 
 

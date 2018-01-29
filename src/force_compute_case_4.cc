@@ -15,8 +15,11 @@ void force(mdsys_t *sys){
   azzero(sys->fy,sys->natoms);
   azzero(sys->fz,sys->natoms);
 
+  // Constants
   double c12 = 4.0*sys->epsilon*pow(sys->sigma, 12.0);
   double c6 = 4.0*sys->epsilon*pow(sys->sigma, 6.0);
+
+  // Cutoff distance squared
   double rcsq = sys->rcut* sys->rcut;
   
   for(i=0; i < (sys->natoms); ++i) {
@@ -29,6 +32,8 @@ void force(mdsys_t *sys){
       rx=pbc(sys->rx[i] - sys->rx[j], 0.5*sys->box);
       ry=pbc(sys->ry[i] - sys->ry[j], 0.5*sys->box);
       rz=pbc(sys->rz[i] - sys->rz[j], 0.5*sys->box);
+
+      // Distance squared
       double rsq = rx*rx + ry*ry + rz*rz;
       
       /* compute force and energy if within cutoff */
