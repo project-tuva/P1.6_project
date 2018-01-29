@@ -126,8 +126,6 @@ Compiler flags:
   0.00      1.98     0.00       12     0.00     0.00  get_a_line
   
 ```
-The command ```make check``` was successfully executed.
-
 ------------------------------------------------------------------------
 ## Case 4: Optimizations -O3 and -ffast-math + math modifications
 Compiler flags:
@@ -166,8 +164,6 @@ Compiler flags:
   0.00      0.87     0.00       12     0.00     0.00  get_a_line
 
 ```
-The command ```make check``` was successfully executed.
-
 Comparing to LAMMPS:
 natoms = 108 --> 3.6 s => 22% less :)
 natoms = 2912 --> 2.7 s => NOT done yet
@@ -244,8 +240,10 @@ pbc
 
 ```
 ------------------------------------------------------------------------
-
-
+## Case 12: cell-list variant
+Compiler flags:
+```
+```
 
 
 

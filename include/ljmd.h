@@ -26,6 +26,13 @@ struct _mdsys {
 };
 typedef struct _mdsys mdsys_t;
 
+// Structure to hold infos about the cell
+struct cell_t {
+  int natoms; // natoms
+  int idxlist[200];
+};
+typedef struct cell_t clist;
+
 // Methods
 /* helper function: read a line and then return
    the first string with whitespace stripped off */

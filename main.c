@@ -17,7 +17,11 @@ int main(int argc, char **argv)
   int nprint;
   char restfile[BLEN], trajfile[BLEN], ergfile[BLEN], line[BLEN];
   FILE *traj,*erg, *time;
-  mdsys_t sys;
+  mdsys_t sys; // structure of the system
+  
+  int ncell = box/rcut;
+  cell_t * clist = malloc(ncell*sizeof(clist)); // pointer to the structure cell_t
+
 
   /* sets the system usyn parameters in stdin */
   set_mdsys(&sys,restfile,trajfile,ergfile,line,&nprint);
@@ -36,7 +40,8 @@ int main(int argc, char **argv)
   erg=fopen(ergfile,"w");
   traj=fopen(trajfile,"w");
 
-  printf("Starting simulation with %d atoms for %d steps.\n",sys.natoms, sys.nsteps);
+  printf("Starting simulation with %d atoms for %d steps.\n",sys.natoms,
+	 sys.nsteps);
   printf("     NFI            TEMP            EKIN                 EPOT              ETOT\n");
   output(&sys, erg, traj);
 
