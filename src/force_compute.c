@@ -30,7 +30,7 @@ void force(mdsys_t *sys){
 #if defined(_OPENMP)
 #pragma omp for {
 #endif    
-    for(i=0; i < (sys->natoms) -1; i+=sys->threads) {
+    for(i=0; i < (sys->natoms) -1; i+=sys->nthreads) {
       int ii=i+tid;
       if(ii>=(sys->natoms) -1) break;
       for(int j=0; j < (sys->natoms); ++j) {
