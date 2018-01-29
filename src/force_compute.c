@@ -22,15 +22,9 @@ void force(mdsys_t *sys){
 #pragma omp parallel reduction(+:epot) {
     tid=omp_get_thread_num();
     sys->nthreads=omp_get_num_threads();
-#endif    
-
-    fx=sys->fx+(tid*sys->natoms);
-    fy=sys->fy+(tid*sys->natoms);
-    fz=sys->fz+(tid*sys->natoms);
-#if defined(_OPENMP)
 #pragma omp for {
 #endif    
-    for(i=0; i < (sys->natoms) -1; i+=sys->nthreads) {
+    for(i=0; i < (sys->natoms); i+=sys->nthreads) {
       int ii=i+tid;
       if(ii>=sys->natoms) break;
       for(int j=0; j < (sys->natoms); ++j) {
