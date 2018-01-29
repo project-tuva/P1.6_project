@@ -7,7 +7,6 @@ clean:
 
 check: ../ljmd-serial.x
 
-
 	$(MAKE) $(MFLAGS) -C ../tests check
 
 	../ljmd-serial.x < argon_108.inp
