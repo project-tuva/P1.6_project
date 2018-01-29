@@ -42,7 +42,7 @@ int set_ic_f(mdsys_t *sys, char restfile[BLEN]);
 void azzero(double *d, const int n); // previously it was static
 
 /* helper function: apply minimum image convention */
-double pbc(double x, const double boxby2);
+//double pbc(double x, const double boxby2);
 
 /* compute kinetic energy */
 void ekin(mdsys_t *sys); // previously it was static

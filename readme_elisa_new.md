@@ -54,7 +54,7 @@ Perform a number of minor optimizations that are relatively expensive.
 Perform a number of minor optimizations that are relatively expensive.
 Enabled at levels -O2, -O3, -Os.
 
-* Time: 19.542 s (x1.42 faster)
+* Time: 19.542 s (x 1.42 faster)
 
 ```
   %   cumulative   self              self     total           
@@ -69,7 +69,7 @@ Enabled at levels -O2, -O3, -Os.
 ```
 ------------------------------------------------------------------------
 ## Case 3: Optimizations -O3 and -ffast-math
-* Time: 6.008 s (x4.63 faster)
+* Time: 6.008 s (x 4.63 faster)
 ```
  %   cumulative   self              self     total           
  time   seconds   seconds    calls  ns/call  ns/call  name    
@@ -84,7 +84,7 @@ The command ```make check``` was successfully executed.
 
 ------------------------------------------------------------------------
 ## Case 4: Optimizations -O3 and -ffast-math + math modifications
-* Time: 5.478 s (x5.08 faster)
+* Time: 5.478 s (x 5.08 faster)
 ```
  %   cumulative   self              self     total           
  time   seconds   seconds    calls  us/call  us/call  name    
@@ -97,7 +97,7 @@ The command ```make check``` was successfully executed.
 ```
 ------------------------------------------------------------------------
 ## Case 5: Optimizations -O3 and -ffast-math + math modifications + Newton
-* Time: 2.794 s  (x9.97 faster)
+* Time: 2.794 s  (x 9.97 faster)
 ```
   %   cumulative   self              self     total           
  time   seconds   seconds    calls  ns/call  ns/call  name    
@@ -266,6 +266,51 @@ make[1]: Leaving directory `/scratch/ebortoli/P1.6_project/Obj-serial'
   1.08      0.93     0.01    30006   333.88   333.88  azzero
   0.00      0.93     0.00       12     0.00     0.00  get_a_line
   ```
+------------------------------------------------------------------------
+gprof ljmd-serial.x | gprof2dot | dot -T png -o 4_callgraph.png
+------------------------------------------------------------------------
+## Case 11: gcc (default) with inline
+pbc
+-removed from the header
+-put in force_compute to have it inline (static)
+
+* Time: 1.201 s yu-uuuuuuuh!!!
+```
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  Ts/call  Ts/call  name    
+100.18      1.18     1.18                             force
+  0.00      1.18     0.00    30006     0.00     0.00  azzero
+  0.00      1.18     0.00       12     0.00     0.00  get_a_line
+
+```
+------------------------------------------------------------------------
+
+
+
+
+
+
+TO DO
+(1) pbc inlined
+(2) run on c3e
+(3) comments on the resuts
+(4) change compiler: intel flags??
+(5) write the makefile in such a way we can compile with and without
+debugging
+(6) prefecthing
+
+QUESTIONS
+(0) perchè force non è profiled? Dovrebbe esserlo..occhio alla flag
+(1) inline pbc: meccanismo e why it doesn't when using O3?
+(2) static, extern, inline
+(3) prefetching
+(3) ha senso conforntare gcc e g++? NO
+(4) mi dimentico flag con icc?
+
+
+Alternativa:
+definire nel header file la funzione pbc
+
 ------------------------------------------------------------------------
 gprof ljmd-serial.x | gprof2dot | dot -T png -o 4_callgraph.png
 ------------------------------------------------------------------------
