@@ -8,3 +8,5 @@
 *.s
 examples/argon*.dat
 examples/argon*.xyz
+run.sh
+run_omp.sh
