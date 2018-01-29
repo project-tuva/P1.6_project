@@ -18,7 +18,7 @@
 
 /*debugging constants MPI code*/
 #define D_MPI_INIT 1
-#define D_NSIZE 1
+#define D_NSIZE 0
 #define D_ALLOC 0
 #define D_READ_IN 0
 #define D_FORCE 1

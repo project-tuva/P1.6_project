@@ -32,7 +32,7 @@ void force(mdsys_t *sys, int rank, int size){
     azzero(bsend, dimbuff);
     //    recvb = (double *)malloc(dimbuff);
 
-    int off=0; // offset to fill in bsend
+    //int off=0; // offset to fill in bsend
     /*each process computes the force for natoms/size(+1 if neeed) particles*/
     for(int i=rank; i < (sys->natoms); i+=size) {
       for(int j=0; j < (sys->natoms); ++j) {
@@ -69,13 +69,15 @@ void force(mdsys_t *sys, int rank, int size){
     /*Broadcast computed values to other processes*/
     for(int R=0; R<size; ++R){
       /*fill in bsend*/
-	for(int i=rank; i < sys->natoms; ++i){
-	  bsend[off*3] = sys->fx[i];
-	  bsend[off*3+1] = sys->fy[i];
-	  bsend[off*3+2] = sys->fz[i];
-	  ++off;
+      if(rank==R){
+	for(int i=0; i < sys->nsize; ++i){
+	  bsend[i*3] = sys->fx[size*i];
+	  bsend[i*3+1] = sys->fy[size*i];
+	  bsend[i*3+2] = sys->fz[size*i];
+	  //++off;
 	} /*end of for loop on i to fill in bsend*/
-	
+      }
+
 	/*Broadcast data from current rank to all other ranks*/
 	MPI_Bcast(bsend, dimbuff, MPI_DOUBLE, R, sys->mpicomm);
 
@@ -84,8 +86,8 @@ void force(mdsys_t *sys, int rank, int size){
 	if( rank != R ){
 	  for(int kk=0; kk < sys->nsize; ++kk){
 	    sys->fx[R*kk] = bsend[kk*3];
-	    sys->fy[R*kk+1] = bsend[kk*3+1];
-	    sys->fz[R*kk+2] = bsend[kk*3+2];
+	    sys->fy[R*kk] = bsend[kk*3+1];
+	    sys->fz[R*kk] = bsend[kk*3+2];
 	  }
 	}
 
