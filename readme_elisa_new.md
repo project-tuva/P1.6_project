@@ -1,4 +1,4 @@
-## Case 1: No optimization
+## Case 1: gcc std=c99
 * Time: 27.871 s
 ```
  %   cumulative   self              self     total           
@@ -182,6 +182,90 @@ In this case it works but I think it's not inlined.
   ```
   Is not inline anything??
 ------------------------------------------------------------------------
+## Case 8: g++ :(
 
+https://stackoverflow.com/questions/172587/what-is-the-difference-between-g-and-gcc
+gcc and g++ are compiler-drivers of the 'Gnu Compiler Collection'
+(which was once upon a time just the 'Gnu C Compiler').
+Even though they automatically determine which backends (cc1 cc1plus ...) to call
+depending on the file-type, unless overridden with -x language,
+they have some differences.
+The probably most important difference in their defaults is which libraries
+they link against automatically.
+According to [1] and [2], g++ is equivalent to
+gcc -xc++ -lstdc++ -shared-libgcc
+(the 1st is a compiler option, the 2nd two are linker options).
+This can be checked by running both with the -v option
+(it displays the backend toolchain commands being run).
 
+* Time: 2.804 s (worse than Case 5, x9.93 faster)
+------------------------------------------------------------------------
+## Case 9: icc (intel compiler)
+### c3e cluster
+module  list 
+Currently Loaded Modulefiles:
+  1) gnu/4.8.3    2) intel/15.0
+
+[ebortoli@b22 P1.6_project]$ make
+make  -C Obj-serial
+make[1]: Entering directory `/u/MHPC17/ebortoli/P1.6_project/Obj-serial'
+icc -c ../src/utilities.c -Wall -O3 -ffast-math -pg -g -fno-pie -I../include -o ../src/utilities.o  
+
+Error: A license for CCompL is not available (-76,61026,2).
+
+License file(s) used were (in this order):
+    1.  Trusted Storage
+**  2.  /u/MHPC17/ebortoli/intel/licenses
+**  3.  /opt/intel/licenses
+**  4.  /opt/cluster/intel/composer_xe_2015.0.090/licenses
+**  5.  /opt/cluster/intel/composer_xe_2015.0.090/licenses/licenses13.lic
+**  6.  /opt/cluster/intel/composer_xe_2015.0.090/bin/intel64/../../Licenses
+**  7.  /u/MHPC17/ebortoli/Licenses
+**  8.  /Users/Shared/Library/Application Support/Intel/Licenses
+**  9.  /opt/cluster/intel/composer_xe_2015.0.090/bin/intel64/*.lic
+
+Please visit http://software.intel.com/sites/support/ if you require technical assistance.
+
+icc: error #10052: could not checkout FLEXlm license
+make[1]: *** [../src/utilities.o] Error 1
+make[1]: Leaving directory `/u/MHPC17/ebortoli/P1.6_project/Obj-serial'
+make: *** [serial] Error 2
+
+### Ulysses cluster (login node)
+* Time: 3.832 s (worse than Case 5, x7.27 faster)
+
+[ebortoli@login1 P1.6_project]$ make 
+make  -C Obj-serial
+make[1]: Entering directory `/scratch/ebortoli/P1.6_project/Obj-serial'
+icc -c ../src/force_compute.c -Wall -O3 -ffast-math -pg -g -fno-pie -I../include -o ../src/force_compute.o  
+icc: command line warning #10006: ignoring unknown option '-ffast-math'
+icc -c ../src/input.c -Wall -O3 -ffast-math -pg -g -fno-pie -I../include -o ../src/input.o  
+icc: command line warning #10006: ignoring unknown option '-ffast-math'
+icc -c ../src/output.c -Wall -O3 -ffast-math -pg -g -fno-pie -I../include -o ../src/output.o  
+icc: command line warning #10006: ignoring unknown option '-ffast-math'
+icc -c ../src/utilities.c -Wall -O3 -ffast-math -pg -g -fno-pie -I../include -o ../src/utilities.o  
+icc: command line warning #10006: ignoring unknown option '-ffast-math'
+icc -c ../src/verlet_1.c -Wall -O3 -ffast-math -pg -g -fno-pie -I../include -o ../src/verlet_1.o  
+icc: command line warning #10006: ignoring unknown option '-ffast-math'
+icc -c ../src/verlet_2.c -Wall -O3 -ffast-math -pg -g -fno-pie -I../include -o ../src/verlet_2.o  
+icc: command line warning #10006: ignoring unknown option '-ffast-math'
+icc -c ../main.c -Wall -O3 -ffast-math -pg -g -fno-pie -I../include -o ../main.o
+icc: command line warning #10006: ignoring unknown option '-ffast-math'
+icc -o ../ljmd-serial.x -Wall -O3 -ffast-math -pg -g -fno-pie -I../include ../src/force_compute.o ../src/input.o ../src/output.o ../src/utilities.o ../src/verlet_1.o ../src/verlet_2.o ../main.o -lm -pg -fno-pie
+icc: command line warning #10006: ignoring unknown option '-ffast-math'
+make[1]: Leaving directory `/scratch/ebortoli/P1.6_project/Obj-serial'
+------------------------------------------------------------------------
+## Case 10: gcc (default)
+* Time: 2.813 s (like Case 5, x9.90 faster)
+
+```
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ns/call  ns/call  name    
+ 70.02      0.65     0.65                             force
+ 29.09      0.92     0.27 173357334     1.56     1.56  pbc
+  1.08      0.93     0.01    30006   333.88   333.88  azzero
+  0.00      0.93     0.00       12     0.00     0.00  get_a_line
+  ```
+------------------------------------------------------------------------
 gprof ljmd-serial.x | gprof2dot | dot -T png -o 4_callgraph.png
+------------------------------------------------------------------------

@@ -6,7 +6,7 @@ HEADDIR=$(ROOT)/include
 
 # -*- Makefile -*-
 SHELL=/bin/sh
-CC=clang
+CC=gcc
 CFLAGS=-Wall -O3 -ffast-math -pg -g -fno-pie -I$(HEADDIR)
 LDLIBS=-lm -pg -fno-pie
 # Version 5
