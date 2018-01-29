@@ -52,9 +52,9 @@ void force(mdsys_t *sys){
 	  epot += 0.5*4.0*sys->epsilon*(pow(sys->sigma/r,12.0)
 					-pow(sys->sigma/r,6.0));
 
-	  sys->fx[i] += rx/r*ffac;
-	  sys->fy[i] += ry/r*ffac;
-	  sys->fz[i] += rz/r*ffac;
+	  sys->fx[ii] += rx/r*ffac;
+	  sys->fy[ii] += ry/r*ffac;
+	  sys->fz[ii] += rz/r*ffac;
 	}
       }
     }
