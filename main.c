@@ -111,7 +111,7 @@ int main(int argc, char **argv)
 #if defined(_MPI) && (D_FORCE)
     free_mdsys(&sys);
     MPI_Finalize();
-    return 0
+    return 0;
 #endif
 
     ekin(&sys);
@@ -133,7 +133,7 @@ int main(int argc, char **argv)
 
         /* propagate system and recompute energies */
         velverlet_1(&sys);
-	force(&sys);
+	force(&sys, rank, size);
 	velverlet_2(&sys);
         ekin(&sys);
     }

@@ -22,13 +22,13 @@ void force(mdsys_t *sys, int rank, int size){
     /*evaluate buffer size*/
     int rem = sys->natoms % size;
     double dimbuff;
-    dimbuff = 3* (sys->nsizes) * sizeof(double);
+    dimbuff = 3* (sys->nsize) * sizeof(double);
     if(rank>rem)
       dimbuff+=3;
     
     /*alloc memory for send and recv buffers*/
     bsend = (double *)malloc(dimbuff);
-    azzero(sys->bsend, dimbuff);
+    azzero(bsend, dimbuff);
     //    recvb = (double *)malloc(dimbuff);
 
     int off=0; // offset to fill in bsend
@@ -79,12 +79,12 @@ void force(mdsys_t *sys, int rank, int size){
 	MPI_Bcast(bsend, dimbuff, MPI_DOUBLE, R, sys->mpicomm);
 
 	/*Copy buffer elements into the right memory cell in fx fy and fz*/
-	off=0;
+	//off=0;
 	if( rank != R ){
-	  for(int kk=0; kk < sys->nsizes; ++kk){
-	    sys->fx[R*kk] = buf[kk*3];
-	    sys->fy[R*kk+1] = buf[kk*3+1];
-	    sys->fz[R*kk+2] = buf[kk*3+2];
+	  for(int kk=0; kk < sys->nsize; ++kk){
+	    sys->fx[R*kk] = bsend[kk*3];
+	    sys->fy[R*kk+1] = bsend[kk*3+1];
+	    sys->fz[R*kk+2] = bsend[kk*3+2];
 	  }
 	}
 
