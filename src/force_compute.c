@@ -21,13 +21,14 @@ void force(mdsys_t *sys, int rank, int size){
     //    double *recvb;
     /*evaluate buffer size*/
     int rem = sys->natoms % size;
-    double dimbuff;
-    dimbuff = 3* (sys->nsize) * sizeof(double);
+    int dimbuff;
+    int a=0;
     if(rank>rem)
-      dimbuff+=3;
+      ++a;
+    dimbuff = 3* (sys->nsize + a);
     
     /*alloc memory for send and recv buffers*/
-    bsend = (double *)malloc(dimbuff);
+    bsend = (double *)malloc(dimbuff*sizeof(double));
     azzero(bsend, dimbuff);
     //    recvb = (double *)malloc(dimbuff);
 
