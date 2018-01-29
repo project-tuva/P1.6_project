@@ -111,7 +111,7 @@ int main(int argc, char **argv)
 #if defined(_MPI) && (D_FORCE)
     free_mdsys(&sys);
     MPI_Finalize();
-    return 0;
+    return 0
 #endif
 
     ekin(&sys);
