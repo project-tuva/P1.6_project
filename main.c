@@ -1,4 +1,4 @@
-/* 
+/*  
  * simple lennard-jones potential MD code with velocity verlet.
  * units: Length=Angstrom, Mass=amu; Energy=kcal
  *
@@ -116,15 +116,25 @@ int main(int argc, char **argv)
     MPI_Finalize();
     return 0;
 #endif
-
+    
+    if(rank==0){
     ekin(&sys);
     
+    //MPI_Finalize();
+    //return 0;
+
     erg=fopen(ergfile,"w");
     traj=fopen(trajfile,"w");
 
     printf("Starting simulation with %d atoms for %d steps.\n",sys.natoms, sys.nsteps);
     printf("     NFI            TEMP            EKIN                 EPOT              ETOT\n");
     output(&sys, erg, traj);
+    
+    fclose(traj);
+    fclose(erg);
+    }
+    MPI_Finalize();
+    return 0;
 
     /**************************************************/
     /* main MD loop */
