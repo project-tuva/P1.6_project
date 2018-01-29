@@ -3,54 +3,42 @@ ROOT=..
 EXEDIR=.
 SRCDIR=$(ROOT)/src
 HEADDIR=$(ROOT)/include
+LIBDIR_ser=$(ROOT)/Obj-serial
 
 # -*- Makefile -*-
 SHELL=/bin/sh
 CC=gcc
 CFLAGS=-Wall -g -std=c99 -O3 -ffast-math -fomit-frame-pointer -I$(HEADDIR)
-LDLIBS=-lm
+LDLIBS=-lm -L$(LIBDIR_ser) -Wl,-rpath,../Obj-serial
 
 SRC=$(wildcard ../src/*.c)
 OBJ=$(SRC:%.c=%.o)
 
-default: $(EXEDIR)/force_test.x $(EXEDIR)/input_test.x $(EXEDIR)/kinetic_test.x $(EXEDIR)/integration_test.x 
+default: $(EXEDIR)/force_test.x $(EXEDIR)/input_test.x $(EXEDIR)/kinetic_test.x $(EXEDIR)/integration_test.x $(LIBDIR_ser)/libserial.so
 
 clean:
-	rm -f *.mod *.o *.out $(EXEDIR)/force_test.x $(EXEDIR)/input_test.x $(EXEDIR)/kinetic_test.x $(EXEDIR)/integration_test.x 
+	rm -f *.mod *.o *.out $(EXEDIR)/force_test.x $(EXEDIR)/input_test.x $(EXEDIR)/kinetic_test.x $(EXEDIR)/integration_test.x
 
-# linker rule
-force_test.x: $(OBJ) force_test.o
-	$(CC) -o $@ $(CFLAGS) $^ $(LDLIBS)
-
-input_test.x: $(OBJ) input_test.o
-	$(CC) -o $@ $(CFLAGS) $^ $(LDLIBS)
-
-kinetic_test.x: $(OBJ) kinetic_test.o
-	$(CC) -o $@ $(CFLAGS) $^ $(LDLIBS)
-
-integration_test.x: $(OBJ) integration_test.o
-	$(CC) -o $@ $(CFLAGS) $^ $(LDLIBS)
-
-# compilation pattern rule for objects
-$(OBJ): $(HEADDIR)/ljmd.h
+$(OBJ): $(HEADDIR)/ljmd.h 
 
 %.o: %.c
-	$(CC) -c $< $(CFLAGS) -o $@  
+	$(CC) -c -fPIC $< $(CFLAGS) -o $@  
 
-force_test.o: force_test.c
-	$(CC) -c $< $(CFLAGS) -o force_test.o
+$(LIBDIR)/libserial.so:
+	$(MAKE) $(MFLAGS) -C ../Obj-serial 
 
-input_test.o: input_test.c
-	$(CC) -c $< $(CFLAGS) -o input_test.o
+# linker rule
+force_test.x: $(LIBDIR_ser)/libserial.so
+	$(CC) $(LDLIBS) $(CFLAGS) -o force_test.x force_test.c -lserial
 
-kinetic_test.o: kinetic_test.c
-	$(CC) -c $< $(CFLAGS) -o kinetic_test.o
+input_test.x: $(LIBDIR_ser)/libserial.so
+	$(CC) $(LDLIBS) $(CFLAGS) -o input_test.x input_test.c -lserial
 
-integration_test.o: integration_test.c
-	$(CC) -c $< $(CFLAGS) -o integration_test.o
+kinetic_test.x: $(LIBDIR_ser)/libserial.so
+	$(CC) $(LDLIBS) $(CFLAGS) -o kinetic_test.x kinetic_test.c -lserial
 
-# dependencies
-#ljmd.o: ljmd.c 
+integration_test.x: $(LIBDIR_ser)/libserial.so
+	$(CC) $(LDLIBS) $(CFLAGS) -o integration_test.x integration_test.c -lserial
 
 check: input_test kinetic_test force_test integration_test
 
