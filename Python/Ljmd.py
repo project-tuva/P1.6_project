@@ -2,9 +2,9 @@
 
 import os
 import sys
-#import numpy as np
-from ctypes import *
 
+
+from ctypes import *
 dso  = CDLL("./ljmd.X.so")
 print ("Calling DSO \n")
 #sys.argv[1]
@@ -13,9 +13,9 @@ os.dup2(fd_rpipe, sys.stdin.fileno())
 with open('argon_108.inp', 'r') as input_file, os.fdopen(fd_wpipe, 'w') as c_stdin:
     c_stdin.write(input_file.read())
 
-#int(nprint)
+
 nprint = c_int()
-#nprint = 0
+
 BLEN = 200
 
 class mdsys(Structure):
@@ -33,7 +33,6 @@ trajfile = create_string_buffer(BLEN)
 ergfile = create_string_buffer(BLEN)
 line = create_string_buffer(BLEN)
 
-#dso.set_mdsys(byref(sys),restfile,trajfile,ergfile,line,c_int(nprint))
 dso.set_mdsys(byref(sys),restfile,trajfile,ergfile,line,byref(nprint))
 
 print(sys.natoms)

@@ -3,7 +3,6 @@
 import os
 import sys
 import unittest
-#import numpy as np
 from ctypes import *
 
 dso  = CDLL("./ljmd.X.so")
@@ -27,7 +26,7 @@ class mdsys(Structure):
                ("vx",POINTER(c_double)),("vy",POINTER(c_double)),("vz",POINTER(c_double)),\
                ("fx",POINTER(c_double)),("fy",POINTER(c_double)),("fz",POINTER(c_double))]
 
-sys = mdsys( )
+sys = mdsys()
 
 restfile = create_string_buffer(BLEN)
 trajfile = create_string_buffer(BLEN)
