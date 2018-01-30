@@ -59,24 +59,13 @@ $(MAIN).o: $(MAIN).c
 # Case 5 (-O3, -ffast-math, avoid expensive math and Newton 3rd law)
 #CFLAGS=-Wall  -std=c99 -O3 -ffast-math -pg -g -no-pie -I$(HEADDIR)
 #--------------------------------------------------------------------------
-# Case 6 (-O3, -ffast-math, avoid expensive math, Newton 3rd law, inline not working) --> WRONG
-#CFLAGS=-Wall  -std=c99 -O3 -ffast-math -pg -g -no-pie -I$(HEADDIR)
-#--------------------------------------------------------------------------
-# Case 7  (-O3, -ffast-math, avoid expensive math, Newton 3rd law, clang)
+# Case 6  (-O3, -ffast-math, avoid expensive math, Newton 3rd law, clang)
 #CC=clang
 #CFLAGS=-Wall  -std=c99 -O3 -ffast-math -pg -g -no-pie -I$(HEADDIR)
 #--------------------------------------------------------------------------
-# Case 8 (-O3, -ffast-math, avoid expensive math, Newton 3rd law, g++) --> WRONG
-#CC=g++
-#CFLAGS=-Wall  -std=c99 -O3 -ffast-math -pg -g -no-pie -I$(HEADDIR)
-#--------------------------------------------------------------------------
-# Case 9 (-O3, doesn't know -ffast-math, avoid expensive math, Newton 3rd law) --> RUN ON LOGIN NODE
-#CC=icc (I've to beware of it because it has "unsafe math" option by default)
-#CFLAGS=-Wall -std=c99 -O3 -ffast-math -pg -g -no-pie -I$(HEADDIR)
-#--------------------------------------------------------------------------
-# Case 10 (-O3, doesn't know -ffast-math, avoid expensive math, Newton 3rd law, gcc default)
+# Case 7 (-O3, doesn't know -ffast-math, avoid expensive math, Newton 3rd law, gcc default)
 #CFLAGS=-Wall -O3 -ffast-math -pg -g -fno-pie -I$(HEADDIR)
 #--------------------------------------------------------------------------
-# Case 11 (-O3, doesn't know -ffast-math, avoid expensive math, Newton 3rd law, gcc default, inline working) --> BEST
+# Case 8 (-O3, doesn't know -ffast-math, avoid expensive math, Newton 3rd law, gcc default, inline working)
 #CFLAGS=-Wall -O3 -ffast-math -pg -g -no-pie -I$(HEADDIR)
 #--------------------------------------------------------------------------
