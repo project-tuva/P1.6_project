@@ -25,8 +25,8 @@ void force(mdsys_t *sys, int rank, int size){
     for(int i=rank; i < (sys->natoms)-1; i+=size) {
       for(int j=i+1; j < (sys->natoms); ++j) {
 
-            /* particles have no interactions with themselves */
-            //if (i==j) continue; // to be activated if N's law is not exploited
+
+
 
             /* get distance between particle i and j */
             rx=pbc(sys->rx[i] - sys->rx[j], 0.5*sys->box);
