@@ -9,7 +9,7 @@ OBJDIR=../Obj-serial/
 # -*- Makefile -*-
 SHELL=/bin/sh
 CC=gcc
-CFLAGS=-Wall -O3 -ffast-math -I$(HEADDIR)
+CFLAGS=-Wall -std=c99 -O3 -ffast-math -I$(HEADDIR)
 LDLIBS=-lm -L$(LIBDIR) -Wl,-rpath,Obj-serial -Wl,-rpath,../Obj-serial
 
 MAIN=$(ROOT)/main

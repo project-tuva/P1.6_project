@@ -10,7 +10,7 @@ LIBDIR_omp=$(ROOT)/Obj-omp
 SHELL=/bin/sh
 CC=gcc
 
-CFLAGS=-Wall -O3 -ffast-math -I$(HEADDIR)
+CFLAGS=-Wall -std=c99 -O3 -ffast-math -I$(HEADDIR)
 LDLIBS=-lm -p -L$(LIBDIR_ser) -L$(LIBDIR_omp) -Wl,-rpath,../Obj-serial -Wl,-rpath,../Obj-omp
 
 SRC=$(wildcard ../src/*.c)
