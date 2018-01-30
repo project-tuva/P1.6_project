@@ -5,13 +5,17 @@ SHELL=/bin/bash
 OBJ_SERIAL=$(SRC:src/%.f90=Obj-serial/%.o)
 ############################################
 
-default: serial
+default: serial omp
 
 serial:
-	$(MAKE) $(MFLAGS) -C Obj-$@
+	$(MAKE) $(MFLAGS) -C Obj-serial
+
+omp:
+	$(MAKE) $(MFLAGS) -C Obj-omp
 
 clean:
 	$(MAKE) $(MFLAGS) -C Obj-serial clean
+	$(MAKE) $(MFLAGS) -C Obj-omp clean
 	$(MAKE) $(MFLAGS) -C examples clean
 	$(MAKE) $(MFLAGS) -C tests clean
 
