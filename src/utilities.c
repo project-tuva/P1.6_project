@@ -1,9 +1,4 @@
-/*
-utilities for main function in ljmd.c
-- azzero: set array's elements to zero
-- pbc: periodic boundary conditions
-- ekin: compute kinetic energy
-*/
+// Case 5
 #include <ljmd.h>
 
 #include <time.h>
@@ -20,13 +15,12 @@ void azzero(double *d, const int n){
 }
 
 /* helper function: apply minimum image convention */
-/* Commented for case 11 
 double pbc(double x, const double boxby2){
     while (x >  boxby2) x -= 2.0*boxby2;
     while (x < -boxby2) x += 2.0*boxby2;
     return x;
 }
-*/
+
 /* compute kinetic energy */
 void ekin(mdsys_t *sys){
     int i;

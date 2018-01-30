@@ -18,13 +18,6 @@ int main(int argc, char **argv)
   char restfile[BLEN], trajfile[BLEN], ergfile[BLEN], line[BLEN];
   FILE *traj,*erg, *time;
   mdsys_t sys; // structure of the system
-  
-  int ncell = box/rcut;
-  cell_t * clist = malloc(ncell*sizeof(clist)); // pointer to the structure cell_t
-  /*
-    int *A = (int *) calloc (loc_size * glob_size, sizeof(int));
-    matrix = ( double* )malloc(sizeof(double*) * ( dimension + 2 ) * ( dimension + 2 ));
-  */
 
   /* sets the system usyn parameters in stdin */
   set_mdsys(&sys,restfile,trajfile,ergfile,line,&nprint);

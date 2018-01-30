@@ -10,8 +10,8 @@ LIBDIR_omp=$(ROOT)/Obj-omp
 SHELL=/bin/sh
 CC=gcc
 
-CFLAGS=-Wall -std=c99 -pg -g -no-pie -I$(HEADDIR)
-LDLIBS=-lm -p -no-pie -L$(LIBDIR_ser) -L$(LIBDIR_omp) -Wl,-rpath,../Obj-serial -Wl,-rpath,../Obj-omp
+CFLAGS=-Wall -O3 -ffast-math -pg -g -I$(HEADDIR)
+LDLIBS=-lm -pg -g -p -L$(LIBDIR_ser) -L$(LIBDIR_omp) -Wl,-rpath,../Obj-serial -Wl,-rpath,../Obj-omp
 
 SRC=$(wildcard ../src/*.c)
 OBJ=$(SRC:%.c=%.o)
@@ -97,18 +97,13 @@ force_test: force_test_ser.x force_test_omp.x
 	./force_test_omp.x < force3.test 
 	diff -w force3.rest force3.out || exit 1
 
-integration_test: integration_test.x
-	./integration_test.x  < integration1.test || exit 1
+integration_test: integration_test_ser.x
+	./integration_test_ser.x  < integration1.test || exit 1
 	diff -w integration1.rest integration1.out || exit 1
-	./integration_test.x  < integration2.test || exit 1
+	./integration_test_ser.x  < integration2.test || exit 1
 	diff -w integration2.rest integration2.out || exit 1
-	./integration_test.x  < integration3.test || exit 1
+	./integration_test_ser.x  < integration3.test || exit 1
 	diff -w integration3.rest integration3.out || exit 1
-	./integration_test.x  < integration4.test || exit 1
+	./integration_test_ser.x  < integration4.test || exit 1
 	diff -w integration4.rest integration4.out || exit 1
-#	./integration_test.x || exit 1
 
-# Luca come risolviamo questo?
-#integration_test: integration_test_ser.x integration_test_omp.x
-#	./integration_test_ser.x || exit 1
-#	./integration_test_omp.x || exit 1 
