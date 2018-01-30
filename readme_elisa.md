@@ -7,11 +7,8 @@ The improvements are documented with profiling/benchmark data.
 After each step, the command ```make check``` was run in order to
 ensure the correctness of the results.
 
-(So two steps will be perfomed:
-1. Mapping, through the visualization of the call-tree and code coverage
-2. Profiling, analysing the code behaviour (hotspots, bottlenecks, resource
-utilization) and its efficiency
-(instruction cycles/cycles, L1/L2/RAM hits, branch misses))
+All the times were recorded on my local pc, an ASUS N-552VW with a CPU
+Intel(R) Core(TM) i7-6700HQ CPU @ 2.60GHz.
 
 ## Starting code
 After breaking down the single file ljmd.c into multiple files and updating
@@ -25,11 +22,12 @@ routines in a program;
 * a node in the graph represents a routine while an edge represent a calling
 relationship.
 
-## Case 1: gcc std=c99
+## Case 1: no optimization
 Compiler flags:
 ```
-CFLAGS=-Wall -std=c99 -pg -g -no-pie -I$(HEADDIR)
-LDLIBS=-lm -p -no-pie -L$(LIBDIR_ser) -L$(LIBDIR_omp) -Wl,-rpath,../Obj-serial -Wl,-rpath,../Obj-omp
+CC=gcc
+CFLAGS=-Wall -std=c99 -I$(HEADDIR)
+LDLIBS=-lm -L$(LIBDIR) -Wl,-rpath,Obj-serial -Wl,-rpath,../Obj-serial
 ```
 * Time 108: 27.871 s
 * Time 2916: 542.359 s (9.03 min)
@@ -56,9 +54,11 @@ LDLIBS=-lm -p -no-pie -L$(LIBDIR_ser) -L$(LIBDIR_omp) -Wl,-rpath,../Obj-serial -
 ## Case 2: Optimization -O3
 Compiler flags:
 ```
+CC=gcc
+CFLAGS=-Wall -std=c99 -O3 -I$(HEADDIR)
+LDLIBS=-lm -L$(LIBDIR) -Wl,-rpath,Obj-serial -Wl,-rpath,../Obj-serial
 
 ```
-
 * Time 108: 20.071 s (x 1.38 faster)
 * Time 2916: 445.366 s  (x 1.21 faster, 7.42 min)
 
@@ -111,6 +111,9 @@ Enabled at levels -O2, -O3, -Os.
 ## Case 3: Optimizations -O3 and -ffast-math
 Compiler flags:
 ```
+CC=gcc
+CFLAGS=-Wall -std=c99 -O3 -ffast-math -I$(HEADDIR)
+LDLIBS=-lm -L$(LIBDIR) -Wl,-rpath,Obj-serial -Wl,-rpath,../Obj-serial
 
 ```
 
@@ -131,7 +134,33 @@ Compiler flags:
 ## Case 4: Optimizations -O3 and -ffast-math + math modifications
 Compiler flags:
 ```
+CC=gcc
+CFLAGS=-Wall -std=c99 -O3 -ffast-math -pg -g -I$(HEADDIR)
+LDLIBS=-lm -pg -g -L$(LIBDIR) -Wl,-rpath,Obj-serial -Wl,-rpath,../Obj-serial
+```
 
+```
+ // Constants
+  double c12 = 4.0*sys->epsilon*pow(sys->sigma, 12.0);
+  double c6 = 4.0*sys->epsilon*pow(sys->sigma, 6.0);
+  
+   // Cutoff distance squared
+  double rcsq = sys->rcut* sys->rcut;
+...
+// Distance squared
+      double rsq = rx*rx + ry*ry + rz*rz;
+      
+      /* compute force and energy if within cutoff */
+      if (rsq < rcsq) {
+	double rinv = 1.0/rsq;
+	double r6 = rinv*rinv*rinv;
+	
+	ffac = (12.0*c12*r6-6.0*c6)*r6*rinv;
+	sys->epot += 0.5*r6*(c12*r6-c6);
+	
+	sys->fx[i] += rx*ffac;
+	sys->fy[i] += ry*ffac;
+	sys->fz[i] += rz*ffac;
 ```
 * Time 108: 5.478 s (x 5.08 faster)
 * Time 2916: 335.193 s (x 1.61 faster)
@@ -150,9 +179,35 @@ Compiler flags:
 ## Case 5: Optimizations -O3 and -ffast-math + math modifications + Newton
 Compiler flags:
 ```
-
+CC=gcc
+CFLAGS=-Wall -O3 -ffast-math -pg -g -I$(HEADDIR)
+LDLIBS=-lm -pg -g -L$(LIBDIR) -Wl,-rpath,Obj-serial -Wl,-rpath,../Obj-serial
 ```
-
+```
+ for(i=0; i < (sys->natoms)-1; ++i) {
+    for(j=i+1; j < (sys->natoms); ++j) {
+            
+      /* get distance between particle i and j */
+      rx=pbc(sys->rx[i] - sys->rx[j], 0.5*sys->box);
+      ry=pbc(sys->ry[i] - sys->ry[j], 0.5*sys->box);
+      rz=pbc(sys->rz[i] - sys->rz[j], 0.5*sys->box);
+      double rsq = rx*rx + ry*ry + rz*rz;
+      
+      /* compute force and energy if within cutoff */
+      if (rsq < rcsq) {
+	double rinv = 1.0/rsq;
+	double r6 = rinv*rinv*rinv;
+	
+	ffac = (12.0*c12*r6-6.0*c6)*r6*rinv;
+	sys->epot += r6*(c12*r6-c6);
+	
+	sys->fx[i] += rx*ffac; sys->fx[j] -= rx*ffac;
+	sys->fy[i] += ry*ffac; sys->fy[j] -= ry*ffac;
+	sys->fz[i] += rz*ffac; sys->fz[j] -= rz*ffac;
+      }
+    }
+  }
+  ```
 * Time 108: 2.794 s  (x 9.97 faster)
 * Time 2916: 204.061 s (x 2.65 faster)
 
@@ -166,7 +221,7 @@ Compiler flags:
 
 ```
 Comparing to LAMMPS:
-natoms = 108 --> 3.6 s => 22% less :)
+natoms = 108 --> 3.6 s => 22% less 
 natoms = 2912 --> 2.7 s => NOT done yet
 ------------------------------------------------------------------------
 ## Case 6: clang
@@ -198,32 +253,11 @@ LDLIBS=-lm -pg
   0.00      0.97     0.00        1     0.00     1.00  set_ic
   ```
 ------------------------------------------------------------------------
-## Case 7: gcc (default)
-Compiler flags:
-```
-CC=gcc
-CFLAGS=-Wall -O3 -ffast-math -pg -g -fno-pie -I$(HEADDIR)
-LDLIBS=-lm -pg -fno-pie
-```
-* Time 108: 2.784 s ( x 10.01 faster)
-* Time 2916: 167.499 ( x 3.23 faster)
-
-```
-  %   cumulative   self              self     total           
- time   seconds   seconds    calls  ns/call  ns/call  name    
- 70.02      0.65     0.65                             force
- 29.09      0.92     0.27 173357334     1.56     1.56  pbc
-  1.08      0.93     0.01    30006   333.88   333.88  azzero
-  0.00      0.93     0.00       12     0.00     0.00  get_a_line
-  ```
-------------------------------------------------------------------------
-gprof ljmd-serial.x | gprof2dot | dot -T png -o 4_callgraph.png
-------------------------------------------------------------------------
 ## Case 8: gcc (default) with inline
 Compiler flags:
 ```
 CC=gcc
-CFLAGS=-Wall -O3 -ffast-math -pg -g -no-pie -I$(HEADDIR)
+CFLAGS=-Wall -std=c99 -O3 -ffast-math -pg -g -no-pie -I$(HEADDIR)
 LDLIBS=-lm -pg -no-pie
 ```
 pbc
@@ -240,20 +274,12 @@ pbc
   0.00      1.18     0.00       12     0.00     0.00  get_a_line
 
 ```
+## Concluding
+![time_optim](https://user-images.githubusercontent.com/23551722/35595436-060cbcd4-0617-11e8-9019-a0e1b9dbcffe.png)
 ------------------------------------------------------------------------
 ## Future activities
 1. Prefetching
 2. Use intel compiler, beware of the "unsafe math" compiler option,
 enabled by default
 3. Cell list variant
-
 ------------------------------------------------------------------------
-
-TO DO
--file input: 2 file inp,rest + script in bash, Makefile
-- tempi???
-
-
-DA DIRE
--integration_test modificato
--readme vari..
