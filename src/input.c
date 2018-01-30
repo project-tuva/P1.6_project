@@ -35,7 +35,7 @@ int get_a_line(FILE *fp, char *buf)
 }
 
 
-#ifdef _MPI
+//#ifdef _MPI
 int set_nsize(int natoms, int rank, int size){
   int nsize;
   nsize = natoms / size;
@@ -44,7 +44,7 @@ int set_nsize(int natoms, int rank, int size){
   printf("\t\tRank %d out of %d: nsize = %d\n", rank, size, nsize);
   return nsize;
 }
-#endif /*defined _MPI*/
+//#endif /*defined _MPI*/
 
 
 
