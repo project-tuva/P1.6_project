@@ -19,12 +19,13 @@ void force(mdsys_t *sys, int rank, int size){
     MPI_Bcast(sys->rx, sys->natoms, MPI_DOUBLE, 0, sys->mpicomm);
     MPI_Bcast(sys->ry, sys->natoms, MPI_DOUBLE, 0, sys->mpicomm);
     MPI_Bcast(sys->rz, sys->natoms, MPI_DOUBLE, 0, sys->mpicomm);
-#else
-    azzero(sys->fx,sys->natoms);
-    azzero(sys->fy,sys->natoms);
-    azzero(sys->fz,sys->natoms);
 #endif
-
+    /*    if(rank==0){
+      azzero(sys->fx,sys->natoms);
+      azzero(sys->fy,sys->natoms);
+      azzero(sys->fz,sys->natoms);
+      }
+      /*
     /*each process computes the force for natoms/size(+1 if neeed) particles*/
     for(int i=rank; i < (sys->natoms)-1; i+=size) {
 
@@ -45,7 +46,7 @@ void force(mdsys_t *sys, int rank, int size){
                 ffac = -4.0*sys->epsilon*(-12.0*pow(sys->sigma/r,12.0)/r
                                          +6*pow(sys->sigma/r,6.0)/r);
 
-                sys->epot += 0.5*4.0*sys->epsilon*(pow(sys->sigma/r,12.0)
+                sys->epot += 4.0*sys->epsilon*(pow(sys->sigma/r,12.0)
                                                -pow(sys->sigma/r,6.0));
 		
 #ifdef _MPI
@@ -74,6 +75,6 @@ void force(mdsys_t *sys, int rank, int size){
     MPI_Reduce(sys->cy, sys->fy, sys->natoms, MPI_DOUBLE, MPI_SUM, 0, sys->mpicomm);
     MPI_Reduce(sys->cz, sys->fz, sys->natoms, MPI_DOUBLE, MPI_SUM, 0, sys->mpicomm);
     double epot = sys->epot;
-    MPI_Reduce(&epot, &sys->epot, 1, MPI_DOUBLE, MPI_SUM, 0, sys->mpicomm);
+    MPI_Reduce(&epot, &(sys->epot), 1, MPI_DOUBLE, MPI_SUM, 0, sys->mpicomm);
 #endif
 }

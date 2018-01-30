@@ -25,7 +25,7 @@ double pbc(double x, const double boxby2){
 
 
 /* compute kinetic energy */
-void ekin(mdsys_t *sys){ // only process 1
+void ekin(mdsys_t *sys){ // only process 0
     int i;
 
     sys->ekin=0.0;
@@ -37,7 +37,7 @@ void ekin(mdsys_t *sys){ // only process 1
 
 void allocate_mdsys(mdsys_t *sys, int rank, int size){
 
-#ifdef _MPI
+#ifdef _MPI // can be better rewritten
   sys->rx=(double *)malloc(sys->natoms*sizeof(double));
   sys->ry=(double *)malloc(sys->natoms*sizeof(double));
   sys->rz=(double *)malloc(sys->natoms*sizeof(double));
