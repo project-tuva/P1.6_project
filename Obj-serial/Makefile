@@ -27,7 +27,7 @@ $(OBJDIR)%.o: $(SRCDIR)%.c
 	$(CC) -c -fPIC $(CFLAGS) $<
 
 clean:
-	rm -f *.mod *.o $(EXEDIR)ljmd-serial.x $(EXEDIR)*.o $(LIBDIR)libserial.so
+	rm -f *.mod *.o $(EXEDIR)ljmd-serial.x $(EXEDIR)*.o $(LIBDIR)libserial.so $(SRCDIR)*.o
 
 $(LIBDIR)libserial.so: $(OBJ)
 	$(CC) -shared $(OBJ) -o $(LIBDIR)libserial.so
