@@ -1,3 +1,4 @@
+// Case 8
 /*
 utilities for main function in ljmd.c
 - azzero: set array's elements to zero
@@ -19,14 +20,16 @@ void azzero(double *d, const int n){
     }
 }
 
-/* helper function: apply minimum image convention */
-/* Commented for case 11 
+
+/* helper function: apply minimum image convention 
+// This need to be commented for the case 8 (inline pbc)
 double pbc(double x, const double boxby2){
     while (x >  boxby2) x -= 2.0*boxby2;
     while (x < -boxby2) x += 2.0*boxby2;
     return x;
 }
 */
+
 /* compute kinetic energy */
 void ekin(mdsys_t *sys){
     int i;

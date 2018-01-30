@@ -223,7 +223,7 @@ gprof ljmd-serial.x | gprof2dot | dot -T png -o 4_callgraph.png
 Compiler flags:
 ```
 CC=gcc
-CFLAGS=-Wall -std=c99 -O3 -ffast-math -pg -g -no-pie -I$(HEADDIR)
+CFLAGS=-Wall -O3 -ffast-math -pg -g -no-pie -I$(HEADDIR)
 LDLIBS=-lm -pg -no-pie
 ```
 pbc
