@@ -156,15 +156,14 @@ int main(int argc, char **argv)
 	if (rank==0){
 	  velverlet_2(&sys); // only process 0
 	  ekin(&sys);// only process 0
-	  /* clean up: close files, free memory */
-	  printf("Simulation Done.\n"); //  only process 0    
-	  //fclose(erg); //  only process 0    
-	  //fclose(traj); //  only process 0    
 	}
     }
-    /**************************************************/
+
 
     free_mdsys(&sys, rank, size); // all processes
+    if(rank==0)
+      printf("Simulation Done.\n"); //  only process 0                                                         
+
 #ifdef _MPI    
     //MPI FINALIZE
     MPI_Finalize();
