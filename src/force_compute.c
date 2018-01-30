@@ -7,7 +7,8 @@
 void force(mdsys_t *sys){
     double r,ffac;
     double rx,ry,rz,*fx,*fy,*fz;
-    int i,j,tid=0;
+    int tid=0;
+    int i=0,j=0;
 
     /* zero energy and forces */
     sys->epot=0.0;
@@ -22,12 +23,12 @@ void force(mdsys_t *sys){
 #pragma omp parallel reduction(+:epot) {
     tid=omp_get_thread_num();
     sys->nthreads=omp_get_num_threads();
-#pragma omp for {
+#pragma omp for private(i,j){
 #endif    
     for(i=0; i < (sys->natoms); i+=sys->nthreads) {
       int ii=i+tid;
       if(ii>=sys->natoms) break;
-      for(int j=0; j < (sys->natoms); ++j) {
+      for(j=0; j < (sys->natoms); ++j) {
 
 	/* particles have no interactions with themselves */
 	if (ii==j) continue;
