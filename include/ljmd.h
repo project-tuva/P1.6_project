@@ -27,13 +27,6 @@ struct _mdsys {
 };
 typedef struct _mdsys mdsys_t;
 
-// Structure to hold infos about the cell
-struct cell_t {
-  int natoms; // natoms
-  int idxlist[200];
-};
-typedef struct cell_t clist;
-
 // Methods
 /* helper function: read a line and then return
    the first string with whitespace stripped off */
@@ -50,7 +43,7 @@ int set_ic_f(mdsys_t *sys, char restfile[BLEN]);
 void azzero(double *d, const int n); // previously it was static
 
 /* helper function: apply minimum image convention */
-//double pbc(double x, const double boxby2);
+double pbc(double x, const double boxby2);
 
 /* compute kinetic energy */
 void ekin(mdsys_t *sys); // previously it was static
