@@ -25,14 +25,13 @@ void force(mdsys_t *sys){
     tid=omp_get_thread_num();
     sys->nthreads=omp_get_num_threads();
     epot=tid;
-    
 #pragma omp for private(i,j)
-    {
 #endif
  
     for(i=0; i < (sys->natoms); i+=sys->nthreads) {
       int ii=i+tid;
-      if(ii>=sys->natoms) break;
+      if(ii>=sys->natoms);
+      else{
       for(j=0; j < (sys->natoms); ++j) {
 
 	/* particles have no interactions with themselves */
@@ -58,10 +57,11 @@ void force(mdsys_t *sys){
 	}
       }
     }
+       }
 
 
 #if defined(_OPENMP)
-      }
+       }
     }
 #endif     
 
