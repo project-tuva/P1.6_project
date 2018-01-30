@@ -56,54 +56,33 @@ void allocate_mdsys(mdsys_t *sys, int rank, int size){
 }
 
 void free_mdsys(mdsys_t *sys, int rank, int size){
-#ifdef _MPI
   free(sys->rx);
   sys->rx=NULL;
   free(sys->ry);
   sys->ry=NULL;
   free(sys->rz);
   sys->rz=NULL;
-  free(sys->cx);
+  if(rank==0){
+    free(sys->vx);
+    sys->vx=NULL;
+    free(sys->vy);
+    sys->vy=NULL;
+    free(sys->vz);
+    sys->vz=NULL;
+    free(sys->fx);
+    sys->fx=NULL;
+    free(sys->fy);
+    sys->fy=NULL;
+    free(sys->fz);
+    sys->fz=NULL;
+  }
+#ifdef _MPI
   sys->cx=NULL;
   free(sys->cy);
   sys->cy=NULL;
   free(sys->cz);
   sys->cz=NULL;
-  if(rank==0){
-  free(sys->vx);
-  sys->vx=NULL;
-  free(sys->vy);
-  sys->vy=NULL;
-  free(sys->vz);
-  sys->vz=NULL;
-  free(sys->fx);
-  sys->fx=NULL;
-  free(sys->fy);
-  sys->fy=NULL;
-  free(sys->fz);
-  sys->fz=NULL;
-  }
-#else
-  free(sys->rx);
-  sys->rx=NULL;
-  free(sys->ry);
-  sys->ry=NULL;
-  free(sys->rz);
-  sys->rz=NULL;
-  free(sys->vx);
-  sys->vx=NULL;
-  free(sys->vy);
-  sys->vy=NULL;
-  free(sys->vz);
-  sys->vz=NULL;
-  free(sys->fx);
-  sys->fx=NULL;
-  free(sys->fy);
-  sys->fy=NULL;
-  free(sys->fz);
-  sys->fz=NULL;
-#endif /*defined _MPI*/
-
+#endif
 }
 
 
