@@ -8,7 +8,7 @@ LIBDIR=$(ROOT)/Obj-omp
 # -*- Makefile -*-
 SHELL=/bin/sh
 CC=gcc
-CFLAGS=-Wall -g -fopenmp -std=c99 -O3 -ffast-math -fomit-frame-pointer -I$(HEADDIR)
+CFLAGS=-Wall -g -fopenmp -std=c99 -I$(HEADDIR)
 LDLIBS=-lm -L$(LIBDIR) -Wl,-rpath,Obj-omp -Wl,-rpath,../Obj-omp
 
 MAIN=$(ROOT)/main
