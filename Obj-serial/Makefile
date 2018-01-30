@@ -1,9 +1,10 @@
 #Dirs
 ROOT=..
-EXEDIR=$(ROOT)
-SRCDIR=$(ROOT)/src
-HEADDIR=$(ROOT)/include
-LIBDIR=$(ROOT)/Obj-serial
+EXEDIR=$(ROOT)/
+SRCDIR=$(ROOT)/src/
+HEADDIR=$(ROOT)/include/
+LIBDIR=$(ROOT)/Obj-serial/
+OBJDIR=../Obj-serial/
 
 # -*- Makefile -*-
 SHELL=/bin/sh
@@ -14,21 +15,22 @@ LDLIBS=-lm -L$(LIBDIR) -Wl,-rpath,Obj-serial -Wl,-rpath,../Obj-serial
 MAIN=$(ROOT)/main
 
 SRC=$(wildcard ../src/*.c)
-OBJ=$(SRC:%.c=%.o)
+OBJ=$(SRC:$(SRCDIR)%.c=$(OBJDIR)%.o)
 
-default: $(EXEDIR)/ljmd-serial.x
+TARGET=$(EXEDIR)ljmd-serial.x
+
+.PHONY: clean
+
+default: $(TARGET)
+
+$(OBJDIR)%.o: $(SRCDIR)%.c
+	$(CC) -c -fPIC $(CFLAGS) $<
 
 clean:
-	rm -f *.mod *.o $(EXEDIR)/ljmd-serial.x $(OBJ) $(EXEDIR)/*.o 
+	rm -f *.mod *.o $(EXEDIR)ljmd-serial.x $(EXEDIR)*.o $(LIBDIR)libserial.so
 
-# compilation pattern rule for objects
-$(OBJ): $(HEADDIR)/ljmd.h 
+$(LIBDIR)libserial.so: $(OBJ)
+	$(CC) -shared $(OBJ) -o $(LIBDIR)libserial.so
 
-%.o: %.c
-	$(CC) -c -fPIC $< $(CFLAGS) -o $@  
-
-$(LIBDIR)/libserial.so: $(OBJ)
-	$(CC) -shared $(OBJ) -o $(LIBDIR)/libserial.so
-
-$(EXEDIR)/ljmd-serial.x: $(MAIN).c $(LIBDIR)/libserial.so
-	$(CC) $(LDLIBS) $(CFLAGS) -o $(EXEDIR)/ljmd-serial.x $(MAIN).c -lserial
+$(TARGET): $(MAIN).c $(LIBDIR)libserial.so
+	$(CC) $(LDLIBS) $(CFLAGS) -o $(EXEDIR)ljmd-serial.x $(MAIN).c -lserial
