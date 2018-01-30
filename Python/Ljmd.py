@@ -2,10 +2,11 @@
 
 import os
 import sys
-
-
 from ctypes import *
-dso  = CDLL("./ljmd.X.so")
+
+#dso  = CDLL("./ljmd.X.so")
+dso  = CDLL("./libserial.so")
+
 print ("Calling DSO \n")
 #sys.argv[1]
 fd_rpipe, fd_wpipe = os.pipe()
