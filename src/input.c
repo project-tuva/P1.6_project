@@ -50,14 +50,11 @@ int set_nsize(int natoms, int rank, int size){
 
 int set_mdsys(mdsys_t *sys,char restfile[BLEN],char trajfile[BLEN],char ergfile[BLEN],char line[BLEN],int *nprint, int rank, int size){
 
-  //  printf("\nHello from rank %d out of %d", rank, size);
-
 #ifdef _MPI
   sys->mpicomm = MPI_COMM_WORLD;
 #endif /*defined MPI*/
 
   if(rank==0){
-    // printf("\nEXPECTED ONLY 0. Hello from rank %d out of %d\n\n\n", rank, size);
   /* read input file */
   if(get_a_line(stdin,line)) return 1;
   sys->natoms=atoi(line); 

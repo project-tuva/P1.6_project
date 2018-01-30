@@ -36,34 +36,23 @@ void ekin(mdsys_t *sys){ // only process 0
 }
 
 void allocate_mdsys(mdsys_t *sys, int rank, int size){
-
-#ifdef _MPI // can be better rewritten
   sys->rx=(double *)malloc(sys->natoms*sizeof(double));
   sys->ry=(double *)malloc(sys->natoms*sizeof(double));
   sys->rz=(double *)malloc(sys->natoms*sizeof(double));
+  if(rank==0){
+    sys->vx=(double *)malloc(sys->natoms*sizeof(double));
+    sys->vy=(double *)malloc(sys->natoms*sizeof(double));
+    sys->vz=(double *)malloc(sys->natoms*sizeof(double));
+    sys->fx=(double *)malloc(sys->natoms*sizeof(double));
+    sys->fy=(double *)malloc(sys->natoms*sizeof(double));
+    sys->fz=(double *)malloc(sys->natoms*sizeof(double));
+  }
+
+#ifdef _MPI
   sys->cx=(double *)malloc(sys->natoms*sizeof(double));
   sys->cy=(double *)malloc(sys->natoms*sizeof(double));
   sys->cz=(double *)malloc(sys->natoms*sizeof(double));
-  if(rank==0){
-  sys->vx=(double *)malloc(sys->natoms*sizeof(double));
-  sys->vy=(double *)malloc(sys->natoms*sizeof(double));
-  sys->vz=(double *)malloc(sys->natoms*sizeof(double));
-  sys->fx=(double *)malloc(sys->natoms*sizeof(double));
-  sys->fy=(double *)malloc(sys->natoms*sizeof(double));
-  sys->fz=(double *)malloc(sys->natoms*sizeof(double));
-  }
-#else /*defined _MPI*/
-  sys->rx=(double *)malloc(sys->natoms*sizeof(double));
-  sys->ry=(double *)malloc(sys->natoms*sizeof(double));
-  sys->rz=(double *)malloc(sys->natoms*sizeof(double));
-  sys->vx=(double *)malloc(sys->natoms*sizeof(double));
-  sys->vy=(double *)malloc(sys->natoms*sizeof(double));
-  sys->vz=(double *)malloc(sys->natoms*sizeof(double));
-  sys->fx=(double *)malloc(sys->natoms*sizeof(double));
-  sys->fy=(double *)malloc(sys->natoms*sizeof(double));
-  sys->fz=(double *)malloc(sys->natoms*sizeof(double));
 #endif /*defined _MPI*/
-
 }
 
 void free_mdsys(mdsys_t *sys, int rank, int size){
