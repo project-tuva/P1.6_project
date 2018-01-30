@@ -49,19 +49,19 @@ with open('argon_108.inp', 'r') as input_file:
     l = input_file.readline()
     sys.sigma = float( l.split("#")[0].strip() )
     l = input_file.readline()
-    mdsys.rcut = float( l.split("#")[0].strip() )
+    sys.rcut = float( l.split("#")[0].strip() )
     l = input_file.readline()
-    mdsys.box = float( l.split("#")[0].strip() )
+    sys.box = float( l.split("#")[0].strip() )
     l = input_file.readline()
     restfile = l.split("#")[0].strip()[:200]
     l = input_file.readline()
     trajfile = l.split("#")[0].strip()[:200]
     l = input_file.readline()
-    regfile = l.split("#")[0].strip()[:200]
+    ergfile = l.split("#")[0].strip()[:200]
     l = input_file.readline()
-    mdsys.nsteps = int( l.split("#")[0].strip() )
+    sys.nsteps = int( l.split("#")[0].strip() )
     l = input_file.readline()
-    mdsys.dt = float( l.split("#")[0].strip() )
+    sys.dt = float( l.split("#")[0].strip() )
     l = input_file.readline()
     sys.nfi = int( l.split("#")[0].strip() )
 
