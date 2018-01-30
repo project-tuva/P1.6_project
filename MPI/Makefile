@@ -16,10 +16,6 @@ SRC=force_compute.c input.c output.c utilities.c verlet_1.c verlet_2.c main.c
 OBJ=$(SRC:%.c=%.o)
 
 default: $(EXEDIR)/ljmd_MPI.x
-#default:
-#	echo $(OBJ)
-#	echo $(SRC)
-
 
 clean:
 	rm -f *.mod *.o $(EXEDIR)/ljmd_MPI.x $(OBJ) $(EXEDIR)/*.o 
@@ -34,8 +30,10 @@ $(OBJ): $(HEADDIR)/ljmd.h
 %.o: %.c
 	$(CC) -c $< $(CFLAGS) -o $@  
 
-#main.o: $(MAIN).c
-#	$(CC) -c $< $(CFLAGS) -o $(MAIN).o
 
-# dependencies
-#ljmd.o: ljmd.c
+
+
+
+
+
+.PHONY: clean
