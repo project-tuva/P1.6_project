@@ -35,7 +35,35 @@ ergfile = create_string_buffer(BLEN)
 line = create_string_buffer(BLEN)
 
 #dso.set_mdsys(byref(sys),restfile,trajfile,ergfile,line,c_int(nprint))
-dso.set_mdsys(byref(sys),restfile,trajfile,ergfile,line,byref(nprint))
+#dso.set_mdsys(byref(sys),restfile,trajfile,ergfile,line,byref(nprint))
+
+#def input(sys,input_file):
+with open('argon_108.inp', 'r') as input_file:
+    sys = mdsys()
+    l = input_file.readline()
+    sys.natoms = int( l.split("#")[0].strip() )
+    l = input_file.readline()
+    sys.mass = float( l.split("#")[0].strip() )
+    l = input_file.readline()
+    sys.epsilon = float( l.split("#")[0].strip() )
+    l = input_file.readline()
+    sys.sigma = float( l.split("#")[0].strip() )
+    l = input_file.readline()
+    mdsys.rcut = float( l.split("#")[0].strip() )
+    l = input_file.readline()
+    mdsys.box = float( l.split("#")[0].strip() )
+    l = input_file.readline()
+    restfile = l.split("#")[0].strip()[:200]
+    l = input_file.readline()
+    trajfile = l.split("#")[0].strip()[:200]
+    l = input_file.readline()
+    regfile = l.split("#")[0].strip()[:200]
+    l = input_file.readline()
+    mdsys.nsteps = int( l.split("#")[0].strip() )
+    l = input_file.readline()
+    mdsys.dt = float( l.split("#")[0].strip() )
+    l = input_file.readline()
+    sys.nfi = int( l.split("#")[0].strip() )
 
 print(sys.natoms)
 
