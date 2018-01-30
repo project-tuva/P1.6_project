@@ -6,7 +6,15 @@
 #endif
 
 /* compute forces */
-void force(mdsys_t *sys, int rank, int size){
+void force(mdsys_t *sys){
+  int size=1;
+  int rank=0;
+
+#ifdef _MPI
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+#endif /*_MPI*/
+
     double r,ffac;
     double rx,ry,rz;
 

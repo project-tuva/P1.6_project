@@ -47,9 +47,12 @@ int set_nsize(int natoms, int rank, int size){
 
 
 
-int set_mdsys(mdsys_t *sys,char restfile[BLEN],char trajfile[BLEN],char ergfile[BLEN],char line[BLEN],int *nprint, int rank, int size){
-
+int set_mdsys(mdsys_t *sys,char restfile[BLEN],char trajfile[BLEN],char ergfile[BLEN],char line[BLEN],int *nprint){
+  int rank =0;
+  int size = 1;
 #ifdef _MPI
+  MPI_Comm_rank(MPI_COMM_WORLD,&rank);
+  MPI_Comm_size(MPI_COMM_WORLD,&size);
   sys->mpicomm = MPI_COMM_WORLD;
 #endif /*defined MPI*/
 

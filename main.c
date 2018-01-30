@@ -39,11 +39,11 @@ int main(int argc, char **argv)
   mdsys_t sys;
  
     /* sets the system usyn parameters in stdin */
-  set_mdsys(&sys,restfile,trajfile,ergfile,line,&nprint, rank, size);
+  set_mdsys(&sys,restfile,trajfile,ergfile,line,&nprint);
   
 
     /* allocate memory */
-  allocate_mdsys(&sys, rank, size);
+  allocate_mdsys(&sys);
 
 
     /* read restart - set initial conditions */
@@ -57,7 +57,7 @@ int main(int argc, char **argv)
     /* initialize forces and energies.*/
     sys.nfi=0;
 
-    force(&sys, rank, size);
+    force(&sys);
 
     if(rank==0){
       ekin(&sys);
@@ -90,7 +90,7 @@ int main(int argc, char **argv)
       }
         /* propagate system and recompute energies: forces: all processes */
 
-	force(&sys, rank, size);
+	force(&sys);
 
 	if (rank==0){
 	  velverlet_2(&sys); // only process 0

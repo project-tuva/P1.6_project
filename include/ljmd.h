@@ -42,7 +42,7 @@ typedef struct _mdsys mdsys_t;
 int get_a_line(FILE *fp, char *buf); 
 
 /* set structure from input */
-int set_mdsys(mdsys_t *sys,char restfile[BLEN],char trajfile[BLEN],char ergfile[BLEN],char line[BLEN],int *nprint, int rank, int size);
+int set_mdsys(mdsys_t *sys,char restfile[BLEN],char trajfile[BLEN],char ergfile[BLEN],char line[BLEN],int *nprint);
 
 int set_ic(mdsys_t *sys, char restfile[BLEN]);
 int set_ic_f(mdsys_t *sys, char restfile[BLEN]);
@@ -54,19 +54,18 @@ void azzero(double *d, const int n);
 double pbc(double x, const double boxby2);
 
 /* helper functions: malloc and free memory for r v f for all the particles */
-void allocate_mdsys(mdsys_t *sys, int rank, int size);
+void allocate_mdsys(mdsys_t *sys);
 void free_mdsys(mdsys_t *sys, int rank, int size);
 
 /*helper function: evaluate nsize= num of atoms assigned to the current process*/
-#ifdef _MPI
 int set_nsize(int natoms, int rank, int size);
-#endif /*defined _MPI*/
+
 
 /* compute kinetic energy */
 void ekin(mdsys_t *sys); 
 
 /* compute forces */
-void force(mdsys_t *sys, int rank, int size); 
+void force(mdsys_t *sys); 
 
 /* velocity verlet */
 void velverlet_1(mdsys_t *sys); 
