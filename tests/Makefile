@@ -16,12 +16,12 @@ LDLIBS=-lm -pg -g -p -L$(LIBDIR_ser) -L$(LIBDIR_omp) -Wl,-rpath,../Obj-serial -W
 SRC=$(wildcard ../src/*.c)
 OBJ=$(SRC:%.c=%.o)
 
-default: $(EXEDIR)/force_test_ser.x $(EXEDIR)/input_test_ser.x $(EXEDIR)/kinetic_test_ser.x $(EXEDIR)/integration_test_ser.x $(LIBDIR_ser)/libserial.so \
-	$(EXEDIR)/force_test_omp.x $(EXEDIR)/input_test_omp.x $(EXEDIR)/kinetic_test_omp.x $(EXEDIR)/integration_test_omp.x $(LIBDIR_omp)/libljomp.so
+default: $(EXEDIR)/force_test_ser.x $(EXEDIR)/input_test.x $(EXEDIR)/kinetic_test_ser.x $(EXEDIR)/integration_test.x $(LIBDIR_ser)/libserial.so \
+	$(EXEDIR)/force_test_omp.x $(EXEDIR)/input_test.x $(EXEDIR)/kinetic_test_omp.x $(EXEDIR)/integration_test.x $(LIBDIR_omp)/libljomp.so
 
 clean:
-	rm -f *.mod *.o *.out *~ $(EXEDIR)/force_test_ser.x $(EXEDIR)/input_test_ser.x $(EXEDIR)/kinetic_test_ser.x $(EXEDIR)/integration_test_ser.x \
-	$(EXEDIR)/force_test_omp.x $(EXEDIR)/input_test_omp.x $(EXEDIR)/kinetic_test_omp.x $(EXEDIR)/integration_test_omp.x
+	rm -f *.mod *.o *.out *~ $(EXEDIR)/force_test_ser.x $(EXEDIR)/input_test.x $(EXEDIR)/kinetic_test_ser.x $(EXEDIR)/integration_test.x \
+	$(EXEDIR)/force_test_omp.x $(EXEDIR)/input_test.x $(EXEDIR)/kinetic_test_omp.x $(EXEDIR)/integration_test.x
 
 $(OBJ): $(HEADDIR)/ljmd.h 
 
@@ -55,7 +55,7 @@ integration_test.x: $(LIBDIR_ser)/libserial.so
 
 check: input_test kinetic_test force_test integration_test
 
-input_test: input_test_ser.x input_test_omp.x
+input_test: input_test.x
 	./input_test.x < input_test.inp
 	diff -w input_test.inp input_test.out
 

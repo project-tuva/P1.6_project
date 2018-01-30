@@ -39,24 +39,24 @@ void force(mdsys_t *sys){
 #pragma omp for private(i,j)
     for(i=0; i < sys->natoms; ++i){
       for(j=0;j<sys->natoms;++j){
-	if (i!=j){
-	  rx=pbc(sys->rx[i] - sys->rx[j], 0.5*sys->box);
-	  ry=pbc(sys->ry[i] - sys->ry[j], 0.5*sys->box);
-	  rz=pbc(sys->rz[i] - sys->rz[j], 0.5*sys->box);
-	  rsq = rx*rx + ry*ry + rz*rz;
+	if (i==j) continue;
+	rx=pbc(sys->rx[i] - sys->rx[j], 0.5*sys->box);
+	ry=pbc(sys->ry[i] - sys->ry[j], 0.5*sys->box);
+	rz=pbc(sys->rz[i] - sys->rz[j], 0.5*sys->box);
+	rsq = rx*rx + ry*ry + rz*rz;
 
-	  if (rsq < rcsq) {
-	    rinv = 1.0/rsq;
-	    r6 = rinv*rinv*rinv;
+	if (rsq < rcsq) {
+	  rinv = 1.0/rsq;
+	  r6 = rinv*rinv*rinv;
 	    
-	    ffac = (12.0*c12*r6-6.0*c6)*r6*rinv;
+	  ffac = (12.0*c12*r6-6.0*c6)*r6*rinv;
 
-	    epot += r6*(c12*r6-c6);
+	  epot += 0.5*r6*(c12*r6-c6);
 
-	    sys->fx[i] += rx*ffac;
-	    sys->fy[i] += ry*ffac;
-	    sys->fz[i] += rz*ffac;
-	  }
+	  sys->fx[i] += rx*ffac;
+	  sys->fy[i] += ry*ffac;
+	  sys->fz[i] += rz*ffac;
+	  
 	}
       }
     }
