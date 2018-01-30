@@ -51,7 +51,7 @@ int set_ic_f(mdsys_t *sys, char restfile[BLEN]);
 void azzero(double *d, const int n); 
 
 /* helper function: apply minimum image convention */
-double pbc(double x, const double boxby2);
+//double pbc(double x, const double boxby2);
 
 /* helper functions: malloc and free memory for r v f for all the particles */
 void allocate_mdsys(mdsys_t *sys);
