@@ -111,53 +111,60 @@ int main(int argc, char **argv)
 
     force(&sys, rank, size);
 
-#if defined(_MPI) && (D_FORCE)
-    free_mdsys(&sys, rank, size);
-    MPI_Finalize();
-    return 0;
-#endif
+    //#if defined(_MPI) && (D_FORCE)
+    //free_mdsys(&sys, rank, size);
+    //MPI_Finalize();
+    //return 0;
+    //#endif
     
     if(rank==0){
-    ekin(&sys);
+      ekin(&sys);
     
     //MPI_Finalize();
     //return 0;
 
-    erg=fopen(ergfile,"w");
-    traj=fopen(trajfile,"w");
+      erg=fopen(ergfile,"w");
+      traj=fopen(trajfile,"w");
 
-    printf("Starting simulation with %d atoms for %d steps.\n",sys.natoms, sys.nsteps);
-    printf("     NFI            TEMP            EKIN                 EPOT              ETOT\n");
-    output(&sys, erg, traj);
-    
-    fclose(traj);
-    fclose(erg);
+      printf("Starting simulation with %d atoms for %d steps.\n",sys.natoms, sys.nsteps);
+      printf("     NFI            TEMP            EKIN                 EPOT              ETOT\n");
+      output(&sys, erg, traj);
+      fclose(erg); //  only process 0                                                                          
+      fclose(traj); //  only process 0                                                                         
     }
-    MPI_Finalize();
-    return 0;
-
+    
     /**************************************************/
     /* main MD loop */
     for(sys.nfi=1; sys.nfi <= sys.nsteps; ++sys.nfi) {
 
         /* write output, if requested */
-        if ((sys.nfi % nprint) == 0)
-            output(&sys, erg, traj);
+      if (rank==0){
+	if((sys.nfi % nprint) == 0){
+	  erg=fopen(ergfile,"a");
+	  traj=fopen(trajfile,"a");            
+	  output(&sys, erg, traj);
+          fclose(erg); //  only process 0
+	  fclose(traj); //  only process 0
+	}
+        /* propagate system and recompute energies: verlet1 only by process 0 */
+	    velverlet_1(&sys);
+      }
+        /* propagate system and recompute energies: forces: all processes */
 
-        /* propagate system and recompute energies */
-        velverlet_1(&sys); // only process 0
 	force(&sys, rank, size);
-	velverlet_2(&sys); // only process 0
-        ekin(&sys);// only process 0
+
+	if (rank==0){
+	  velverlet_2(&sys); // only process 0
+	  ekin(&sys);// only process 0
+	  /* clean up: close files, free memory */
+	  printf("Simulation Done.\n"); //  only process 0    
+	  //fclose(erg); //  only process 0    
+	  //fclose(traj); //  only process 0    
+	}
     }
     /**************************************************/
 
-    /* clean up: close files, free memory */
-    printf("Simulation Done.\n");
-    fclose(erg);
-    fclose(traj);
-
-    free_mdsys(&sys, rank, size);
+    free_mdsys(&sys, rank, size); // all processes
 #ifdef _MPI    
     //MPI FINALIZE
     MPI_Finalize();
