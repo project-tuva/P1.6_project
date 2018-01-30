@@ -1,5 +1,3 @@
 {
-  "test_units_pytest.py::test_Integration": true,
-  "test_units_pytest.py::test_force": true,
   "test_units_pytest.py::test_kinetic": true
 }

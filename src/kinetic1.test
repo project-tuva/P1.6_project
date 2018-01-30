@@ -7,6 +7,6 @@
 kinetic.rest      # restart
 kinetic1.out      # trajectory
 kinetic1.dat      # energies
-1.0               # nr MD steps
+1               # nr MD steps
 5.0               # MD time step (in fs)
-1.0               # output print frequency
+1               # output print frequency
