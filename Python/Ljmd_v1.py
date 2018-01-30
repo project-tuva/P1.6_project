@@ -2,10 +2,10 @@
 
 import os
 import sys
-import unittest
-from ctypes import *
 
-dso  = CDLL("./ljmd.X.so")
+from ctypes import *
+dso  = CDLL("./libserial.so")
+#dso  = CDLL("./ljmd.X.so")
 print ("Calling DSO \n")
 #sys.argv[1]
 fd_rpipe, fd_wpipe = os.pipe()
