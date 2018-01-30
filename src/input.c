@@ -81,13 +81,10 @@ int set_mdsys(mdsys_t *sys,char restfile[BLEN],char trajfile[BLEN],char ergfile[
   if(get_a_line(stdin,line)) return 1;
   *nprint=atoi(line);
 }
-  //  printf("\nAfter reading from stdin. Hello from rank %d out of %d\n\n\n", rank, size);        
-
 
 
 #ifdef _MPI
   MPI_Bcast(&sys->natoms, 1, MPI_INT, 0, sys->mpicomm);
-  //sys->nsize = set_nsize(sys->natoms,rank,size); 
   MPI_Bcast(&sys->mass, 1, MPI_DOUBLE, 0, sys->mpicomm);
   MPI_Bcast(&sys->epsilon, 1, MPI_DOUBLE, 0, sys->mpicomm);
   MPI_Bcast(&sys->sigma, 1, MPI_DOUBLE, 0, sys->mpicomm);
@@ -98,7 +95,6 @@ int set_mdsys(mdsys_t *sys,char restfile[BLEN],char trajfile[BLEN],char ergfile[
   MPI_Bcast(ergfile, BLEN, MPI_CHAR, 0, sys->mpicomm);
   MPI_Bcast(&sys->nsteps, 1, MPI_INT, 0, sys->mpicomm);
   MPI_Bcast(&sys->dt, 1, MPI_DOUBLE, 0, sys->mpicomm);
-  //  MPI_Bcast(&sys->mass, 1, MPI_DOUBLE, 0, sys->mpicomm);
   MPI_Bcast(nprint, 1, MPI_INT, 0, sys->mpicomm);
 
 #endif /*defined _MPI*/
@@ -124,14 +120,7 @@ int set_ic(mdsys_t *sys, char restfile[BLEN]){
       foo=fscanf(fp,"%lf%lf%lf",sys->vx+i, sys->vy+i, sys->vz+i);
     }
     fclose(fp);
-    azzero(sys->fx, sys->natoms); // can be av.
-    azzero(sys->fy, sys->natoms);
-    azzero(sys->fz, sys->natoms);
-#ifdef _MPI // can be avoided. just for check
-    azzero(sys->cx, sys->natoms);
-    azzero(sys->cy, sys->natoms);
-    azzero(sys->cz, sys->natoms);
-#endif 
+
 } else {
     perror("cannot read restart file");
     return 3;
