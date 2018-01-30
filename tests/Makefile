@@ -10,7 +10,7 @@ LIBDIR_omp=$(ROOT)/Obj-omp
 SHELL=/bin/sh
 CC=gcc
 
-CFLAGS=-Wall -O3 -ffast-math -pg -g -I$(HEADDIR)
+CFLAGS=-Wall -fopenmp -std=c99 -O3 -ffast-math -pg -g -I$(HEADDIR)
 LDLIBS=-lm -pg -g -p -L$(LIBDIR_ser) -L$(LIBDIR_omp) -Wl,-rpath,../Obj-serial -Wl,-rpath,../Obj-omp
 
 SRC=$(wildcard ../src/*.c)
@@ -41,11 +41,8 @@ force_test_ser.x: $(LIBDIR_ser)/libserial.so
 force_test_omp.x: $(LIBDIR_omp)/libljomp.so
 	$(CC) $(LDLIBS) $(CFLAGS) -o force_test_omp.x force_test.c -lljomp
 
-input_test_ser.x: $(LIBDIR_ser)/libserial.so
-	$(CC) $(LDLIBS) $(CFLAGS) -o input_test_ser.x input_test.c -lserial
-
-input_test_omp.x: $(LIBDIR_omp)/libljomp.so
-	$(CC) $(LDLIBS) $(CFLAGS) -o input_test_omp.x input_test.c -lljomp
+input_test.x: $(LIBDIR_ser)/libserial.so
+	$(CC) $(LDLIBS) $(CFLAGS) -o input_test.x input_test.c -lserial
 
 kinetic_test_ser.x: $(LIBDIR_ser)/libserial.so
 	$(CC) $(LDLIBS) $(CFLAGS) -o kinetic_test_ser.x kinetic_test.c -lserial
@@ -53,18 +50,13 @@ kinetic_test_ser.x: $(LIBDIR_ser)/libserial.so
 kinetic_test_omp.x: $(LIBDIR_omp)/libljomp.so
 	$(CC) $(LDLIBS) $(CFLAGS) -o kinetic_test_omp.x kinetic_test.c -lljomp
 
-integration_test_ser.x: $(LIBDIR_ser)/libserial.so
-	$(CC) $(LDLIBS) $(CFLAGS) -o integration_test_ser.x integration_test.c -lserial
-
-integration_test_omp.x: $(LIBDIR_omp)/libljomp.so
-	$(CC) $(LDLIBS) $(CFLAGS) -o integration_test_omp.x integration_test.c -lljomp
+integration_test.x: $(LIBDIR_ser)/libserial.so
+	$(CC) $(LDLIBS) $(CFLAGS) -o integration_test.x integration_test.c -lserial
 
 check: input_test kinetic_test force_test integration_test
 
 input_test: input_test_ser.x input_test_omp.x
-	./input_test_ser.x < input_test.inp
-	diff -w input_test.inp input_test.out
-	./input_test_omp.x < input_test.inp
+	./input_test.x < input_test.inp
 	diff -w input_test.inp input_test.out
 
 kinetic_test: kinetic_test_ser.x kinetic_test_omp.x
@@ -97,17 +89,13 @@ force_test: force_test_ser.x force_test_omp.x
 	./force_test_omp.x < force3.test 
 	diff -w force3.rest force3.out || exit 1
 
-integration_test: integration_test_ser.x
-	./integration_test_ser.x  < integration1.test || exit 1
+integration_test: integration_test.x
+	./integration_test.x  < integration1.test || exit 1
 	diff -w integration1.rest integration1.out || exit 1
-	./integration_test_ser.x  < integration2.test || exit 1
+	./integration_test.x  < integration2.test || exit 1
 	diff -w integration2.rest integration2.out || exit 1
-	./integration_test_ser.x  < integration3.test || exit 1
+	./integration_test.x  < integration3.test || exit 1
 	diff -w integration3.rest integration3.out || exit 1
-	./integration_test_ser.x  < integration4.test || exit 1
+	./integration_test.x  < integration4.test || exit 1
 	diff -w integration4.rest integration4.out || exit 1
 
-# Luca come risolviamo questo?
-#integration_test: integration_test_ser.x integration_test_omp.x
-#	./integration_test_ser.x || exit 1
-#	./integration_test_omp.x || exit 1 
