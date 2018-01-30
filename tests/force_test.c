@@ -28,8 +28,7 @@ int main(void){
   int size = 1;
 
 #ifdef _MPI
-  // INITIALIZE MPI ENVIRONMENT                                                                                    
-  MPI_Init(&argc, &argv);
+  // INITIALIZE MPI ENVIRONMENT                                                                                     MPI_Init(&argc, &argv);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
 #endif /*_MPI*/
@@ -42,12 +41,12 @@ int main(void){
   
   set_mdsys(&sys,restfile, trajfile, ergfile, line, &nprint);
   allocate_mdsys(&sys);
-
-  set_ic_f(&sys, restfile);
+  if(rank==0)
+    set_ic_f(&sys, restfile);
 
   force(&sys);
-
-  test_output(&sys, trajfile);
+  if(rank==0)
+    test_output(&sys, trajfile);
 
   free_mdsys(&sys);
 
