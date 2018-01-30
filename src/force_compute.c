@@ -14,7 +14,7 @@ static double pbc(double x, const double boxby2){
 void force(mdsys_t *sys){
 
   double ffac;
-  double rx,ry,rz,rsq,rinv,r6;
+  double rx,ry,rz,rsq,rinv,r6,*fx,*fy,*fz;
   int i,j;
 
   /* zero energy and forces */
