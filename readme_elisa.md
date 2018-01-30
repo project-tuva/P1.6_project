@@ -28,7 +28,8 @@ relationship.
 ## Case 1: gcc std=c99
 Compiler flags:
 ```
-
+CFLAGS=-Wall -std=c99 -pg -g -no-pie -I$(HEADDIR)
+LDLIBS=-lm -p -no-pie -L$(LIBDIR_ser) -L$(LIBDIR_omp) -Wl,-rpath,../Obj-serial -Wl,-rpath,../Obj-omp
 ```
 * Time 108: 27.871 s
 * Time 2916: 542.359 s (9.03 min)

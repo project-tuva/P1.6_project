@@ -9,8 +9,8 @@ LIBDIR=$(ROOT)/Obj-serial
 SHELL=/bin/sh
 CC=gcc
 
-CFLAGS=-Wall -O3 -ffast-math -pg -g -no-pie -I$(HEADDIR)
-LDLIBS=-lm -pg -no-pie -L$(LIBDIR) -Wl,-rpath,Obj-serial -Wl,-rpath,../Obj-serial
+CFLAGS=-Wall -std=c99 -pg -g -no-pie -I$(HEADDIR)
+LDLIBS=-lm -L$(LIBDIR) -Wl,-rpath,Obj-serial -Wl,-rpath,../Obj-serial
 
 MAIN=$(ROOT)/main
 
