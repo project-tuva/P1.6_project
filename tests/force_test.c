@@ -14,8 +14,6 @@ force2.test: if r in [0.05, 0.1) B<->C
 force3.test: if r in [0.1, 0.395) B<->C & A<->D
 */
 
-
-
 #include <ljmd.h>
 #include <stdio.h>
 #include <stdlib.h>
