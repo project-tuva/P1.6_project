@@ -2,7 +2,6 @@
 
 import os
 import sys
-import unittest
 #import numpy as np
 from ctypes import *
 
@@ -27,7 +26,7 @@ class mdsys(Structure):
                ("vx",POINTER(c_double)),("vy",POINTER(c_double)),("vz",POINTER(c_double)),\
                ("fx",POINTER(c_double)),("fy",POINTER(c_double)),("fz",POINTER(c_double))]
 
-sys = mdsys( )
+sys = mdsys()
 
 restfile = create_string_buffer(BLEN)
 trajfile = create_string_buffer(BLEN)
@@ -46,7 +45,7 @@ dso.set_ic(byref(sys),restfile)
 sys.nfi = c_int(0)
 dso.force(byref(sys))
 dso.ekin(byref(sys))
-#I need to open pointer FILE!
+
 i = c_int(0)
 
 print("Starting simulation with %d atoms for %d steps.\n" % (sys.natoms, sys.nsteps))
