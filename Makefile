@@ -28,4 +28,5 @@ clean:
 	$(MAKE) $(MFLAGS) -C Obj-hybrid clean
 
 check: serial mpi omp
+	$(MAKE)
 	$(MAKE) $(MFLAGS) -C examples check
