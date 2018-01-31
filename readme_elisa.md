@@ -291,4 +291,5 @@ Anyway some further improvement could be applied:
 ------------------------------------------------------------------------
 ## References
 Axel Kohlmeyer, "A simple LJ many-body simulator - Optimization and Parallelization"
+
 https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html
