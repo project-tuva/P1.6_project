@@ -4,8 +4,13 @@ utilities for main function in ljmd.c
 - azzero: set array's elements to zero
 - pbc: periodic boundary conditions
 - ekin: compute kinetic energy
+- allocate_mdsys
+- free_mdsys 
 */
 #include <ljmd.h>
+#ifdef _MPI
+#include <mpi.h>
+#endif /*defined _MPI*/
 
 #include <time.h>
 #include <ctype.h>
@@ -31,7 +36,7 @@ double pbc(double x, const double boxby2){
 */
 
 /* compute kinetic energy */
-void ekin(mdsys_t *sys){
+void ekin(mdsys_t *sys){ // only process 0
     int i;
 
     sys->ekin=0.0;
@@ -44,31 +49,64 @@ void ekin(mdsys_t *sys){
 }
 
 void allocate_mdsys(mdsys_t *sys){
+  int rank =0;
+  //int size = 1;
+#ifdef _MPI
+  MPI_Comm_rank(MPI_COMM_WORLD,&rank);
+  //MPI_Comm_size(MPI_COMM_WORLD,&size);
+#endif /*defined MPI*/
 
   sys->rx=(double *)malloc(sys->natoms*sizeof(double));
   sys->ry=(double *)malloc(sys->natoms*sizeof(double));
   sys->rz=(double *)malloc(sys->natoms*sizeof(double));
-  sys->vx=(double *)malloc(sys->natoms*sizeof(double));
-  sys->vy=(double *)malloc(sys->natoms*sizeof(double));
-  sys->vz=(double *)malloc(sys->natoms*sizeof(double));
-  sys->fx=(double *)malloc(sys->natoms*sizeof(double));
-  sys->fy=(double *)malloc(sys->natoms*sizeof(double));
-  sys->fz=(double *)malloc(sys->natoms*sizeof(double));
+  if(rank==0){
+    sys->vx=(double *)malloc(sys->natoms*sizeof(double));
+    sys->vy=(double *)malloc(sys->natoms*sizeof(double));
+    sys->vz=(double *)malloc(sys->natoms*sizeof(double));
+    sys->fx=(double *)malloc(sys->natoms*sizeof(double));
+    sys->fy=(double *)malloc(sys->natoms*sizeof(double));
+    sys->fz=(double *)malloc(sys->natoms*sizeof(double));
+  }
 
+#ifdef _MPI
+  sys->cx=(double *)malloc(sys->natoms*sizeof(double));
+  sys->cy=(double *)malloc(sys->natoms*sizeof(double));
+  sys->cz=(double *)malloc(sys->natoms*sizeof(double));
+#endif /*defined _MPI*/
 }
 
 void free_mdsys(mdsys_t *sys){
-
+  int rank =0;
+#ifdef _MPI
+  MPI_Comm_rank(MPI_COMM_WORLD,&rank);
+#endif /*defined MPI*/
   free(sys->rx);
+  sys->rx=NULL;
   free(sys->ry);
+  sys->ry=NULL;
   free(sys->rz);
-  free(sys->vx);
-  free(sys->vy);
-  free(sys->vz);
-  free(sys->fx);
-  free(sys->fy);
-  free(sys->fz);
-
+  sys->rz=NULL;
+  if(rank==0){
+    free(sys->vx);
+    sys->vx=NULL;
+    free(sys->vy);
+    sys->vy=NULL;
+    free(sys->vz);
+    sys->vz=NULL;
+    free(sys->fx);
+    sys->fx=NULL;
+    free(sys->fy);
+    sys->fy=NULL;
+    free(sys->fz);
+    sys->fz=NULL;
+  }
+#ifdef _MPI
+  sys->cx=NULL;
+  free(sys->cy);
+  sys->cy=NULL;
+  free(sys->cz);
+  sys->cz=NULL;
+#endif
 }
 
 double cclock()
