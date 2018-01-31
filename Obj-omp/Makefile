@@ -1,9 +1,10 @@
 #Dirs
 ROOT=..
-EXEDIR=$(ROOT)
-SRCDIR=$(ROOT)/src
-HEADDIR=$(ROOT)/include
-LIBDIR=$(ROOT)/Obj-omp
+EXEDIR=$(ROOT)/
+SRCDIR=$(ROOT)/src/
+HEADDIR=$(ROOT)/include/
+LIBDIR=$(ROOT)/Obj-omp/
+OBJDIR=../Obj-omp/
 
 # -*- Makefile -*-
 SHELL=/bin/sh
@@ -14,21 +15,22 @@ LDLIBS=-lm -L$(LIBDIR) -Wl,-rpath,Obj-omp -Wl,-rpath,../Obj-omp
 MAIN=$(ROOT)/main
 
 SRC=$(wildcard ../src/*.c)
-OBJ=$(SRC:%.c=%.o)
+OBJ=$(SRC:$(SRCDIR)%.c=$(OBJDIR)%.o)
 
-default: $(EXEDIR)/ljmd-omp.x
+TARGET=$(EXEDIR)ljmd-omp.x
+
+.PHONY: clean
+
+default: $(TARGET)
+
+$(OBJDIR)%.o: $(SRCDIR)%.c
+	$(CC) -c -fPIC $(CFLAGS) $<
 
 clean:
-	rm -f *.mod *.o $(EXEDIR)/ljmd-serial.x $(OBJ) $(EXEDIR)/*.o 
+	rm -f *.mod *.o $(EXEDIR)ljmd-omp.x $(EXEDIR)*.o $(LIBDIR)libljomp.so $(SRCDIR)*.o
 
-# compilation pattern rule for objects
-$(OBJ): $(HEADDIR)/ljmd.h 
+$(LIBDIR)libljomp.so: $(OBJ) $(HEADDIR)ljmd.h 
+	$(CC) -shared $(OBJ) -o $(LIBDIR)libljomp.so
 
-%.o: %.c
-	$(CC) -c -fPIC $< $(CFLAGS) -o $@  
-
-$(LIBDIR)/libljomp.so: $(OBJ)
-	$(CC) -shared $(OBJ) -o $(LIBDIR)/libljomp.so
-
-$(EXEDIR)/ljmd-omp.x: $(MAIN).c $(LIBDIR)/libljomp.so
-	$(CC) $(LDLIBS) $(CFLAGS) -o $(EXEDIR)/ljmd-omp.x $(MAIN).c -lljomp
+$(TARGET): $(MAIN).c $(LIBDIR)libljomp.so $(HEADDIR)ljmd.h 
+	$(CC) $(LDLIBS) $(CFLAGS) -o $(EXEDIR)ljmd-omp.x $(MAIN).c -lljomp

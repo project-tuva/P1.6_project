@@ -3,6 +3,9 @@
 #include<stdio.h>
 #include<string.h>
 #include<ctype.h>
+#ifdef _MPI
+#include <mpi.h>
+#endif /*defined _MPI*/
 
 int get_a_line(FILE *fp, char *buf)
 {
@@ -31,13 +34,35 @@ int get_a_line(FILE *fp, char *buf)
     return 0;
 }
 
-int set_mdsys(mdsys_t *sys,char restfile[BLEN],char trajfile[BLEN],char ergfile[BLEN],char line[BLEN],int *nprint){
 
+
+int set_nsize(int natoms, int rank, int size){
+  int nsize;
+  nsize = natoms / size;
+  if(rank < natoms % size) /*manage remainders*/
+    ++nsize;
+  return nsize;
+}
+
+
+
+
+int set_mdsys(mdsys_t *sys,char restfile[BLEN],char trajfile[BLEN],char ergfile[BLEN],char line[BLEN],int *nprint)
+{
+  int rank =0;
+  int size = 1;
+#ifdef _MPI
+  MPI_Comm_rank(MPI_COMM_WORLD,&rank);
+  MPI_Comm_size(MPI_COMM_WORLD,&size);
+  sys->mpicomm = MPI_COMM_WORLD;
+#endif /*defined MPI*/
+
+  if(rank==0){
   /* read input file */
   if(get_a_line(stdin,line)) return 1;
-  sys->natoms=atoi(line);
+  sys->natoms=atoi(line); 
   if(get_a_line(stdin,line)) return 1;
-  sys->mass=atof(line);
+  sys->mass=atof(line); 
   if(get_a_line(stdin,line)) return 1;
   sys->epsilon=atof(line);
   if(get_a_line(stdin,line)) return 1;
@@ -55,6 +80,26 @@ int set_mdsys(mdsys_t *sys,char restfile[BLEN],char trajfile[BLEN],char ergfile[
   sys->dt=atof(line);
   if(get_a_line(stdin,line)) return 1;
   *nprint=atoi(line);
+}
+
+
+#ifdef _MPI
+  MPI_Bcast(&sys->natoms, 1, MPI_INT, 0, sys->mpicomm);
+  MPI_Bcast(&sys->mass, 1, MPI_DOUBLE, 0, sys->mpicomm);
+  MPI_Bcast(&sys->epsilon, 1, MPI_DOUBLE, 0, sys->mpicomm);
+  MPI_Bcast(&sys->sigma, 1, MPI_DOUBLE, 0, sys->mpicomm);
+  MPI_Bcast(&sys->rcut, 1, MPI_DOUBLE, 0, sys->mpicomm);
+  MPI_Bcast(&sys->box, 1, MPI_DOUBLE, 0, sys->mpicomm);
+  MPI_Bcast(restfile, BLEN, MPI_CHAR, 0, sys->mpicomm);
+  MPI_Bcast(trajfile, BLEN, MPI_CHAR, 0, sys->mpicomm);
+  MPI_Bcast(ergfile, BLEN, MPI_CHAR, 0, sys->mpicomm);
+  MPI_Bcast(&sys->nsteps, 1, MPI_INT, 0, sys->mpicomm);
+  MPI_Bcast(&sys->dt, 1, MPI_DOUBLE, 0, sys->mpicomm);
+  MPI_Bcast(nprint, 1, MPI_INT, 0, sys->mpicomm);
+
+#endif /*defined _MPI*/
+
+  sys->nsize = set_nsize(sys->natoms,rank,size);
 
   return 0;
 
@@ -75,10 +120,8 @@ int set_ic(mdsys_t *sys, char restfile[BLEN]){
       foo=fscanf(fp,"%lf%lf%lf",sys->vx+i, sys->vy+i, sys->vz+i);
     }
     fclose(fp);
-    azzero(sys->fx, sys->natoms);
-    azzero(sys->fy, sys->natoms);
-    azzero(sys->fz, sys->natoms);
-  } else {
+
+} else {
     perror("cannot read restart file");
     return 3;
   }

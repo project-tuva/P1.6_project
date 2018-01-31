@@ -1,0 +1,8 @@
+{
+<<<<<<< HEAD
+=======
+  "test_units_pytest.py::test_Integration": true,
+  "test_units_pytest.py::test_input": true,
+>>>>>>> python
+  "test_units_pytest.py::test_kinetic": true
+}
