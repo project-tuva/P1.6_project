@@ -10,18 +10,21 @@ LIBDIR_mpi=$(ROOT)/MPI
 # -*- Makefile -*-
 SHELL=/bin/sh
 CC=gcc
+
 CFLAGS=-Wall -g -fopenmp -std=c99 -O3 -ffast-math -fomit-frame-pointer -I$(HEADDIR)
 MPICC=mpicc
 MPISIZE=2
 LDLIBS=-lm  -g -p -L$(LIBDIR_ser) -L$(LIBDIR_omp) -Wl,-rpath,../Obj-serial -Wl,-rpath,../Obj-omp -L$(LIBDIR_mpi) -Wl,-rpath,../MPI
 
+
 SRC=$(wildcard ../src/*.c)
 OBJ=$(SRC:%.c=%.o)
 
-default: $(EXEDIR)/force_test_ser.x $(EXEDIR)/input_test.x $(EXEDIR)/kinetic_test_ser.x $(EXEDIR)/integration_test.x $(EXEDIR)/force_test_mpi.x $(EXEDIR)/input_test_mpi.x $(EXEDIR)/kinetic_test_mpi.x $(EXEDIR)/integration_test_mpi.x
+default: $(EXEDIR)/force_test_ser.x $(EXEDIR)/input_test.x $(EXEDIR)/kinetic_test_ser.x $(EXEDIR)/integration_test.x $(EXEDIR)/force_test_mpi.x $(EXEDIR)/input_test_mpi.x $(EXEDIR)/kinetic_test_mpi.x $(EXEDIR)/integration_test_mpi.x $(LIBDIR_ser)/libserial.so $(LIBDIR_mpi)/lib $(LIBDIR_mpi)/libljmd_MPI.so
 
 clean:
 	rm -f *.mod *.o *.out $(EXEDIR)/*.x
+
 
 # compilation pattern rule for objects
 $(OBJ): $(HEADDIR)/ljmd.h
@@ -47,8 +50,6 @@ $(EXEDIR)/integration_test.x: $(LIBDIR_ser)/libserial.so
 $(LIBDIR_omp)/libljomp.so:
 	$(MAKE) $(MFLAGS) -C ../Obj-omp
 
-$(EXEDIR)/force_test_omp.x: $(LIBDIR_omp)/libljomp.so
-	$(CC) $(LDLIBS) $(CFLAGS) -o force_test_omp.x force_test.c -lljomp
 
 $(EXEDIR)/kinetic_test_omp.x: $(LIBDIR_omp)/libljomp.so
 	$(CC) $(LDLIBS) $(CFLAGS) -o kinetic_test_omp.x kinetic_test.c -lljomp
@@ -56,6 +57,7 @@ $(EXEDIR)/kinetic_test_omp.x: $(LIBDIR_omp)/libljomp.so
 # MPI executables
 $(LIBDIR_mpi)/libljmd_MPI.so:
 	$(MAKE) $(MFLAGS) -C ../MPI 
+
 
 $(EXEDIR)/force_test_mpi.x: $(LIBDIR_mpi)/libljmd_MPI.so
 	$(MPICC) $(LDLIBS) $(CFLAGS) -o force_test_mpi.x force_test.c -lljmd_MPI -D _MPI=1
@@ -116,6 +118,19 @@ force_test: force_test_ser.x force_test_mpi.x
 integration_test: integration_test.x integration_test_mpi.x
 	./integration_test.x < integration1.test
 	diff -w integration1.rest integration1.out || exit 1
+	./integration_test.x  < integration2.test || exit 1
+	diff -w integration2.rest integration2.out || exit 1
+	./integration_test.x  < integration3.test || exit 1
+	diff -w integration3.rest integration3.out || exit 1
+	./integration_test.x  < integration4.test || exit 1
+	diff -w integration4.rest integration4.out || exit 1
 
 	mpirun -np $(MPISIZE) ./integration_test_mpi.x < integration1.test
 	diff -w integration1.rest integration1.out || exit 1 
+	mpirun -np $(MPISIZE) ./integration_test_mpi.x < integration1.test
+	diff -w integration2.rest integration2.out || exit 1 
+	mpirun -np $(MPISIZE) ./integration_test_mpi.x < integration1.test
+	diff -w integration3.rest integration3.out || exit 1 
+	mpirun -np $(MPISIZE) ./integration_test_mpi.x < integration1.test
+	diff -w integration4.rest integration4.out || exit 1 
+

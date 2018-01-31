@@ -2,6 +2,7 @@
 /*force_compute.c*/
 #include <ljmd.h>
 #include <math.h>
+#include<omp.h>
 
 #ifdef _MPI
 #include <mpi.h>
@@ -18,6 +19,7 @@ static double pbc(double x, const double boxby2){
 
 /* compute forces */
 void force(mdsys_t *sys){
+
 
   int size=1;
   int rank=0;
@@ -107,6 +109,7 @@ void force(mdsys_t *sys){
     double epot = sys->epot;
     MPI_Reduce(&epot, &(sys->epot), 1, MPI_DOUBLE, MPI_SUM, 0, sys->mpicomm);
 #endif
+
 
 }
 
