@@ -11,10 +11,11 @@ set ylabel "Time [s]"
 #set style line 1  lc rgb '#FFD700' lt 2 lw 2.0 pt 2
 #set style line 2  lc rgb '#FF0000' lt 2 lw 2.0 pt 4
 set style line 3  lc rgb '#0000FF' lt 2 lw 2.0 pt 6
-   plot "time_natoms.dat" u 1:2 t '' w linespoints ls 2,\
+set key left top
+   plot "ulysses_time_natoms.dat" u 1:2 t 'Case 1' w linespoints ls 3,\
    
 set terminal png
-set output 'time_natoms.png'
+set output 'ulysses_time_natoms.png'
 rep
 unset terminal
 #-------------------------------------------------------------------------------------------------------------------
