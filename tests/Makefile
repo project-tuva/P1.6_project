@@ -106,8 +106,3 @@ integration_test: integration_test_ser.x
 	diff -w integration3.rest integration3.out || exit 1
 	./integration_test_ser.x  < integration4.test || exit 1
 	diff -w integration4.rest integration4.out || exit 1
-
-# Luca come risolviamo questo?
-#integration_test: integration_test_ser.x integration_test_omp.x
-#	./integration_test_ser.x || exit 1
-#	./integration_test_omp.x || exit 1 
