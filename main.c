@@ -65,8 +65,13 @@ int main(int argc, char **argv)
   free_mdsys(&sys);
     
   double t_end = cclock();
-  
-  time=fopen("timefile.txt","w+");
+
+  char outfile[50];
+  sprintf(outfile, "time_%d.txt", sys.natoms);
+#if defined(_OPENMP)
+  sprintf(outfile, "time_%d_omp.txt", sys.natoms);
+#endif 
+  time=fopen(outfile,"w+");
   fprintf(time, "Execution times: %.3f s\n", t_end-t_start);
   fclose(time);
 
