@@ -21,14 +21,14 @@
 int main(int argc, char **argv) 
 {
 
-  int size=1;
+  //  int size=1;
   int rank=0;
 
 #ifdef _MPI
   // INITIALIZE MPI ENVIRONMENT                                                 
   MPI_Init(&argc, &argv);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  // MPI_Comm_size(MPI_COMM_WORLD, &size);
 #endif /*_MPI*/
 
   double t_start = cclock();
@@ -68,14 +68,11 @@ int main(int argc, char **argv)
       printf("Starting simulation with %d atoms for %d steps.\n",sys.natoms, sys.nsteps);
       fprintf(erg,"     NFI            TEMP            EKIN                 EPOT              ETOT\n");
       output(&sys, erg, traj);
-      printf("ciao %d", sys.nsteps);
-      fclose(erg); //  only process 0                                                                          
-      printf("ciao %d", sys.nsteps);
+      fclose(erg); //  only process 0                             
       fclose(traj); //  only process 0                                                                         
-      printf("ciao %d", sys.nsteps);
+      
 
 }
-    printf("ciao %d", sys.nsteps);
     
     /**************************************************/
     /* main MD loop */
