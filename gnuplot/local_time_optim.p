@@ -11,6 +11,7 @@ set ylabel "Time [s]"
 #set style line 1  lc rgb '#FFD700' lt 2 lw 2.0 pt 2
 set style line 2  lc rgb '#FF0000' lt 2 lw 2.0 pt 4
 set style line 3  lc rgb '#0000FF' lt 2 lw 2.0 pt 6
+   set key right top
    plot "local_time_optim.dat" u 1:2 t '108 atoms' w linespoints ls 2,\
          "local_time_optim.dat" u 1:3 t '2916 atoms' w linespoints ls 3,\
    
