@@ -48,6 +48,11 @@ void force(mdsys_t *sys){
     MPI_Bcast(sys->ry, sys->natoms, MPI_DOUBLE, 0, sys->mpicomm);
     MPI_Bcast(sys->rz, sys->natoms, MPI_DOUBLE, 0, sys->mpicomm);
 #endif
+    if(rank==0){
+      azzero(sys->fx,sys->natoms);
+      azzero(sys->fy,sys->natoms);
+      azzero(sys->fz,sys->natoms);
+    }
 
     /*each process computes the force for natoms/size(+1 if neeed) particles*/
     for(int i=rank; i < (sys->natoms)-1; i+=size) {
@@ -92,7 +97,7 @@ void force(mdsys_t *sys){
             } /*end of if r<rcut*/
 	  } /*end of for cycle on j*/
 
-	  sys->epot=epot;
+	  sys->epot=0.5*epot;
 #if defined(_OPENMP)
       }  
 #endif
