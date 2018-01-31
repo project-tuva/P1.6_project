@@ -11,7 +11,7 @@ LIBDIR_mpi=$(ROOT)/MPI
 SHELL=/bin/sh
 CC=gcc
 
-CFLAGS=-Wall -g -fopenmp -std=c99 -O3 -ffast-math -fomit-frame-pointer -I$(HEADDIR)
+CFLAGS=-Wall -g -std=c99 -O3 -ffast-math -fomit-frame-pointer -I$(HEADDIR)
 MPICC=mpicc
 MPISIZE=2
 LDLIBS=-lm  -g -p -L$(LIBDIR_ser) -L$(LIBDIR_omp) -Wl,-rpath,../Obj-serial -Wl,-rpath,../Obj-omp -L$(LIBDIR_mpi) -Wl,-rpath,../MPI
@@ -45,19 +45,19 @@ $(EXEDIR)/input_test.x: $(LIBDIR_ser)/libserial.so
 $(EXEDIR)/integration_test.x: $(LIBDIR_ser)/libserial.so
 	$(CC) $(LDLIBS) $(CFLAGS) -o integration_test.x integration_test.c -lserial
 
-
 # OMP executables
 $(LIBDIR_omp)/libljomp.so:
 	$(MAKE) $(MFLAGS) -C ../Obj-omp
 
-
 $(EXEDIR)/kinetic_test_omp.x: $(LIBDIR_omp)/libljomp.so
-	$(CC) $(LDLIBS) $(CFLAGS) -o kinetic_test_omp.x kinetic_test.c -lljomp
+	$(CC) $(LDLIBS) $(CFLAGS) -fopenmp -o kinetic_test_omp.x kinetic_test.c -lljomp
+
+$(EXEDIR)/force_test_omp.x: $(LIBDIR_omp)/libljomp.so
+	$(CC) $(LDLIBS) $(CFLAGS) -fopenmp -o force_test_omp.x force_test.c -lljomp
 
 # MPI executables
 $(LIBDIR_mpi)/libljmd_MPI.so:
 	$(MAKE) $(MFLAGS) -C ../MPI 
-
 
 $(EXEDIR)/force_test_mpi.x: $(LIBDIR_mpi)/libljmd_MPI.so
 	$(MPICC) $(LDLIBS) $(CFLAGS) -o force_test_mpi.x force_test.c -lljmd_MPI -D _MPI=1
@@ -71,10 +71,20 @@ $(EXEDIR)/kinetic_test_mpi.x: $(LIBDIR_mpi)/libljmd_MPI.so
 $(EXEDIR)/integration_test_mpi.x: $(LIBDIR_mpi)/libljmd_MPI.so
 	$(MPICC) $(LDLIBS) $(CFLAGS) -o integration_test_mpi.x integration_test.c -lljmd_MPI -D _MPI=1
 
+# Hybrid executables
+$(LIBDIR_mpi)/libhybrid.so:
+	$(MAKE) $(MFLAGS) -C ../Obj-hybrid 
+
+$(EXEDIR)/force_test_hybrid.x: $(LIBDIR_mpi)/libljmd_MPI.so
+	$(MPICC) $(LDLIBS) $(CFLAGS) -fopenmp -o force_test_mpi.x force_test.c -lljmd_MPI -D _MPI=1
+
+$(EXEDIR)/kinetic_test_mpi.x: $(LIBDIR_mpi)/libljmd_MPI.so
+	$(MPICC) $(LDLIBS) $(CFLAGS) -fopenmp -o kinetic_test_mpi.x kinetic_test.c -lljmd_MPI -D _MPI=1
+
+$(EXEDIR)/integration_test_mpi.x: $(LIBDIR_mpi)/libljmd_MPI.so
+	$(MPICC) $(LDLIBS) $(CFLAGS) -fopenmp -o integration_test_mpi.x integration_test.c -lljmd_MPI -D _MPI=1
 
 
-# dependencies
-#ljmd.o: ljmd.c
 
 check: input_test kinetic_test force_test integration_test
 

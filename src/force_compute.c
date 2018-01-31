@@ -97,10 +97,12 @@ void force(mdsys_t *sys){
             } /*end of if r<rcut*/
 	  } /*end of for cycle on j*/
 
-	  sys->epot=0.5*epot;
 #if defined(_OPENMP)
       }  
 #endif
+
+	  sys->epot=0.5*epot;
+
  } /*end of for cycle on i*/
 
 #ifdef _MPI
