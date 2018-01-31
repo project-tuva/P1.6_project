@@ -35,6 +35,6 @@ libljmd_MPI.so: $(OBJ)
 	$(CC) -shared $(LFLAGS) -o $@ $^
 
 $(EXEDIR)/ljmd_MPI_din.x: libljmd_MPI.so main.o
-	$(CC) -o $@ main.o -l ljmd_MPI -L. -Wl,-rpath,MPI $(LFLAGS) 
+	$(CC) -o $@ main.o -l ljmd_MPI -L. -Wl,-rpath,MPI -Wl,-rpath,../MPI $(LFLAGS) 
 
 .PHONY: clean
