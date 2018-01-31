@@ -66,7 +66,7 @@ int main(int argc, char **argv)
       traj=fopen(trajfile,"w");
 
       printf("Starting simulation with %d atoms for %d steps.\n",sys.natoms, sys.nsteps);
-      fprintf(erg,"     NFI            TEMP            EKIN                 EPOT              ETOT\n");
+      //fprintf(erg,"     NFI            TEMP            EKIN                 EPOT              ETOT\n");
       output(&sys, erg, traj);
       fclose(erg); //  only process 0                             
       fclose(traj); //  only process 0                                                                         
@@ -74,6 +74,7 @@ int main(int argc, char **argv)
 
 }
     
+
     /**************************************************/
     /* main MD loop */
     for(sys.nfi=1; sys.nfi <= sys.nsteps; ++sys.nfi) {

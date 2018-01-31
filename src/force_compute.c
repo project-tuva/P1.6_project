@@ -2,14 +2,18 @@
 /*force_compute.c*/
 #include <ljmd.h>
 #include <math.h>
+
 #ifdef _MPI
 #include <mpi.h>
 #endif
 
+#include<omp.h>
+
+
 static double pbc(double x, const double boxby2){
-    while (x >  boxby2) x -= 2.0*boxby2;
-    while (x < -boxby2) x += 2.0*boxby2;
-    return x;
+  while (x >  boxby2) x -= 2.0*boxby2;
+  while (x < -boxby2) x += 2.0*boxby2;
+  return x;
 }
 
 /* compute forces */
@@ -105,3 +109,6 @@ void force(mdsys_t *sys){
 #endif
 
 }
+
+  
+  

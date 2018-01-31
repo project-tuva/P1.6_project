@@ -118,5 +118,4 @@ integration_test: integration_test.x integration_test_mpi.x
 	diff -w integration1.rest integration1.out || exit 1
 
 	mpirun -np $(MPISIZE) ./integration_test_mpi.x < integration1.test
-	diff -w integration1.rest integration1.out || exit 1
-
+	diff -w integration1.rest integration1.out || exit 1 
