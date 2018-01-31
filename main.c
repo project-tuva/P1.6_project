@@ -66,7 +66,7 @@ int main(int argc, char **argv)
     
   double t_end = cclock();
   
-  time=fopen("timefile.txt","w+");
+  time=fopen("timefile.txt","w+a");
   fprintf(time, "Execution times: %.3f s\n", t_end-t_start);
   fclose(time);
 

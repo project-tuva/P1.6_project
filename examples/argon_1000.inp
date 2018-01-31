@@ -1,0 +1,12 @@
+1000              # natoms
+39.948            # mass in AMU
+0.2379            # epsilon in kcal/mol
+3.405             # sigma in angstrom
+9.62              # rcut in angstrom
+27.8000           # box length (in angstrom)
+argon_1000.rest   # restart
+argon_1000.xyz    # trajectory
+argon_1000.dat    # energies
+1000              # nr MD steps
+5.0               # MD time step (in fs)
+10                # output print frequency
