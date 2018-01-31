@@ -3,7 +3,10 @@
 This section describes the code optimization.
 The main goal is to optimize the force computation, refactoring the code in
 order to avoid costly operations or redundant work.
-The improvements are documented with profiling/benchmark data.
+The improvements are documented with profiling/benchmark data; the settings of each
+optimization step are present in the corresponding branch (the master
+was set with the best optimization options, "case_8").
+
 After each step, the command ```make check``` was run in order to
 ensure the correctness of the results.
 
