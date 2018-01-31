@@ -21,7 +21,7 @@ routines in a program;
 * reports the cumulative number of calls.
 * a node in the graph represents a routine while an edge represent a calling
 relationship.
-
+------------------------------------------------------------------------
 ## Case 1: no optimization
 Compiler flags:
 ```
@@ -29,9 +29,14 @@ CC=gcc
 CFLAGS=-Wall -std=c99 -I$(HEADDIR)
 LDLIBS=-lm -L$(LIBDIR) -Wl,-rpath,Obj-serial -Wl,-rpath,../Obj-serial
 ```
-* Time 108: 27.871 s
-* Time 2916: 542.359 s (9.03 min)
 
+Time:
+* 108 atoms: 27.871 s
+* 2916 atoms: 542.359 s (9.03 min)
+
+Profiling:
+* all the functions are visible;
+* pbc is the most called function.
 ```
  %   cumulative   self              self     total           
  time   seconds   seconds    calls  us/call  us/call  name    
@@ -52,50 +57,30 @@ LDLIBS=-lm -L$(LIBDIR) -Wl,-rpath,Obj-serial -Wl,-rpath,../Obj-serial
 ```
 ------------------------------------------------------------------------
 ## Case 2: Optimization -O3
+Knowing that the optimization:
+* O0: allows the compiler tries to reduce code size and execution time;
+* O2: optimizes even more, turning on all optimization flags specified by -O0
+and using also other other optimization flags;
+* O3: turns on all optimizations specified by -O2 and also other optimization flags,
+among which there are:
+**-finline-functions", that considers all functions for inlining,
+even if they are not declared inline.
+** -fexpensive-optimizations, that performs a number of minor optimizations that are relatively expensive.
+
 Compiler flags:
 ```
 CC=gcc
 CFLAGS=-Wall -std=c99 -O3 -I$(HEADDIR)
 LDLIBS=-lm -L$(LIBDIR) -Wl,-rpath,Obj-serial -Wl,-rpath,../Obj-serial
-
 ```
-* Time 108: 20.071 s (x 1.38 faster)
-* Time 2916: 445.366 s  (x 1.21 faster, 7.42 min)
 
-https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html
-*** O0 ***
-Optimizing compilation takes somewhat more time,
-and a lot more memory for a large function.
-With -O, the compiler tries to reduce code size and execution time,
-*** O2 ***
-Optimize even more. GCC performs nearly all supported optimizations
-that do not involve a space-speed tradeoff.
-As compared to -O, this option increases both compilation time and the
-performance of the generated code.
--O2 turns on all optimization flags specified by -O.
-It also turns on the other optimization flags
-*** O3 ***
-Optimize yet more.
--O3 turns on all optimizations specified by -O2 and also
-turns on the following optimization flags:
-..
--finline-functions:
-Consider all functions for inlining, even if they are not declared inline.
-The compiler heuristically decides which functions are worth
-integrating in this way.
-If all calls to a given function are integrated, and the function is
-declared static, then the function is normally not output as assembler code
-in its own right.
+Time:
+* 108 atoms: 20.071 s (x 1.38 faster)
+* 2916 atoms: 445.366 s  (x 1.21 faster, 7.42 min)
 
-Enabled at level -O3. 
--fexpensive-optimizations:
-Perform a number of minor optimizations that are relatively expensive.
-(Enabled at levels -O2, -O3, -Os.)
-
--fexpensive-optimizations
-Perform a number of minor optimizations that are relatively expensive.
-Enabled at levels -O2, -O3, -Os.
-
+Profiling:
+* some functions are automatically inlined (but not pbc);
+* the number of calls of pbc doesn't change.
 ```
   %   cumulative   self              self     total           
  time   seconds   seconds    calls  us/call  us/call  name    
@@ -114,12 +99,14 @@ Compiler flags:
 CC=gcc
 CFLAGS=-Wall -std=c99 -O3 -ffast-math -I$(HEADDIR)
 LDLIBS=-lm -L$(LIBDIR) -Wl,-rpath,Obj-serial -Wl,-rpath,../Obj-serial
-
 ```
+Time:
+* 108 atoms: 6.008 s (x 4.63 faster)
+* 2916 atoms: 342.196 s ( x 1.30 faster, 5.70 min)
 
-* Time 108: 6.008 s (x 4.63 faster)
-* Time 2916: 342.196 s ( x 1.30 faster, 5.70 min)
-
+Profiling:
+* velverlet_1 is inlined
+* the number of calls don't change (as expected).
 ```
  %   cumulative   self              self     total           
  time   seconds   seconds    calls  ns/call  ns/call  name    
@@ -132,13 +119,7 @@ LDLIBS=-lm -L$(LIBDIR) -Wl,-rpath,Obj-serial -Wl,-rpath,../Obj-serial
 ```
 ------------------------------------------------------------------------
 ## Case 4: Optimizations -O3 and -ffast-math + math modifications
-Compiler flags:
-```
-CC=gcc
-CFLAGS=-Wall -std=c99 -O3 -ffast-math -pg -g -I$(HEADDIR)
-LDLIBS=-lm -pg -g -L$(LIBDIR) -Wl,-rpath,Obj-serial -Wl,-rpath,../Obj-serial
-```
-
+In this case the number of expensive math operations (pow) were avoided (or at least reduced).
 ```
  // Constants
   double c12 = 4.0*sys->epsilon*pow(sys->sigma, 12.0);
@@ -162,9 +143,19 @@ LDLIBS=-lm -pg -g -L$(LIBDIR) -Wl,-rpath,Obj-serial -Wl,-rpath,../Obj-serial
 	sys->fy[i] += ry*ffac;
 	sys->fz[i] += rz*ffac;
 ```
-* Time 108: 5.478 s (x 5.08 faster)
-* Time 2916: 335.193 s (x 1.61 faster)
 
+Compiler flags:
+```
+CC=gcc
+CFLAGS=-Wall -std=c99 -O3 -ffast-math -pg -g -I$(HEADDIR)
+LDLIBS=-lm -pg -g -L$(LIBDIR) -Wl,-rpath,Obj-serial -Wl,-rpath,../Obj-serial
+```
+Time:
+* 108 atoms: 5.478 s (x 5.08 faster)
+* 2916 atoms: 335.193 s (x 1.61 faster)
+
+Profiling:
+* no changes (as expected)
 ```
  %   cumulative   self              self     total           
  time   seconds   seconds    calls  us/call  us/call  name    
@@ -176,13 +167,8 @@ LDLIBS=-lm -pg -g -L$(LIBDIR) -Wl,-rpath,Obj-serial -Wl,-rpath,../Obj-serial
 
 ```
 ------------------------------------------------------------------------
-## Case 5: Optimizations -O3 and -ffast-math + math modifications + Newton
-Compiler flags:
-```
-CC=gcc
-CFLAGS=-Wall -O3 -ffast-math -pg -g -I$(HEADDIR)
-LDLIBS=-lm -pg -g -L$(LIBDIR) -Wl,-rpath,Obj-serial -Wl,-rpath,../Obj-serial
-```
+## Case 5: Optimizations -O3 and -ffast-math + math modifications + Newton's 3rd law
+The code changes as follows:
 ```
  for(i=0; i < (sys->natoms)-1; ++i) {
     for(j=i+1; j < (sys->natoms); ++j) {
@@ -208,9 +194,18 @@ LDLIBS=-lm -pg -g -L$(LIBDIR) -Wl,-rpath,Obj-serial -Wl,-rpath,../Obj-serial
     }
   }
   ```
-* Time 108: 2.794 s  (x 9.97 faster)
-* Time 2916: 204.061 s (x 2.65 faster)
 
+Compiler flags:
+```
+CC=gcc
+CFLAGS=-Wall -O3 -ffast-math -pg -g -I$(HEADDIR)
+LDLIBS=-lm -pg -g -L$(LIBDIR) -Wl,-rpath,Obj-serial -Wl,-rpath,../Obj-serial
+```
+Time:
+* 108 atoms: 2.794 s  (x 9.97 faster)
+* 2916 atoms: 204.061 s (x 2.65 faster)
+
+Profiling:
 ```
   %   cumulative   self              self     total           
  time   seconds   seconds    calls  ns/call  ns/call  name    
@@ -221,20 +216,24 @@ LDLIBS=-lm -pg -g -L$(LIBDIR) -Wl,-rpath,Obj-serial -Wl,-rpath,../Obj-serial
 
 ```
 Comparing to LAMMPS:
+
 natoms = 108 --> 3.6 s => 22% less 
 natoms = 2912 --> 2.7 s => NOT done yet
 ------------------------------------------------------------------------
 ## Case 6: clang
+The compiler was changed from gcc to clang.
 Compiler flags:
 ```
 CC=clang
 CFLAGS=-Wall -std=c99 -O3 -ffast-math -pg -g -I$(HEADDIR)
 LDLIBS=-lm -pg
-
 ```
-* Time 108: 2.932 s  (even worse than Case 5, x 9.50 faster)
-* Time 2916: 177.513 (x 3.05 faster)
 
+Time:
+* 108 atoms: 2.932 s  (even worse than Case 5, x 9.50 faster)
+* 2916 atoms: 177.513 (x 3.05 faster)
+
+Profiling:
 ```
  %   cumulative   self              self     total           
  time   seconds   seconds    calls  us/call  us/call  name    
@@ -283,3 +282,6 @@ pbc
 enabled by default
 3. Cell list variant
 ------------------------------------------------------------------------
+## References
+Axel Kohlmeyer, "A simple LJ many-body simulator - Optimization and Parallelization"
+https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html
