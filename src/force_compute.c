@@ -55,10 +55,16 @@ void force(mdsys_t *sys){
     }
 
 
-
+    double epot=0;
 
     /*each process computes the force for natoms/size(+1 if neeed) particles*/
     for(int i=rank; i < (sys->natoms)-1; i+=size) {
+      epot=0;
+#if defined(_OMP)
+#pragma omp parallel reduction(+:epot) private(j,rx,ry,rz,rsq,rinv,r6,ffac)
+      {
+#pragma omp for
+#endif
       for(int j=i+1; j < (sys->natoms); ++j) {
             /* get distance between particle i and j */
             rx=pbc(sys->rx[i] - sys->rx[j], 0.5*sys->box);
@@ -73,7 +79,7 @@ void force(mdsys_t *sys){
 	      r6 = rinv*rinv*rinv;
 	      
 	      ffac = (12.0*c12*r6-6.0*c6)*r6*rinv;
-	      sys->epot += r6*(c12*r6-c6);
+	      epot += r6*(c12*r6-c6);
 
 	      /*ffac = -4.0*sys->epsilon*(-12.0*pow(sys->sigma/r,12.0)/r
                                          +6*pow(sys->sigma/r,6.0)/r);
@@ -100,13 +106,19 @@ void force(mdsys_t *sys){
 
             } /*end of if r<rcut*/
         } /*end of for cycle on j*/
+#if defined(_OMP)
+      }
+#endif
+
+      sys->epot+=epot;
+
     } /*end of for cycle on i*/
 
 #ifdef _MPI
     MPI_Reduce(sys->cx, sys->fx, sys->natoms, MPI_DOUBLE, MPI_SUM, 0, sys->mpicomm);
     MPI_Reduce(sys->cy, sys->fy, sys->natoms, MPI_DOUBLE, MPI_SUM, 0, sys->mpicomm);
     MPI_Reduce(sys->cz, sys->fz, sys->natoms, MPI_DOUBLE, MPI_SUM, 0, sys->mpicomm);
-    double epot = sys->epot;
+    epot = sys->epot;
     MPI_Reduce(&epot, &(sys->epot), 1, MPI_DOUBLE, MPI_SUM, 0, sys->mpicomm);
 #endif
 

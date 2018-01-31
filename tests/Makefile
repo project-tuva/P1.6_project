@@ -83,6 +83,18 @@ $(EXEDIR)/kinetic_test_hybrid.x: $(LIBDIR_mpi)/libljmd_MPI.so
 	$(MPICC) $(LDLIBS) $(CFLAGS) -fopenmp -o kinetic_test_hybrid.x kinetic_test.c -lhybrid -D _MPI=1
 	@echo ""
 
+# omp executables                                                                                    
+$(LIBDIR_omp)/libljomp.so:
+	$(MAKE) $(MFLAGS) -C ../Obj-omp 
+
+$(EXEDIR)/force_test_omp.x: $(LIBDIR_omp)/libljomp.so
+	$(CC) $(LDLIBS) $(CFLAGS) -fopenmp -o force_test_omp.x force_test.c -lljomp 
+	@echo ""
+$(EXEDIR)/kinetic_test_omp.x: $(LIBDIR_omp)/libljomp.so
+	$(CC) $(LDLIBS) $(CFLAGS) -fopenmp -o kinetic_test_omp.x kinetic_test.c -lljomp
+	@echo ""
+
+
 check:  input_test kinetic_test force_test integration_test 
 
 input_test: input_test.x input_test_mpi.x
@@ -98,7 +110,7 @@ input_test: input_test.x input_test_mpi.x
 	@echo "***** Test PASSED  *****"
 	@echo ""
 
-kinetic_test: kinetic_test_ser.x kinetic_test_mpi.x kinetic_test_hybrid.x
+kinetic_test: kinetic_test_ser.x kinetic_test_mpi.x kinetic_test_hybrid.x kinetic_test_omp.x
 	@echo "***** Kinetic test - serial *****"
 	./kinetic_test_ser.x < kinetic1.test
 	diff -w kinetic.rest kinetic1.out || exit 1
@@ -129,7 +141,18 @@ kinetic_test: kinetic_test_ser.x kinetic_test_mpi.x kinetic_test_hybrid.x
 	@echo "***** Test PASSED  *****"
 	@echo ""
 
-force_test: force_test_ser.x force_test_mpi.x force_test_hybrid.x
+	@echo "***** Kinetic test - omp *****"
+	./kinetic_test_omp.x < kinetic1.test
+	diff -w kinetic.rest kinetic1.out || exit 1
+	./kinetic_test_omp.x < kinetic2.test
+	diff -w kinetic.rest kinetic2.out || exit 1
+	./kinetic_test_omp.x < kinetic3.test
+	diff -w kinetic.rest kinetic3.out || exit 1
+	@echo "***** Test PASSED  *****"
+	@echo ""
+
+
+force_test: force_test_ser.x force_test_mpi.x force_test_hybrid.x force_test_omp.x
 	@echo "***** Force test - serial *****"
 	./force_test_ser.x < force1.test
 	diff -w force1.rest force1.out || exit 1
@@ -159,6 +182,17 @@ force_test: force_test_ser.x force_test_mpi.x force_test_hybrid.x
 	diff -w force3.rest force3.out || exit 1
 	@echo "***** Test PASSED  *****"
 	@echo ""
+
+	@echo "***** Force test - omp *****"
+	./force_test_omp.x < force1.test
+	diff -w force1.rest force1.out || exit 1
+	./force_test_omp.x < force2.test
+	diff -w force2.rest force2.out || exit 1
+	./force_test_omp.x < force3.test
+	diff -w force3.rest force3.out || exit 1
+	@echo "***** Test PASSED  *****"
+	@echo ""
+
 
 integration_test: integration_test.x integration_test_mpi.x
 	@echo "***** Integration test - serial *****"
