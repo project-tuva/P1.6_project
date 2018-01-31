@@ -10,7 +10,7 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-dso  = CDLL("./libljomp.so")
+dso  = CDLL("../Obj-omp/./libljomp.so")
 print ("Calling DSO \n")
 #sys.argv[1]
 fd_rpipe, fd_wpipe = os.pipe()

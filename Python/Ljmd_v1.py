@@ -4,7 +4,7 @@ import os
 import sys
 
 from ctypes import *
-dso  = CDLL("./libserial.so")
+dso  = CDLL("../Obj-serial/./libserial.so")
 #dso  = CDLL("./ljmd.X.so")
 print ("Calling DSO \n")
 #sys.argv[1]

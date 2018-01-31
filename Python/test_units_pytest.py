@@ -121,8 +121,8 @@ def input_func(ifile):
 def test_force():
     
     sys1,restfile1,trajfile1,ergfile1 = input_func('force1.test')
-#    sys2,restfile2,trajfile2,ergfile2 = input_func('force2.test')
-#    sys3,restfile3,trajfile3,ergfile3 = input_func('force3.test')
+#    sys2,restfile2,trajfile2,ergfile2 = input_func('../tests/force2.test')
+#    sys3,restfile3,trajfile3,ergfile3 = input_func('../tests/force3.test')
     dso.allocate_mdsys(byref(sys1))
     dso.set_ic_f(byref(sys1),restfile1)
     dso.force(byref(sys1))
@@ -161,8 +161,8 @@ def test_force():
 def test_Integration():
     
     sys,restfile,trajfile,ergfile = input_func('Integration1.test')
-#    sys2,restfile2,trajfile2,ergfile2 = input_func('Integration2.test')
-#    sys3,restfile3,trajfile3,ergfile3 = input_func('Integration3.test')
+#    sys2,restfile2,trajfile2,ergfile2 = input_func('../tests/Integration2.test')
+#    sys3,restfile3,trajfile3,ergfile3 = input_func('../tests/Integration3.test')
     dso.allocate_mdsys(byref(sys))
     dso.set_ic_f(byref(sys),restfile)
     dso.velverlet_1(byref(sys))
@@ -201,8 +201,8 @@ def test_Integration():
 def test_kinetic():
 
     sys1,restfile1,trajfile1,ergfile1 = input_func('kinetic1.test')
-#    sys2,restfile2,trajfile2,ergfile2 = input_func('kinetic2.test')
-#    sys3,restfile3,trajfile3,ergfile3 = input_func('kinetic3.test')
+#    sys2,restfile2,trajfile2,ergfile2 = input_func('../tests/kinetic2.test')
+#    sys3,restfile3,trajfile3,ergfile3 = input_func('../tests/kinetic3.test')
     dso.allocate_mdsys(byref(sys1))
     dso.set_ic_f(byref(sys1),restfile1)
     dso.ekin(byref(sys1))
