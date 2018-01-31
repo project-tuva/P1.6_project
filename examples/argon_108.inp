@@ -7,6 +7,6 @@
 argon_108.rest    # restart
 argon_108.xyz     # trajectory
 argon_108.dat     # energies
-10000             # nr MD steps
+1000              # nr MD steps
 5.0               # MD time step (in fs)
-100               # output print frequency
+10                # output print frequency
