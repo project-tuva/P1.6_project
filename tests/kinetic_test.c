@@ -22,7 +22,7 @@ force3.test: if r in [0.1, 0.395) B<->C & A<->D
 #include <stdlib.h>
 
 
-int main(void)
+int main(int argc, char * argv[] )
   {
 
     int rank=0;

@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-int main(){
+int main(int argc, char * argv[] ){
   int rank=0;
   int size = 1;
 
@@ -40,6 +40,7 @@ int main(){
 
   // Write output to file
   test_output(&sys, trajfile);
+
   }
   // Deallocation
   free_mdsys(&sys);
@@ -48,6 +49,7 @@ int main(){
   //MPI FINALIZE                                                                                                 
   MPI_Finalize();
 #endif /*_MPI*/
+
 
 
 

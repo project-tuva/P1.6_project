@@ -14,6 +14,7 @@ force2.test: if r in [0.05, 0.1) B<->C
 force3.test: if r in [0.1, 0.395) B<->C & A<->D
 */
 
+
 #ifdef  _MPI
 #include <mpi.h>
 #endif
@@ -22,13 +23,13 @@ force3.test: if r in [0.1, 0.395) B<->C & A<->D
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(void){
+int main(int argc, char * argv[] ){
 
   int rank=0;
   int size = 1;
 
-#ifdef _MPI
-  // INITIALIZE MPI ENVIRONMENT                                                                                     MPI_Init(&argc, &argv);
+#if defined(_MPI)
+  MPI_Init(&argc, &argv);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
 #endif /*_MPI*/

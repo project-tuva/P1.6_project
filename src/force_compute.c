@@ -1,3 +1,4 @@
+// Case 8
 /*force_compute.c*/
 #include <ljmd.h>
 #include <math.h>
@@ -5,20 +6,15 @@
 #include <mpi.h>
 #endif
 
-
-
-
 static double pbc(double x, const double boxby2){
-  while (x >  boxby2) x -= 2.0*boxby2;
-  while (x < -boxby2) x += 2.0*boxby2;
-  return x;
+    while (x >  boxby2) x -= 2.0*boxby2;
+    while (x < -boxby2) x += 2.0*boxby2;
+    return x;
 }
-
-
-
 
 /* compute forces */
 void force(mdsys_t *sys){
+
   int size=1;
   int rank=0;
 
@@ -99,4 +95,5 @@ void force(mdsys_t *sys){
     double epot = sys->epot;
     MPI_Reduce(&epot, &(sys->epot), 1, MPI_DOUBLE, MPI_SUM, 0, sys->mpicomm);
 #endif
+
 }

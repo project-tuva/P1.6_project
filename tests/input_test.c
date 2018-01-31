@@ -14,25 +14,39 @@
 */
 
 // TEST CODE
+#ifdef  _MPI
+#include <mpi.h>
+#endif
 
 #include <ljmd.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(){
+int main(int argc, char * argv[] ){
+
+  //  int size=1;
+  int rank=0;
+
+#ifdef _MPI
+  // INITIALIZE MPI ENVIRONMENT                                                                                    
+  MPI_Init(&argc, &argv);
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  //MPI_Comm_size(MPI_COMM_WORLD, &size);
+#endif /*_MPI*/
 
   // This test verify that input parameter data is read correctly.
   // compare to input with diff -w fil1 file2
-   
-  printf("INPUT PARAMETER TEST: started\n");
+  if(rank==0)
+    printf("INPUT PARAMETER TEST: started\n");
   mdsys_t sys;
   char restfile[BLEN], trajfile[BLEN], ergfile[BLEN], line[BLEN];
   int nprint;
-  FILE *fp;
-  fp=fopen("input_test.out", "w");
-
+ 
   set_mdsys(&sys,restfile,trajfile,ergfile,line,&nprint);
 
+  if(rank==0){
+  FILE *fp;
+  fp=fopen("input_test.out", "w");
   fprintf(fp,"%d\t", sys.natoms);
   fprintf(fp,"# natoms\n");
   fprintf(fp,"%.3f\t", sys.mass);
@@ -61,7 +75,14 @@ int main(){
   fclose(fp);
 
   printf("INPUT PARAMETER TEST: ended\n"); 
+  }
      
-  return 0;
+
+#ifdef _MPI
+  //MPI FINALIZE                                                                                                 
+  MPI_Finalize();
+#endif /*_MPI*/
+ 
+ return 0;
   
 }

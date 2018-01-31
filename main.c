@@ -31,8 +31,8 @@ int main(int argc, char **argv)
   MPI_Comm_size(MPI_COMM_WORLD, &size);
 #endif /*_MPI*/
 
+  double t_start = cclock();
 
-  
   int nprint;
   char restfile[BLEN], trajfile[BLEN], ergfile[BLEN], line[BLEN];
   FILE *traj,*erg;
@@ -49,7 +49,7 @@ int main(int argc, char **argv)
     /* read restart - set initial conditions */
   if(rank==0){
     set_ic(&sys,restfile);
-  }
+   }
 
 
 
@@ -68,15 +68,19 @@ int main(int argc, char **argv)
       printf("Starting simulation with %d atoms for %d steps.\n",sys.natoms, sys.nsteps);
       fprintf(erg,"     NFI            TEMP            EKIN                 EPOT              ETOT\n");
       output(&sys, erg, traj);
+      printf("ciao %d", sys.nsteps);
       fclose(erg); //  only process 0                                                                          
+      printf("ciao %d", sys.nsteps);
       fclose(traj); //  only process 0                                                                         
-    }
+      printf("ciao %d", sys.nsteps);
+
+}
+    printf("ciao %d", sys.nsteps);
     
     /**************************************************/
     /* main MD loop */
     for(sys.nfi=1; sys.nfi <= sys.nsteps; ++sys.nfi) {
-
-        /* write output, if requested */
+      /* write output, if requested */
       if (rank==0){
 	if((sys.nfi % nprint) == 0){
 	  erg=fopen(ergfile,"a");
@@ -99,14 +103,24 @@ int main(int argc, char **argv)
     }
 
 
-    free_mdsys(&sys, rank, size); // all processes
-    if(rank==0)
-      printf("Simulation Done.\n"); //  only process 0                                                         
+    free_mdsys(&sys); // all processes
+
+    double t_end = cclock();
+    if(rank==0){
+      FILE * time;
+      time=fopen("timefile.txt","w+");
+      fprintf(time, "Execution times: %.3f s\n", t_end-t_start);
+      fclose(time);
+      printf("Simulation Done.\n"); //  only process 0    
+    }
+
+
 
 #ifdef _MPI    
     //MPI FINALIZE
     MPI_Finalize();
 #endif /*_MPI*/
 
-    return 0;
+    return 0;    
+
 }
