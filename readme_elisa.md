@@ -10,7 +10,6 @@ ensure the correctness of the results.
 All the times were recorded on my local pc, an ASUS N-552VW with a CPU
 Intel(R) Core(TM) i7-6700HQ CPU @ 2.60GHz.
 
-## Starting code
 After breaking down the single file ljmd.c into multiple files and updating
 the make process accordingly so that dependencies are properly applied,
 __gprof__ was used to produce the call-tree.
@@ -22,7 +21,7 @@ routines in a program;
 * a node in the graph represents a routine while an edge represent a calling
 relationship.
 ------------------------------------------------------------------------
-## Case 1: no optimization
+### Case 1: no optimization
 Compiler flags:
 ```
 CC=gcc
@@ -56,7 +55,7 @@ Profiling:
   
 ```
 ------------------------------------------------------------------------
-## Case 2: Optimization -O3
+### Case 2: Optimization -O3
 Knowing that the optimization:
 * O0: allows the compiler tries to reduce code size and execution time;
 * O2: optimizes even more, turning on all optimization flags specified by -O0
@@ -93,7 +92,7 @@ Profiling:
   
 ```
 ------------------------------------------------------------------------
-## Case 3: Optimizations -O3 and -ffast-math
+### Case 3: Optimizations -O3 and -ffast-math
 Compiler flags:
 ```
 CC=gcc
@@ -118,7 +117,7 @@ Profiling:
   
 ```
 ------------------------------------------------------------------------
-## Case 4: Optimizations -O3 and -ffast-math + math modifications
+### Case 4: Optimizations -O3 and -ffast-math + math modifications
 In this case the number of expensive math operations (pow) were avoided (or at least reduced).
 ```
  // Constants
@@ -150,6 +149,7 @@ CC=gcc
 CFLAGS=-Wall -std=c99 -O3 -ffast-math -pg -g -I$(HEADDIR)
 LDLIBS=-lm -pg -g -L$(LIBDIR) -Wl,-rpath,Obj-serial -Wl,-rpath,../Obj-serial
 ```
+
 Time:
 * 108 atoms: 5.478 s (x 5.08 faster)
 * 2916 atoms: 335.193 s (x 1.61 faster)
@@ -167,7 +167,7 @@ Profiling:
 
 ```
 ------------------------------------------------------------------------
-## Case 5: Optimizations -O3 and -ffast-math + math modifications + Newton's 3rd law
+### Case 5: Optimizations -O3 and -ffast-math + math modifications + Newton's 3rd law
 The code changes as follows:
 ```
  for(i=0; i < (sys->natoms)-1; ++i) {
@@ -206,6 +206,8 @@ Time:
 * 2916 atoms: 204.061 s (x 2.65 faster)
 
 Profiling:
+* the number of calls of pbc decreased by half (as expected)
+* the function velverlet_2 seems to be inlined
 ```
   %   cumulative   self              self     total           
  time   seconds   seconds    calls  ns/call  ns/call  name    
@@ -216,11 +218,10 @@ Profiling:
 
 ```
 Comparing to LAMMPS:
-
-natoms = 108 --> 3.6 s => 22% less 
-natoms = 2912 --> 2.7 s => NOT done yet
+* natoms = 108 --> 3.6 s => 22% less 
+* natoms = 2912 --> 2.7 s => NOT done yet
 ------------------------------------------------------------------------
-## Case 6: clang
+### Case 6: clang
 The compiler was changed from gcc to clang.
 Compiler flags:
 ```
@@ -230,10 +231,11 @@ LDLIBS=-lm -pg
 ```
 
 Time:
-* 108 atoms: 2.932 s  (even worse than Case 5, x 9.50 faster)
+* 108 atoms: 2.932 s  (x 9.50 faster)
 * 2916 atoms: 177.513 (x 3.05 faster)
 
 Profiling:
+* no function seems to be inlined
 ```
  %   cumulative   self              self     total           
  time   seconds   seconds    calls  us/call  us/call  name    
@@ -252,19 +254,23 @@ Profiling:
   0.00      0.97     0.00        1     0.00     1.00  set_ic
   ```
 ------------------------------------------------------------------------
-## Case 8: gcc (default) with inline
+### Case 8: pbc inlined
+The function pbc was removed from the header file and then declared and defined 
+in the force_compute.c, so that the function force can know it at compile time.
+
 Compiler flags:
 ```
 CC=gcc
 CFLAGS=-Wall -std=c99 -O3 -ffast-math -pg -g -no-pie -I$(HEADDIR)
 LDLIBS=-lm -pg -no-pie
 ```
-pbc
--removed from the header
--put in force_compute to have it inline (static)
 
-* Time 108: 1.201 s ( x 23.20 faster)
-* Time 2916: 35.340 s ( x 15.34 faster)
+Time:
+* 108 atoms: 1.201 s ( x 23.20 faster)
+* 2916 atoms: 35.340 s ( x 15.34 faster)
+
+Profiling: 
+* pbc is inlined
 ```
   %   cumulative   self              self     total           
  time   seconds   seconds    calls  Ts/call  Ts/call  name    
@@ -273,14 +279,15 @@ pbc
   0.00      1.18     0.00       12     0.00     0.00  get_a_line
 
 ```
-## Concluding
-![time_optim](https://user-images.githubusercontent.com/23551722/35595436-060cbcd4-0617-11e8-9019-a0e1b9dbcffe.png)
 ------------------------------------------------------------------------
-## Future activities
-1. Prefetching
-2. Use intel compiler, beware of the "unsafe math" compiler option,
-enabled by default
-3. Cell list variant
+## Concluding
+A big improvement was obtained from the not optimized version to the last case.
+In the following graph the time outputs for the different optimization steps
+are reported.
+![time_optim](https://user-images.githubusercontent.com/23551722/35595436-060cbcd4-0617-11e8-9019-a0e1b9dbcffe.png)
+Anyway some further improvement could be applied:
+* Analyzing the scaling with system size (output times for several sizes)
+* Apply the cell list variant (change the algorithm)
 ------------------------------------------------------------------------
 ## References
 Axel Kohlmeyer, "A simple LJ many-body simulator - Optimization and Parallelization"
