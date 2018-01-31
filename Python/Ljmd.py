@@ -5,7 +5,7 @@ import sys
 import unittest
 from ctypes import *
 #dso  = CDLL("./ljmd.X.so")
-dso  = CDLL("./libserial.so")
+dso  = CDLL("../Obj-serial/./libserial.so")
 print ("Calling DSO \n")
 #sys.argv[1]
 fd_rpipe, fd_wpipe = os.pipe()
