@@ -47,7 +47,8 @@ int set_nsize(int natoms, int rank, int size){
 
 
 
-int set_mdsys(mdsys_t *sys,char restfile[BLEN],char trajfile[BLEN],char ergfile[BLEN],char line[BLEN],int *nprint){
+int set_mdsys(mdsys_t *sys,char restfile[BLEN],char trajfile[BLEN],char ergfile[BLEN],char line[BLEN],int *nprint)
+{
   int rank =0;
   int size = 1;
 #ifdef _MPI

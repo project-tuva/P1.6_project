@@ -44,8 +44,7 @@ typedef struct _mdsys mdsys_t;
 int get_a_line(FILE *fp, char *buf); 
 
 /* set structure from input */
-int set_mdsys(mdsys_t *sys,char restfile[BLEN],char trajfile[BLEN],
-	      char ergfile[BLEN],char line[BLEN],int *nprint);
+int set_mdsys(mdsys_t *sys,char restfile[BLEN],char trajfile[BLEN], char ergfile[BLEN],char line[BLEN],int *nprint);
 
 int set_ic(mdsys_t *sys, char restfile[BLEN]);
 int set_ic_f(mdsys_t *sys, char restfile[BLEN]);
