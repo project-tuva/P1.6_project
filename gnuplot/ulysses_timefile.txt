@@ -1,0 +1,4 @@
+Execution times: 0.165 s
+Execution times: 2.127 s
+Execution times: 7.029 s
+Execution times: 48.382 s

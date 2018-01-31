@@ -1,7 +1,7 @@
-set title "TIMES USING DIFFERENT N° OF ATOMS\n{LOCAL PC}"
+set title "TIMES USING DIFFERENT N° OF ATOMS\n{Local pc}"
 #set title "Big Title\n{/*0.5 subtitle}"
 #set label "Subtitle" at screen 0.5, 0.9 font "Arial,8"
-set xlabel "N optimization [-]"
+set xlabel "Optimization N°[-]"
 set ylabel "Time [s]"
 #   set format y "%.2f"
 #set logscale
@@ -11,10 +11,10 @@ set ylabel "Time [s]"
 #set style line 1  lc rgb '#FFD700' lt 2 lw 2.0 pt 2
 set style line 2  lc rgb '#FF0000' lt 2 lw 2.0 pt 4
 #set style line 3  lc rgb '#0000FF' lt 2 lw 2.0 pt 6
-   plot "time_natoms.dat" u 1:2 t '' w linespoints ls 2,\
+   plot "local_time_natoms.dat" u 1:2 t '' w linespoints ls 2,\
    
 set terminal png
-set output 'time_natoms.png'
+set output 'local_time_natoms.png'
 rep
 unset terminal
 #-------------------------------------------------------------------------------------------------------------------
