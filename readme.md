@@ -7,7 +7,7 @@ The list of the group members and the names will are the following:
 * Luca Ciuffreda (ciuffredaluca)
 
 ## Introduction
-The code contains the implementation of the he LJ Model for Liquid Argon.
+The code contains the implementation of the LJ Model for Liquid Argon.
 The tasks are the following:
 
 __1. PYTHON INTERFACE__ (Farida)
