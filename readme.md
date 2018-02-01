@@ -1,6 +1,6 @@
 # N-BODY LJMD REFACTORING, OPTIMIZATION AND PARALLELIZATION PROJECT
 ## Group 2
-The list of the group members and the names will are the following:
+The list of the group members and the names are the following:
 * Farida Farsian (ffarsian)
 * Elisa Bortoli (ElisaBortoli)
 * Timoteo Colnaghi (project-tuva)
