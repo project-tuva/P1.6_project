@@ -9,6 +9,7 @@ The list of the group members and the names will are the following:
 ## Introduction
 The code contains the implementation of the he LJ Model for Liquid Argon.
 The tasks are the following:
+
 __1. PYTHON INTERFACE__ (Farida)
 Create a python interface so that top-level operations are implemented in
 python and only time critical steps are performed in C.
