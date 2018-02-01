@@ -1,15 +1,65 @@
-GROUP 2: Luca (ciuffredaluca), Elisa (ElisaBortoli), Farida (ffarsian), Timoteo (project-tuva)
+# N-BODY LJMD REFACTORING, OPTIMIZATION AND PARALLELIZATION PROJECT
+## Group 2
+The list of the group members and the names are the following:
+* Farida Farsian (ffarsian)
+* Elisa Bortoli (ElisaBortoli)
+* Timoteo Colnaghi (project-tuva)
+* Luca Ciuffreda (ciuffredaluca)
 
-This package contains simplified MD code with multi-threading
-parallelization for simulating atoms with a Lennard-Jones potential.
+## Introduction
+The code contains the implementation of the LJ Model for Liquid Argon.
+The tasks are the following:
 
-The bundled makefiles are set up to compile the executable once
-with OpenMP disabled and once with OpenMP enabled with each build
-placing the various object files in separate directories.
+__1. PYTHON INTERFACE__ (Farida)
+Create a python interface so that top-level operations are implemented in
+python and only time critical steps are performed in C.
+This can be done incrementally. Minimal goal is to replace
+input (of parameters) and do unit testing in python.
 
-The examples directory contains 3 sets of example input decks
-and the reference directory the corresponding outputs.
+__2. CODE OPTIMIZATION__ (Elisa)
+Optimize the force computation: refactor the code for better optimization
+and to avoid costly operations or redundant work.
+Adapt data structures as needed. Document improvements with
+profiling/benchmark data.
 
-Type: make
-to compile everything and: make clean
-to remove all compiled objects
+__3. MPI__ (Timoteo)
+Add MPI parallelization. Document the parallel efficiency of changes.
+
+__4. OpenMP__ (Luca)
+Add MPI parallelization. Document the parallel efficiency of changes.
+
+## Description
+At first, the code was optimized using the compiler flags -O3 and -ffast-math
+and then it was rewritten avoiding expensive math operations (sqrt and pow)
+and applying the Newton's 3rd law.
+In the following graph the execution time of each optimization step
+is plotted. Each step contains the previous optimization and a new feature:
+
+1. No optimization
+2. -O3 compiler flag
+3. flags -ffast-math compiler
+4. expensive math avoided
+5. Newton's 3rd law
+6. clang compiler
+7. function pbc inlined
+
+Further details of the optimization are described in the "readme_elisa.md".
+
+![local_time_optim](https://user-images.githubusercontent.com/23551722/35654496-b76e840e-06ed-11e8-85b7-f22c2c60a1aa.png)
+
+Then a python interface for this serial version was implemented
+(for details see "readme_farida.md").
+
+Finally the most optimized code was parallelized using OpenMP, MPI and then both
+of them ("hybrid"). The user can choose to run the desired implementation
+using the command ``` make <version> ```.
+
+The results can be summarized by the the following graph, in which
+the different times per cycle (time/n° of MD steps)
+for the different implementation are reported.
+
+![ulysses_timecycle](https://user-images.githubusercontent.com/23551722/35653743-e8fe0282-06e9-11e8-97a1-84ed40ebe9af.png)
+
+It can noticed that for a small n° of atoms the 4 implementations are very
+similar but increasing the size the performance is much better with the use
+of MPI and the hybrid version.
