@@ -50,8 +50,9 @@ Further details of the optimization are described in the "readme_elisa.md".
 Then a python interface for this serial version was implemented
 (for details see "readme_farida.md").
 
-Then the most optimized code was parallelized using OpenMP, MPI and then both
-of them ("hybrid"). 
+Finally the most optimized code was parallelized using OpenMP, MPI and then both
+of them ("hybrid"). The user can choose to run the desired implementation
+using the command ``` make <version> ```.
 
 The results can be summarized by the the following graph, in which
 the different times per cycle (time/n° of MD steps)
