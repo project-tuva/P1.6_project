@@ -287,7 +287,9 @@ Profiling:
 A big improvement was obtained from the not optimized version to the last case.
 In the following graph the time outputs for the different optimization steps
 are reported.
+
 ![time_optim](https://user-images.githubusercontent.com/23551722/35595436-060cbcd4-0617-11e8-9019-a0e1b9dbcffe.png)
+
 Anyway some further improvement could be applied:
 * Analyzing the scaling with system size (output times for several sizes)
 * Apply the cell list variant (change the algorithm)

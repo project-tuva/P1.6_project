@@ -15,16 +15,16 @@ python and only time critical steps are performed in C.
 This can be done incrementally. Minimal goal is to replace
 input (of parameters) and do unit testing in python.
 
-__ 2. CODE OPTIMIZATION__ (Elisa)
+__2. CODE OPTIMIZATION__ (Elisa)
 Optimize the force computation: refactor the code for better optimization
 and to avoid costly operations or redundant work.
 Adapt data structures as needed. Document improvements with
 profiling/benchmark data.
 
-__ 3. MPI__ (Timoteo)
+__3. MPI__ (Timoteo)
 Add MPI parallelization. Document the parallel efficiency of changes.
 
-__ 4. OpenMP__ (Luca)
+__4. OpenMP__ (Luca)
 Add MPI parallelization. Document the parallel efficiency of changes.
 
 ## Description
